@@ -1,0 +1,16 @@
+#fog {
+  background-image: radial-gradient(
+    40% 70% at 50% 50%,
+    rgba(233, 233, 233, 0) 30.8%,
+    rgba(232, 232, 232, 0.8) 85%
+  );
+}
+
+#persistent-fog {
+  background-image: radial-gradient(
+    closest-corner,
+    rgba(255, 0, 0, 0) 50%,
+    rgba(233, 233, 233, 0.5) 70%,
+    rgba(233, 233, 233, 0.8) 100%
+  );
+}

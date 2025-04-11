@@ -1,0 +1,16 @@
+#card-content-expanded::-webkit-scrollbar {
+  width: 10px;
+}
+
+#card-content-expanded::-webkit-scrollbar-track {
+  background-color: rgba(87, 87, 87, 0.225);
+}
+
+#card-content-expanded::-webkit-scrollbar-thumb {
+  background-color: var(--card-accent-color);
+  border-radius: 10px;
+}
+
+#card-content-expanded::-webkit-scrollbar-thumb:hover {
+  background-color: var(--card-scrollbar-color);
+}
