@@ -25,7 +25,8 @@ const InfiniteCanvas = () => {
     position,
     zoomLevel,
     userHasInteracted,
-    learnMoreRef
+    learnMoreRef,
+    cardIsTransitioning
   } = useCanvasStore(
     useShallow((state: CanvasState) => ({
       containerRef: state.containerRef,
@@ -34,7 +35,8 @@ const InfiniteCanvas = () => {
       position: state.position,
       zoomLevel: state.zoomLevel,
       userHasInteracted: state.userHasInteracted,
-      learnMoreRef: state.learnMoreRef
+      learnMoreRef: state.learnMoreRef,
+      cardIsTransitioning: state.cardIsTransitioning
     }))
   );
 
@@ -110,7 +112,7 @@ const InfiniteCanvas = () => {
                   card={card}
                   onLearnMore={handleLearnMore}
                   userHasInteracted={userHasInteracted}
-                  className={`${scaleClass}`}
+                  className={`${scaleClass} ${cardIsTransitioning ? '' : 'hover:scale-[1.1]'}`}
                   learnMoreRef={isMiddleCard ? learnMoreRef : undefined}
                 />
               </div>

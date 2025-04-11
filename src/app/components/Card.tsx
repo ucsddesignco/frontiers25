@@ -21,7 +21,7 @@ const Card: React.FC<CardProps> = ({ card, onLearnMore, className = '', learnMor
     <>
       <div
         id={`card-container-${card.key}`}
-        className={`z-[0] ${className} relative h-full transition-[transform] duration-[0.2s] ease-out hover:scale-[1.1]`}
+        className={`${className} relative z-[0] h-full transition-[transform] duration-[0.2s] ease-out`}
       >
         <div className="relative h-full">
           <div
