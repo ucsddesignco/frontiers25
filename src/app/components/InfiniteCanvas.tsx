@@ -93,7 +93,7 @@ const InfiniteCanvas = () => {
         >
           {visibleCards.map(card => {
             const isMiddleCard = card.patternIndex === MIDDLE_CARD_INDEX;
-            const scaleClass = isMiddleCard && !userHasInteracted ? 'scale-[1.15] z-[1]' : '';
+            const scaleClass = isMiddleCard && !userHasInteracted ? `scale-[1.1] z-[1]` : '';
             const middleClass = isMiddleCard
               ? 'transition-transform duration-[0.3s] ease-in-out'
               : '';

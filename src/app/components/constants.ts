@@ -1,11 +1,10 @@
 export const GRID_COLUMNS = 5;
 export const GRID_ROWS = 5;
-export const CARD_WIDTH = 360; // px
-export const CARD_HEIGHT = 480; // px
+export const CARD_WIDTH = 300; // px
+export const CARD_HEIGHT = 400; // px
 export const MIN_ZOOM = 0.45;
 export const MAX_ZOOM = 2.4;
-export const MIDDLE_CARD_SCALE = 1.15;
-export const CARD_GAP = 128; // px
+export const CARD_GAP = 100; // px
 export const DOT_BACKGROUND_SIZE = 122; // px
 export const APPLY_LINK = 'https://ucsddesign.co/';
 

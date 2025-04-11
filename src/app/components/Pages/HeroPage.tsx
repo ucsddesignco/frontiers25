@@ -33,7 +33,7 @@ export default function HeroPage({ scrollToSection, isExpanded }: HeroPageProps)
         </div>
         <p className="time transition-transform duration-card ease-in-out">9am-5pm</p>
         <div className="flex flex-col lg:text-lg">
-          <p className="description w-[23ch] transition-transform duration-card ease-in-out">
+          <p className="description w-[21.5ch] transition-transform duration-card ease-in-out">
             A 7-hour design sprint to solve UX problems.
           </p>
         </div>
@@ -46,7 +46,7 @@ export default function HeroPage({ scrollToSection, isExpanded }: HeroPageProps)
           </button>
           {NAV_BUTTONS.map(({ id, label }) => (
             <button
-              key={'button-' + id}
+              key={'expanded-button-' + id}
               onClick={() => scrollToSection(id as SectionId)}
               className="relative rounded-[51px] bg-[var(--card-button-color)] px-6 py-2 outline-dashed outline-[2px] outline-[var(--card-accent-color)]"
             >

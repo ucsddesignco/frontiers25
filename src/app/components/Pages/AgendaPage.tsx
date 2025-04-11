@@ -12,7 +12,7 @@ export default function AgendaPage({ ref, isExpanded }: AgendaPageProps) {
       ref={ref}
       className={`${isExpanded ? 'opacity-100' : 'opacity-0'} h-screen w-full transition-opacity duration-[0.2s] ease-in-out`}
     >
-      <PageTitle title="Agenda" subtitle="Agenda" />
+      <PageTitle title="Agenda" subtitle="What’s the timeline of our design sprint?" />
     </section>
   );
 }

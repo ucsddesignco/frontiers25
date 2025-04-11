@@ -10,22 +10,28 @@ interface CardProps {
   learnMoreRef: React.RefObject<HTMLButtonElement | null> | undefined;
 }
 
+const NAV_BUTTONS = [
+  { id: 'faq', label: 'FAQ' },
+  { id: 'agenda', label: 'Agenda' },
+  { id: 'judges', label: 'Judges' }
+];
+
 const Card: React.FC<CardProps> = ({ card, onLearnMore, className = '', learnMoreRef }) => {
   return (
     <>
-      <div id={`card-container-${card.key}`} className={`z-[0] ${className} relative`}>
-        <div className="relative">
+      <div id={`card-container-${card.key}`} className={`z-[0] ${className} relative h-full`}>
+        <div className="relative h-full">
           <div
             id={`card-bg-${card.key}`}
             style={{ backgroundColor: card.primary, borderColor: card.borderColor }}
-            className={`absolute inset-0 rounded-[4rem] border-[3px] border-solid transition-transform duration-card ease-in-out`}
+            className={`absolute inset-0 rounded-[3rem] border-[3px] border-solid transition-transform duration-card ease-in-out`}
           ></div>
           <div
             id={`card-content-${card.key}`}
             style={{ color: card.accent }}
-            className={`relative flex h-[480px] w-[360px] flex-col items-center justify-between rounded-[4rem] bg-transparent p-[48px] text-[#530B67] transition-transform duration-card ease-in-out`}
+            className={`relative flex h-full flex-col items-center justify-between p-[36px] text-[#530B67] transition-transform duration-card ease-in-out`}
           >
-            <div className="w-full lg:text-lg">
+            <div className="w-full">
               <svg
                 className="svg transition-transform duration-card ease-in-out"
                 width="100%"
@@ -46,8 +52,8 @@ const Card: React.FC<CardProps> = ({ card, onLearnMore, className = '', learnMor
               </div>
             </div>
 
-            <div className="flex flex-col gap-3 lg:text-lg">
-              <p className="description w-[23ch] transition-transform duration-card ease-in-out">
+            <div className="flex flex-col gap-3">
+              <p className="description w-[21.5ch] transition-transform duration-card ease-in-out">
                 A 7-hour design sprint to solve UX problems.
               </p>
               <div className="relative flex w-full justify-center">
@@ -62,33 +68,22 @@ const Card: React.FC<CardProps> = ({ card, onLearnMore, className = '', learnMor
                   Learn More
                 </button>
 
-                <button className="pointer-events-none absolute rounded-full px-6 py-2">
-                  <span
-                    style={{ backgroundColor: card.buttonColor, outlineColor: card.accent }}
-                    className={`faq-bg absolute inset-0 z-[0] inline-block h-full w-full rounded-full opacity-0 outline-dashed outline-[2px]`}
-                  ></span>
-                  <span className="faq-text inline-block opacity-0 transition-[transform,opacity] duration-card-half ease-in-out">
-                    FAQ
-                  </span>
-                </button>
-                <button className="pointer-events-none absolute z-[1] rounded-full px-6 py-2">
-                  <span
-                    style={{ backgroundColor: card.buttonColor, outlineColor: card.accent }}
-                    className={`agenda-bg absolute inset-0 z-[0] inline-block h-full w-full rounded-full opacity-0 outline-dashed outline-[2px] transition-[transform,opacity]`}
-                  ></span>
-                  <span className="agenda-text inline-block opacity-0 transition-[transform,opacity] duration-card-half ease-in-out">
-                    Agenda
-                  </span>
-                </button>
-                <button className="pointer-events-none absolute rounded-full px-6 py-2">
-                  <span
-                    style={{ backgroundColor: card.buttonColor, outlineColor: card.accent }}
-                    className={`judges-bg absolute inset-0 z-[0] inline-block h-full w-full rounded-full opacity-0 outline-dashed outline-[2px] transition-[transform,opacity]`}
-                  ></span>
-                  <span className="judges-text inline-block opacity-0 transition-[transform,opacity] duration-card-half ease-in-out">
-                    Judges
-                  </span>
-                </button>
+                {NAV_BUTTONS.map(({ id, label }) => (
+                  <button
+                    key={'card-button-' + id}
+                    className="pointer-events-none absolute rounded-full px-6 py-2"
+                  >
+                    <span
+                      style={{ backgroundColor: card.buttonColor, outlineColor: card.accent }}
+                      className={`${id}-bg absolute inset-0 z-[0] inline-block h-full w-full rounded-full opacity-0 outline-dashed outline-[2px]`}
+                    ></span>
+                    <span
+                      className={`${id}-text inline-block opacity-0 transition-[transform,opacity] duration-card-half ease-in-out`}
+                    >
+                      {label}
+                    </span>
+                  </button>
+                ))}
               </div>
               <button
                 onClick={() => {
