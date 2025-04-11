@@ -5,7 +5,7 @@ export const CARD_HEIGHT = 400; // px
 export const MIN_ZOOM = 0.45;
 export const MAX_ZOOM = 2.4;
 export const CARD_GAP = 100; // px
-export const DOT_BACKGROUND_SIZE = 122; // px
+export const DOT_BACKGROUND_SIZE = 100; // px
 export const APPLY_LINK = 'https://ucsddesign.co/';
 
 export type CardType = {
