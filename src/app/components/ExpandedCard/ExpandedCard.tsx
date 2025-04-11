@@ -88,7 +88,7 @@ const ExpandedCardComponent = ({ isExpanded }: ExpandedCardProps) => {
             backgroundColor: !isExpanded ? 'transparent' : openedCard?.primary
           } as React.CSSProperties
         }
-        className={`${isExpanded ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'} absolute z-[1] mx-auto h-full w-full overflow-y-scroll transition-opacity duration-[0.4s] ease-in-out`}
+        className={`${isExpanded ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'} absolute z-[1] mx-auto h-full w-full overflow-y-scroll transition-opacity duration-[0.2s] ease-in-out`}
       >
         <HeroPage scrollToSection={scrollToSection} isExpanded={isExpanded} />
         {/* It is necessary for these pages to have isExpanded so that they continue to fade even when scrolling */}

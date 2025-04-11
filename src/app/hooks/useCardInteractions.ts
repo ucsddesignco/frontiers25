@@ -57,6 +57,10 @@ export function useCardInteractions() {
       if (!canvasGrid || !clickedCard || !cardBg || !cardContent) return;
 
       clickedCard.style.zIndex = '1';
+      const hoverScale = 1.1;
+      // Maintain hover scale while transitioning
+      clickedCard.style.transform = `scale(${hoverScale})`;
+      clickedCard.style.transformOrigin = 'center center';
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
       const cardRect = cardBg.getBoundingClientRect();
@@ -67,7 +71,7 @@ export function useCardInteractions() {
       const initialScale = parentScale;
 
       if (zoomLevel !== 1) {
-        parentScale = zoomLevel;
+        parentScale = zoomLevel * hoverScale;
       }
 
       // Calculate the scale needed to fill the screen while maintaining aspect ratio
@@ -95,9 +99,6 @@ export function useCardInteractions() {
         parentScale,
         setCardIsTransitioning,
         onTransitionEnd: () => {
-          // This is specifically to create a smoother transition between cardContent and expandedCard
-          cardContent.style.transition = 'opacity 0.4s 0.3s ease-in-out';
-          cardContent.style.opacity = '0';
           setIsExpanded(true);
           setCardIsTransitioning(false);
         },
@@ -135,20 +136,27 @@ export function useCardInteractions() {
     cardContent.style.transition = 'none';
     cardContent.style.opacity = '1';
     cardBg.style.transform = 'scale(1)';
+    clickedCard.style.transform = '';
 
     setIsExpanded(false);
+
+    let parentScale = parseFloat(window.getComputedStyle(clickedCard).transform.split(',')[3]) || 1;
+
+    if (zoomLevel !== 1) {
+      parentScale = zoomLevel;
+    }
 
     // Reposition cardContent to be same as expandedCard in case user scrolled
     handleCardElementTransition({
       type: 'reposition',
       clickedCard,
-      parentScale: zoomLevel,
+      parentScale: parentScale,
       setCardIsTransitioning,
       onTransitionEnd: () => {
         handleCardElementTransition({
           type: 'close',
           clickedCard,
-          parentScale: zoomLevel,
+          parentScale: parentScale,
           setCardIsTransitioning,
           onTransitionEnd: () => {
             clickedCard.style.zIndex = '0';

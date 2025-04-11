@@ -19,7 +19,10 @@ const NAV_BUTTONS = [
 const Card: React.FC<CardProps> = ({ card, onLearnMore, className = '', learnMoreRef }) => {
   return (
     <>
-      <div id={`card-container-${card.key}`} className={`z-[0] ${className} relative h-full`}>
+      <div
+        id={`card-container-${card.key}`}
+        className={`z-[0] ${className} relative h-full transition-[transform] duration-[0.2s] ease-out hover:scale-[1.1]`}
+      >
         <div className="relative h-full">
           <div
             id={`card-bg-${card.key}`}
