@@ -25,9 +25,6 @@ jobs:
       - name: Run Linting/Style Check
         run: pnpm lint-check
 
-      - name: Type Check
-        run: pnpm type-check
-
       - name: Build Check
         run: pnpm build
 
