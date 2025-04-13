@@ -11,6 +11,7 @@ export interface CanvasState {
   dragging: boolean;
   disableDragging: boolean;
   userHasInteracted: boolean;
+  didDrag: boolean;
 
   // Refs
   containerRef: RefObject<HTMLDivElement | null>;
@@ -31,6 +32,7 @@ export interface CanvasState {
   setDragging: (dragging: boolean) => void;
   setDisableDragging: (disable: boolean) => void;
   setUserHasInteracted: (interacted: boolean) => void;
+  setDidDrag: (didDrag: boolean) => void;
   setShowMiddleFog: (show: boolean) => void;
   setShowGalleryFog: (show: boolean) => void;
   setTransitionEnabled: (enabled: boolean) => void;
@@ -49,6 +51,7 @@ export const useCanvasStore = create<CanvasState>((set, _get) => ({
   dragging: false,
   disableDragging: false,
   userHasInteracted: false,
+  didDrag: false,
   showMiddleFog: true,
   showGalleryFog: true,
   isTransitionEnabled: false,
@@ -71,6 +74,7 @@ export const useCanvasStore = create<CanvasState>((set, _get) => ({
   setDragging: dragging => set({ dragging }),
   setDisableDragging: disableDragging => set({ disableDragging }),
   setUserHasInteracted: userHasInteracted => set({ userHasInteracted }),
+  setDidDrag: didDrag => set({ didDrag }),
 
   setBasePattern: basePattern => set({ basePattern }),
   setOpenedCard: openedCard => set({ openedCard }),

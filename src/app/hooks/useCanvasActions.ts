@@ -7,7 +7,8 @@ import {
   CARD_HEIGHT,
   CARD_GAP,
   MIN_ZOOM,
-  MAX_ZOOM
+  MAX_ZOOM,
+  DRAG_THRESHOLD
 } from '../components/constants';
 import { throttle } from '../util/throttle';
 import { useShallow } from 'zustand/shallow';
@@ -21,10 +22,12 @@ export function useCanvasActions() {
     dragging,
     disableDragging,
     userHasInteracted,
+    didDrag,
     setPosition,
     setZoomLevel,
     openedCard,
     setDragging,
+    setDidDrag,
     setUserHasInteracted,
     gridRef,
     isTransitionEnabled,
@@ -38,10 +41,12 @@ export function useCanvasActions() {
       dragging: state.dragging,
       disableDragging: state.disableDragging,
       userHasInteracted: state.userHasInteracted,
+      didDrag: state.didDrag,
       setPosition: state.setPosition,
       setZoomLevel: state.setZoomLevel,
       openedCard: state.openedCard,
       setDragging: state.setDragging,
+      setDidDrag: state.setDidDrag,
       setUserHasInteracted: state.setUserHasInteracted,
       gridRef: state.gridRef,
       isTransitionEnabled: state.isTransitionEnabled,
@@ -51,6 +56,7 @@ export function useCanvasActions() {
   );
   const transitionTimerRef = useRef<NodeJS.Timeout>(null);
   const movementAccumulator = useRef({ x: 0, y: 0 });
+  const startPositionRef = useRef<{ x: number; y: number } | null>(null);
   const lastTouchRef = useRef<{ x: number; y: number } | null>(null);
   const lastPinchDistanceRef = useRef<number | null>(null);
 
@@ -154,9 +160,18 @@ export function useCanvasActions() {
       if (disableDragging || e.button !== 0 || cardIsExpanding) return; // Only allow left click for drag
       if (!userHasInteracted) setUserHasInteracted(true);
       setDragging(true);
+      setDidDrag(false);
+      startPositionRef.current = { x: e.clientX, y: e.clientY };
       movementAccumulator.current = { x: 0, y: 0 };
     },
-    [disableDragging, cardIsExpanding, userHasInteracted, setUserHasInteracted, setDragging]
+    [
+      disableDragging,
+      cardIsExpanding,
+      userHasInteracted,
+      setUserHasInteracted,
+      setDragging,
+      setDidDrag
+    ]
   );
 
   const handleMouseMove = useCallback(
@@ -164,13 +179,30 @@ export function useCanvasActions() {
       if (dragging && !isTransitionEnabled) {
         movementAccumulator.current.x += e.movementX;
         movementAccumulator.current.y += e.movementY;
+
+        if (!didDrag && startPositionRef.current) {
+          const dx = e.clientX - startPositionRef.current.x;
+          const dy = e.clientY - startPositionRef.current.y;
+          if (Math.sqrt(dx * dx + dy * dy) > DRAG_THRESHOLD) {
+            setDidDrag(true);
+          }
+        }
+
         throttledSetPosition({
           x: position.x + movementAccumulator.current.x,
           y: position.y + movementAccumulator.current.y
         });
       }
     },
-    [dragging, isTransitionEnabled, position.x, position.y, throttledSetPosition]
+    [
+      dragging,
+      isTransitionEnabled,
+      didDrag,
+      setDidDrag,
+      position.x,
+      position.y,
+      throttledSetPosition
+    ]
   );
 
   const handleMouseUpOrLeave = useCallback((): void => {
@@ -182,6 +214,7 @@ export function useCanvasActions() {
       movementAccumulator.current = { x: 0, y: 0 };
       setDragging(false);
     }
+    startPositionRef.current = null;
   }, [dragging, position, setPosition, setDragging]);
 
   // ---- TOUCH HANDLERS ----
@@ -201,6 +234,8 @@ export function useCanvasActions() {
       if (disableDragging || isTransitionEnabled) return;
       if (!userHasInteracted) setUserHasInteracted(true);
 
+      setDidDrag(false);
+
       if (e.touches.length === 2) {
         // Pinch start
         const touch1 = e.touches[0];
@@ -212,11 +247,13 @@ export function useCanvasActions() {
           x: (touch1.clientX + touch2.clientX) / 2,
           y: (touch1.clientY + touch2.clientY) / 2
         };
-        setDragging(false); // Ensure dragging stops if pinch starts
+        setDragging(false);
+        startPositionRef.current = null;
       } else if (e.touches.length === 1) {
         // Pan start
         const touch = e.touches[0];
         lastTouchRef.current = { x: touch.clientX, y: touch.clientY };
+        startPositionRef.current = { x: touch.clientX, y: touch.clientY };
         setDragging(true);
         movementAccumulator.current = { x: 0, y: 0 };
       }
@@ -227,7 +264,8 @@ export function useCanvasActions() {
       userHasInteracted,
       setUserHasInteracted,
       setTransitionEnabled,
-      setDragging
+      setDragging,
+      setDidDrag
     ]
   );
 
@@ -244,22 +282,23 @@ export function useCanvasActions() {
         const dy = touch1.clientY - touch2.clientY;
         const currentDistance = Math.sqrt(dx * dx + dy * dy);
         const pinchRatio = currentDistance / lastPinchDistanceRef.current;
-        lastPinchDistanceRef.current = currentDistance; // Update for next move
+        lastPinchDistanceRef.current = currentDistance;
 
         const midX = (touch1.clientX + touch2.clientX) / 2;
         const midY = (touch1.clientY + touch2.clientY) / 2;
 
         // Use a sensitivity factor for pinch zoom
-        const zoomDelta = (pinchRatio - 1) * 0.5; // Adjust sensitivity as needed
+        const zoomDelta = (pinchRatio - 1) * 0.5;
 
         const zoomUpdate = calculateZoomUpdate(zoomLevel, position, zoomDelta, midX, midY);
 
         if (zoomUpdate) {
           setPosition(zoomUpdate.newPosition);
           setZoomLevel(zoomUpdate.newZoomLevel);
-          lastTouchRef.current = { x: midX, y: midY }; // Update midpoint ref
+          lastTouchRef.current = { x: midX, y: midY };
         }
-        return; // Don't pan while pinching
+        setDidDrag(true);
+        return;
       }
 
       // Handle panning with single finger
@@ -268,6 +307,14 @@ export function useCanvasActions() {
         const movementX = touch.clientX - lastTouchRef.current.x;
         const movementY = touch.clientY - lastTouchRef.current.y;
         lastTouchRef.current = { x: touch.clientX, y: touch.clientY };
+
+        if (!didDrag && startPositionRef.current) {
+          const dx = touch.clientX - startPositionRef.current.x;
+          const dy = touch.clientY - startPositionRef.current.y;
+          if (Math.sqrt(dx * dx + dy * dy) > DRAG_THRESHOLD) {
+            setDidDrag(true);
+          }
+        }
 
         movementAccumulator.current.x += movementX;
         movementAccumulator.current.y += movementY;
@@ -281,6 +328,8 @@ export function useCanvasActions() {
       openedCard,
       isTransitionEnabled,
       dragging,
+      didDrag,
+      setDidDrag,
       calculateZoomUpdate,
       zoomLevel,
       position,
@@ -293,11 +342,10 @@ export function useCanvasActions() {
   const handleTouchEnd = useCallback(
     (_e: TouchEvent<HTMLDivElement>): void => {
       if (lastPinchDistanceRef.current !== null) {
-        lastPinchDistanceRef.current = null; // Clear pinch zoom tracking
+        lastPinchDistanceRef.current = null;
       }
 
       if (dragging) {
-        // Finalize panning
         setPosition({
           x: position.x + movementAccumulator.current.x,
           y: position.y + movementAccumulator.current.y
@@ -305,7 +353,8 @@ export function useCanvasActions() {
         movementAccumulator.current = { x: 0, y: 0 };
         setDragging(false);
       }
-      lastTouchRef.current = null; // Reset touch tracking
+      lastTouchRef.current = null;
+      startPositionRef.current = null;
     },
     [dragging, position, setPosition, setDragging]
   );
@@ -314,10 +363,12 @@ export function useCanvasActions() {
     (_e: TouchEvent<HTMLDivElement>): void => {
       lastTouchRef.current = null;
       lastPinchDistanceRef.current = null;
+      startPositionRef.current = null;
       movementAccumulator.current = { x: 0, y: 0 };
       setDragging(false);
+      setDidDrag(false);
     },
-    [setDragging]
+    [setDragging, setDidDrag]
   );
 
   // ---- ZOOMING HANDLERS (MOUSE WHEEL) ----
@@ -334,7 +385,7 @@ export function useCanvasActions() {
       if (e.ctrlKey) {
         const mouseX = e.clientX;
         const mouseY = e.clientY;
-        const zoomFactor = 0.15; // Zoom sensitivity
+        const zoomFactor = 0.15;
         const zoomDelta = e.deltaY < 0 ? zoomFactor : -zoomFactor;
 
         const zoomUpdate = calculateZoomUpdate(zoomLevel, position, zoomDelta, mouseX, mouseY);
@@ -342,6 +393,7 @@ export function useCanvasActions() {
         if (zoomUpdate) {
           setPosition(zoomUpdate.newPosition);
           setZoomLevel(zoomUpdate.newZoomLevel);
+          setDidDrag(true);
         }
       }
       // Handle trackpad scroll/pan (no Ctrl key)
@@ -349,6 +401,7 @@ export function useCanvasActions() {
         const sensitivity = 1.0; // Pan sensitivity
         movementAccumulator.current.x -= e.deltaX * sensitivity;
         movementAccumulator.current.y -= e.deltaY * sensitivity;
+        setDidDrag(true);
         throttledSetPosition({
           x: position.x + movementAccumulator.current.x,
           y: position.y + movementAccumulator.current.y
@@ -361,6 +414,7 @@ export function useCanvasActions() {
       userHasInteracted,
       setUserHasInteracted,
       disableDragging,
+      setDidDrag,
       calculateZoomUpdate,
       zoomLevel,
       position,
@@ -372,7 +426,6 @@ export function useCanvasActions() {
 
   // ---- EFFECTS & INITIALIZATION ----
 
-  // Attach/detach event listeners
   useEffect(() => {
     const container = containerRef.current;
     if (container) {
@@ -415,7 +468,7 @@ export function useCanvasActions() {
     }
   }, [
     containerRef,
-    handleMouseDown, // Add mouse handlers to dependencies
+    handleMouseDown,
     handleMouseMove,
     handleMouseUpOrLeave,
     handleWheel,

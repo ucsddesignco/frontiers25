@@ -27,7 +27,8 @@ const InfiniteCanvas = () => {
     userHasInteracted,
     cardIsExpanding,
     gridRef,
-    isTransitionEnabled
+    isTransitionEnabled,
+    didDrag
   } = useCanvasStore(
     useShallow((state: CanvasState) => ({
       containerRef: state.containerRef,
@@ -38,7 +39,8 @@ const InfiniteCanvas = () => {
       userHasInteracted: state.userHasInteracted,
       cardIsExpanding: state.cardIsExpanding,
       gridRef: state.gridRef,
-      isTransitionEnabled: state.isTransitionEnabled
+      isTransitionEnabled: state.isTransitionEnabled,
+      didDrag: state.didDrag
     }))
   );
 
@@ -105,7 +107,9 @@ const InfiniteCanvas = () => {
                   e.preventDefault();
                 }
               : () => {
-                  centerToCard(card.x, card.y);
+                  if (!didDrag) {
+                    centerToCard(card.x, card.y);
+                  }
                 };
 
             return (

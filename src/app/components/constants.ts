@@ -7,6 +7,7 @@ export const MAX_ZOOM = 2.4;
 export const CARD_GAP = 100; // px
 export const DOT_BACKGROUND_SIZE = 100; // px
 export const APPLY_LINK = 'https://ucsddesign.co/';
+export const DRAG_THRESHOLD = 5; // px
 
 export type CardType = {
   id: string;
