@@ -14,15 +14,16 @@ export interface CanvasState {
 
   // Refs
   containerRef: RefObject<HTMLDivElement | null>;
-  learnMoreRef: RefObject<HTMLButtonElement | null>;
+  gridRef: RefObject<HTMLDivElement | null>;
   expandedCardRef: RefObject<HTMLDivElement | null>;
 
   openedCard: VisibleCard | null;
   basePattern: CardType[];
   isExpanded: boolean;
-  cardIsTransitioning: boolean;
+  cardIsExpanding: boolean;
   showMiddleFog: boolean;
   showGalleryFog: boolean;
+  isTransitionEnabled: boolean;
 
   // Canvas actions
   setPosition: (position: { x: number; y: number }) => void;
@@ -32,13 +33,13 @@ export interface CanvasState {
   setUserHasInteracted: (interacted: boolean) => void;
   setShowMiddleFog: (show: boolean) => void;
   setShowGalleryFog: (show: boolean) => void;
+  setTransitionEnabled: (enabled: boolean) => void;
 
   // Card actions
   setOpenedCard: (card: VisibleCard | null) => void;
   setBasePattern: (pattern: CardType[]) => void;
   setIsExpanded: (show: boolean) => void;
-  setCardIsTransitioning: (transitioning: boolean) => void;
-  setExpandedCardRef: (ref: RefObject<HTMLDivElement>) => void;
+  setCardIsExpanding: (transitioning: boolean) => void;
 }
 
 export const useCanvasStore = create<CanvasState>((set, _get) => ({
@@ -50,16 +51,17 @@ export const useCanvasStore = create<CanvasState>((set, _get) => ({
   userHasInteracted: false,
   showMiddleFog: true,
   showGalleryFog: true,
+  isTransitionEnabled: false,
 
   // Refs
   containerRef: createRef<HTMLDivElement>(),
-  learnMoreRef: createRef<HTMLButtonElement>(),
+  gridRef: createRef<HTMLDivElement>(),
   expandedCardRef: createRef<HTMLDivElement>(),
 
   basePattern: [],
   openedCard: null,
   isExpanded: false,
-  cardIsTransitioning: false,
+  cardIsExpanding: false,
 
   // Actions to update state
   setPosition: position => set({ position }),
@@ -72,7 +74,7 @@ export const useCanvasStore = create<CanvasState>((set, _get) => ({
 
   setBasePattern: basePattern => set({ basePattern }),
   setOpenedCard: openedCard => set({ openedCard }),
-  setCardIsTransitioning: cardIsTransitioning => set({ cardIsTransitioning }),
+  setCardIsExpanding: cardIsExpanding => set({ cardIsExpanding }),
   setIsExpanded: isExpanded => set({ isExpanded }),
-  setExpandedCardRef: expandedCardRef => set({ expandedCardRef })
+  setTransitionEnabled: enabled => set({ isTransitionEnabled: enabled })
 }));

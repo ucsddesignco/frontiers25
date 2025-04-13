@@ -10,10 +10,10 @@ export function useCardInteractions() {
   const {
     zoomLevel,
     openedCard,
-    cardIsTransitioning,
+    cardIsExpanding,
     userHasInteracted,
     setOpenedCard,
-    setCardIsTransitioning,
+    setCardIsExpanding,
     isExpanded,
     setIsExpanded,
     setDisableDragging,
@@ -27,9 +27,9 @@ export function useCardInteractions() {
       zoomLevel: state.zoomLevel,
       openedCard: state.openedCard,
       setOpenedCard: state.setOpenedCard,
-      cardIsTransitioning: state.cardIsTransitioning,
+      cardIsExpanding: state.cardIsExpanding,
       userHasInteracted: state.userHasInteracted,
-      setCardIsTransitioning: state.setCardIsTransitioning,
+      setCardIsExpanding: state.setCardIsExpanding,
       isExpanded: state.isExpanded,
       setIsExpanded: state.setIsExpanded,
       setDisableDragging: state.setDisableDragging,
@@ -43,7 +43,7 @@ export function useCardInteractions() {
 
   const handleLearnMore = useCallback(
     (card: VisibleCard) => {
-      if (openedCard !== null || cardIsTransitioning) return;
+      if (card.isFading || openedCard !== null || cardIsExpanding) return;
       if (!userHasInteracted) setShowMiddleFog(false);
       if (showGalleryFog) setShowGalleryFog(false);
       setOpenedCard(card);
@@ -97,17 +97,17 @@ export function useCardInteractions() {
         type: 'open',
         clickedCard,
         parentScale,
-        setCardIsTransitioning,
+        setCardIsExpanding,
         onTransitionEnd: () => {
           setIsExpanded(true);
-          setCardIsTransitioning(false);
+          setCardIsExpanding(false);
         },
         expandedCard: expandedCardRef.current
       });
     },
     [
       openedCard,
-      cardIsTransitioning,
+      cardIsExpanding,
       userHasInteracted,
       setShowMiddleFog,
       showGalleryFog,
@@ -115,7 +115,7 @@ export function useCardInteractions() {
       setOpenedCard,
       setDisableDragging,
       zoomLevel,
-      setCardIsTransitioning,
+      setCardIsExpanding,
       expandedCardRef,
       setIsExpanded
     ]
@@ -123,7 +123,7 @@ export function useCardInteractions() {
 
   const handleGalleryClick = useCallback(() => {
     if (!userHasInteracted) setUserHasInteracted(true);
-    if (openedCard === null || cardIsTransitioning || !isExpanded) return;
+    if (openedCard === null || cardIsExpanding || !isExpanded) return;
 
     const clickedCard = document.getElementById(`card-container-${openedCard.key}`);
     const cardContent = document.getElementById(`card-content-${openedCard.key}`);
@@ -151,17 +151,17 @@ export function useCardInteractions() {
       type: 'reposition',
       clickedCard,
       parentScale: parentScale,
-      setCardIsTransitioning,
+      setCardIsExpanding,
       onTransitionEnd: () => {
         handleCardElementTransition({
           type: 'close',
           clickedCard,
           parentScale: parentScale,
-          setCardIsTransitioning,
+          setCardIsExpanding,
           onTransitionEnd: () => {
             clickedCard.style.zIndex = '0';
             setDisableDragging(false);
-            setCardIsTransitioning(false);
+            setCardIsExpanding(false);
             setOpenedCard(null);
           },
           expandedCard: expandedCardRef.current
@@ -173,13 +173,13 @@ export function useCardInteractions() {
     userHasInteracted,
     setUserHasInteracted,
     openedCard,
-    cardIsTransitioning,
+    cardIsExpanding,
     isExpanded,
     showGalleryFog,
     setShowGalleryFog,
     setIsExpanded,
     zoomLevel,
-    setCardIsTransitioning,
+    setCardIsExpanding,
     expandedCardRef,
     setDisableDragging,
     setOpenedCard

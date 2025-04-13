@@ -25,8 +25,9 @@ const InfiniteCanvas = () => {
     position,
     zoomLevel,
     userHasInteracted,
-    learnMoreRef,
-    cardIsTransitioning
+    cardIsExpanding,
+    gridRef,
+    isTransitionEnabled
   } = useCanvasStore(
     useShallow((state: CanvasState) => ({
       containerRef: state.containerRef,
@@ -35,8 +36,9 @@ const InfiniteCanvas = () => {
       position: state.position,
       zoomLevel: state.zoomLevel,
       userHasInteracted: state.userHasInteracted,
-      learnMoreRef: state.learnMoreRef,
-      cardIsTransitioning: state.cardIsTransitioning
+      cardIsExpanding: state.cardIsExpanding,
+      gridRef: state.gridRef,
+      isTransitionEnabled: state.isTransitionEnabled
     }))
   );
 
@@ -44,7 +46,7 @@ const InfiniteCanvas = () => {
 
   useInitializeCards();
 
-  useCanvasActions();
+  const { centerToCard } = useCanvasActions();
 
   const { handleLearnMore, handleGalleryClick } = useCardInteractions();
 
@@ -71,7 +73,7 @@ const InfiniteCanvas = () => {
         <div
           ref={backgroundRef}
           id="background-dots"
-          className="absolute inset-0 z-[-1]"
+          className="absolute inset-0"
           style={{
             backgroundSize: `${DOT_BACKGROUND_SIZE}px ${DOT_BACKGROUND_SIZE}px`
           }}
@@ -86,8 +88,9 @@ const InfiniteCanvas = () => {
           Gallery
         </button>
         <div
+          ref={gridRef}
           id="canvas-grid"
-          className="relative select-none will-change-transform"
+          className={`${isTransitionEnabled ? 'transition-transform duration-[0.35s] ease-in-out' : ''} relative select-none will-change-transform`}
           style={{
             transform: `translate(${position.x}px, ${position.y}px) scale(${zoomLevel})`,
             transformOrigin: 'top left' // Align with coordinate system
@@ -97,6 +100,14 @@ const InfiniteCanvas = () => {
             const isMiddleCard = card.patternIndex === MIDDLE_CARD_INDEX;
             const scaleClass = isMiddleCard && !userHasInteracted ? `scale-[1.1] z-[1]` : '';
 
+            const handleCardClick = card.isFading
+              ? (e: React.MouseEvent<HTMLDivElement>) => {
+                  e.preventDefault();
+                }
+              : () => {
+                  centerToCard(card.x, card.y);
+                };
+
             return (
               <div
                 key={card.key}
@@ -105,15 +116,16 @@ const InfiniteCanvas = () => {
                   left: `${card.x}px`,
                   top: `${card.y}px`,
                   width: `${CARD_WIDTH}px`,
-                  height: `${CARD_HEIGHT}px`
+                  height: `${CARD_HEIGHT}px`,
+                  zIndex: card.isFading ? -1 : ''
                 }}
               >
                 <Card
                   card={card}
+                  onClick={handleCardClick}
                   onLearnMore={handleLearnMore}
                   userHasInteracted={userHasInteracted}
-                  className={`${scaleClass} ${cardIsTransitioning ? '' : 'hover:scale-[1.1]'}`}
-                  learnMoreRef={isMiddleCard ? learnMoreRef : undefined}
+                  className={`${scaleClass} ${cardIsExpanding ? '' : 'hover:scale-[1.1]'}`}
                 />
               </div>
             );

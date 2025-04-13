@@ -26,7 +26,10 @@ export function useCanvasActions() {
     openedCard,
     setDragging,
     setUserHasInteracted,
-    learnMoreRef
+    gridRef,
+    isTransitionEnabled,
+    setTransitionEnabled,
+    cardIsExpanding
   } = useCanvasStore(
     useShallow((state: CanvasState) => ({
       containerRef: state.containerRef,
@@ -40,10 +43,13 @@ export function useCanvasActions() {
       openedCard: state.openedCard,
       setDragging: state.setDragging,
       setUserHasInteracted: state.setUserHasInteracted,
-      learnMoreRef: state.learnMoreRef
+      gridRef: state.gridRef,
+      isTransitionEnabled: state.isTransitionEnabled,
+      setTransitionEnabled: state.setTransitionEnabled,
+      cardIsExpanding: state.cardIsExpanding
     }))
   );
-
+  const transitionTimerRef = useRef<NodeJS.Timeout>(null);
   const movementAccumulator = useRef({ x: 0, y: 0 });
   const lastTouchRef = useRef<{ x: number; y: number } | null>(null);
   const lastPinchDistanceRef = useRef<number | null>(null);
@@ -58,35 +64,6 @@ export function useCanvasActions() {
       }, 16)(); // ~60fps throttle
     },
     [setPosition]
-  );
-
-  const calculateCenterPosition = useCallback(
-    (cardIndex: number = -1): { x: number; y: number } => {
-      if (!containerRef.current) return { x: 0, y: 0 };
-
-      const totalWidth = GRID_COLUMNS * CARD_WIDTH + (GRID_COLUMNS - 1) * CARD_GAP;
-      const totalHeight = GRID_ROWS * CARD_HEIGHT + (GRID_ROWS - 1) * CARD_GAP;
-
-      // Center on the entire grid if no specific card index is provided
-      if (cardIndex === -1 || cardIndex === undefined) {
-        return {
-          x: -(totalWidth / 2) + window.innerWidth / 2,
-          y: -(totalHeight / 2) + window.innerHeight / 2
-        };
-      }
-
-      const column = cardIndex % GRID_COLUMNS;
-      const row = Math.floor(cardIndex / GRID_COLUMNS);
-      const cardCenterX = column * (CARD_WIDTH + CARD_GAP) + CARD_WIDTH / 2;
-      const cardCenterY = row * (CARD_HEIGHT + CARD_GAP) + CARD_HEIGHT / 2;
-
-      // Calculate position to center the specified card
-      return {
-        x: window.innerWidth / 2 - cardCenterX * zoomLevel,
-        y: window.innerHeight / 2 - cardCenterY * zoomLevel
-      };
-    },
-    [containerRef, zoomLevel]
   );
 
   // Helper to calculate the new zoom level and position based on a zoom event
@@ -120,22 +97,71 @@ export function useCanvasActions() {
     [] // No dependencies needed for this pure calculation function
   );
 
-  // ---- PANNING HANDLERS ----
+  // Function to center the view either on a specific card or the grid center
+  // Updated centerToCard function
+  const centerToCard = useCallback(
+    (cardX?: number, cardY?: number) => {
+      const gridElement = gridRef.current;
+      if (!gridElement || !containerRef.current || cardIsExpanding) return;
 
+      // Clear any pending transition timer
+      if (transitionTimerRef.current) {
+        clearTimeout(transitionTimerRef.current);
+        transitionTimerRef.current = null;
+      }
+
+      // Reset zoom level to 1
+      setZoomLevel(1);
+
+      const viewportWidth = containerRef.current.clientWidth;
+      const viewportHeight = containerRef.current.clientHeight;
+
+      let focusPointX: number;
+      let focusPointY: number;
+
+      if (cardX !== undefined && cardY !== undefined) {
+        focusPointX = cardX + CARD_WIDTH / 2;
+        focusPointY = cardY + CARD_HEIGHT / 2;
+        setTransitionEnabled(true);
+      } else {
+        // Center on the middle of the entire grid
+        const totalWidth = GRID_COLUMNS * CARD_WIDTH + (GRID_COLUMNS - 1) * CARD_GAP;
+        const totalHeight = GRID_ROWS * CARD_HEIGHT + (GRID_ROWS - 1) * CARD_GAP;
+        focusPointX = totalWidth / 2;
+        focusPointY = totalHeight / 2;
+      }
+
+      // Calculate target position using zoom level 1
+      const targetX = viewportWidth / 2 - focusPointX * 1;
+      const targetY = viewportHeight / 2 - focusPointY * 1;
+      setPosition({ x: targetX, y: targetY });
+
+      // Set a timer to disable the transition after it completes
+      if (cardX !== undefined && cardY !== undefined) {
+        transitionTimerRef.current = setTimeout(() => {
+          setTransitionEnabled(false);
+          transitionTimerRef.current = null;
+        }, 350);
+      }
+    },
+    [gridRef, containerRef, cardIsExpanding, setZoomLevel, setPosition, setTransitionEnabled]
+  );
+
+  // ---- PANNING HANDLERS ----
   const handleMouseDown = useCallback(
     (e: MouseEvent<HTMLDivElement>): void => {
       e.preventDefault(); // Prevent text selection and default drag behavior
-      if (disableDragging || e.button !== 0) return; // Only allow left click for drag
-      if (!userHasInteracted && e.target !== learnMoreRef.current) setUserHasInteracted(true);
+      if (disableDragging || e.button !== 0 || cardIsExpanding) return; // Only allow left click for drag
+      if (!userHasInteracted) setUserHasInteracted(true);
       setDragging(true);
       movementAccumulator.current = { x: 0, y: 0 };
     },
-    [disableDragging, userHasInteracted, learnMoreRef, setUserHasInteracted, setDragging]
+    [disableDragging, cardIsExpanding, userHasInteracted, setUserHasInteracted, setDragging]
   );
 
   const handleMouseMove = useCallback(
     (e: MouseEvent<HTMLDivElement>): void => {
-      if (dragging) {
+      if (dragging && !isTransitionEnabled) {
         movementAccumulator.current.x += e.movementX;
         movementAccumulator.current.y += e.movementY;
         throttledSetPosition({
@@ -144,7 +170,7 @@ export function useCanvasActions() {
         });
       }
     },
-    [dragging, position, throttledSetPosition]
+    [dragging, isTransitionEnabled, position.x, position.y, throttledSetPosition]
   );
 
   const handleMouseUpOrLeave = useCallback((): void => {
@@ -163,9 +189,17 @@ export function useCanvasActions() {
   const handleTouchStart = useCallback(
     (e: TouchEvent<HTMLDivElement>): void => {
       e.preventDefault();
+      if (isTransitionEnabled) {
+        if (transitionTimerRef.current) {
+          clearTimeout(transitionTimerRef.current);
+          transitionTimerRef.current = null;
+        }
+        setTransitionEnabled(false);
+        return;
+      }
 
+      if (disableDragging || isTransitionEnabled) return;
       if (!userHasInteracted) setUserHasInteracted(true);
-      if (disableDragging) return;
 
       if (e.touches.length === 2) {
         // Pinch start
@@ -187,13 +221,20 @@ export function useCanvasActions() {
         movementAccumulator.current = { x: 0, y: 0 };
       }
     },
-    [disableDragging, setDragging, userHasInteracted, setUserHasInteracted]
+    [
+      isTransitionEnabled,
+      disableDragging,
+      userHasInteracted,
+      setUserHasInteracted,
+      setTransitionEnabled,
+      setDragging
+    ]
   );
 
   const handleTouchMove = useCallback(
     (e: TouchEvent<HTMLDivElement>): void => {
       e.preventDefault();
-      if (openedCard !== null) return;
+      if (openedCard !== null || isTransitionEnabled) return;
 
       // Handle pinch-to-zoom
       if (e.touches.length === 2 && lastTouchRef.current && lastPinchDistanceRef.current !== null) {
@@ -237,14 +278,15 @@ export function useCanvasActions() {
       }
     },
     [
-      dragging,
-      position,
-      zoomLevel,
       openedCard,
+      isTransitionEnabled,
+      dragging,
+      calculateZoomUpdate,
+      zoomLevel,
+      position,
       setPosition,
       setZoomLevel,
-      throttledSetPosition,
-      calculateZoomUpdate
+      throttledSetPosition
     ]
   );
 
@@ -284,7 +326,7 @@ export function useCanvasActions() {
     (e: WheelEvent): void => {
       e.preventDefault(); // Prevent default browser scroll/zoom
 
-      if (openedCard !== null) return;
+      if (openedCard !== null || isTransitionEnabled) return;
 
       if (!userHasInteracted) setUserHasInteracted(true);
 
@@ -314,16 +356,17 @@ export function useCanvasActions() {
       }
     },
     [
+      openedCard,
+      isTransitionEnabled,
+      userHasInteracted,
+      setUserHasInteracted,
+      disableDragging,
+      calculateZoomUpdate,
       zoomLevel,
       position,
-      openedCard,
-      disableDragging,
       setPosition,
       setZoomLevel,
-      throttledSetPosition,
-      calculateZoomUpdate,
-      userHasInteracted,
-      setUserHasInteracted
+      throttledSetPosition
     ]
   );
 
@@ -384,19 +427,21 @@ export function useCanvasActions() {
 
   // Center the canvas initially
   useEffect(() => {
-    const centerPos = calculateCenterPosition();
-    setPosition(centerPos);
+    centerToCard();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Run only once on mount
 
   // Recenter the canvas on window resize
   useEffect(() => {
     const handleResize = () => {
-      const newCenterPos = calculateCenterPosition();
-      setPosition(newCenterPos);
+      centerToCard();
     };
 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [calculateCenterPosition, setPosition]);
+  }, [centerToCard]);
+
+  return {
+    centerToCard
+  };
 }

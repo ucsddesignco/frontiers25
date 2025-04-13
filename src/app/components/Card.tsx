@@ -4,10 +4,10 @@ import { APPLY_LINK } from './constants';
 
 interface CardProps {
   card: VisibleCard;
+  onClick: (e: React.MouseEvent<HTMLDivElement>) => void;
   onLearnMore: (card: VisibleCard) => void;
   userHasInteracted: boolean;
   className?: string;
-  learnMoreRef: React.RefObject<HTMLButtonElement | null> | undefined;
 }
 
 const NAV_BUTTONS = [
@@ -16,12 +16,19 @@ const NAV_BUTTONS = [
   { id: 'judges', label: 'Judges' }
 ];
 
-const Card: React.FC<CardProps> = ({ card, onLearnMore, className = '', learnMoreRef }) => {
+const Card: React.FC<CardProps> = ({ card, onClick, onLearnMore, className = '' }) => {
+  // Calculate opacity for fading cards
+  const opacity = card.isFading
+    ? Math.max(0, 1 - (Date.now() - (card.fadeStartTime || 0)) / 300)
+    : 1;
+
   return (
     <>
       <div
         id={`card-container-${card.key}`}
-        className={`${className} relative z-[0] h-full transition-[transform] duration-[0.2s] ease-out`}
+        onClick={onClick}
+        className={`${className} relative z-[0] h-full transition-[transform,opacity] duration-[0.2s] ease-out`}
+        style={{ opacity }}
       >
         <div className="relative h-full">
           <div
@@ -61,11 +68,11 @@ const Card: React.FC<CardProps> = ({ card, onLearnMore, className = '', learnMor
               </p>
               <div className="relative flex w-full justify-center">
                 <button
-                  onClick={() => {
+                  onClick={e => {
+                    e.stopPropagation();
                     onLearnMore(card);
                   }}
                   style={{ backgroundColor: card.buttonColor }}
-                  ref={learnMoreRef}
                   className="learn-more w-full rounded-full p-2 transition-[transform,opacity] duration-[300ms,200ms] ease-in-out"
                 >
                   Learn More
@@ -89,7 +96,8 @@ const Card: React.FC<CardProps> = ({ card, onLearnMore, className = '', learnMor
                 ))}
               </div>
               <button
-                onClick={() => {
+                onClick={e => {
+                  e.stopPropagation();
                   window.open(APPLY_LINK, '_blank');
                 }}
                 style={{ color: card.buttonColor }}

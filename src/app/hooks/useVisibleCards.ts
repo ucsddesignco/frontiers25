@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 import { CardType } from '../components/constants';
 import {
   GRID_COLUMNS,
@@ -33,7 +33,12 @@ export type VisibleCard = CardType & {
   virtualRow: number;
   patternIndex: number;
   key: string;
+  isFading?: boolean;
+  fadeStartTime?: number;
 };
+
+// The duration cards will linger after they leave the viewport
+const FADE_DURATION_MS = 250;
 
 export const useVisibleCards = ({
   basePattern,
@@ -41,13 +46,17 @@ export const useVisibleCards = ({
   zoomLevel,
   viewportSize
 }: UseVisibleCardsProps): VisibleCard[] => {
+  const prevVisibleCardsRef = useRef<Record<string, VisibleCard>>({});
+  // Ref to track the current timestamp for cleanup calculations
+  const nowRef = useRef<number>(Date.now());
+
   return useMemo(() => {
     if (!basePattern.length || !viewportSize.width || !viewportSize.height || zoomLevel <= 0)
       return [];
 
-    // Disable buffer when zoomed out significantly to improve performance
-    const zoomThreshold = 0.75;
-    const renderBuffer = zoomLevel >= zoomThreshold ? 1 : 0; // Buffer is used to reduce pop-in
+    nowRef.current = Date.now();
+
+    const renderBuffer = zoomLevel <= 1 ? 0 : 1;
 
     const effectiveCardWidth = CARD_WIDTH + CARD_GAP;
     const effectiveCardHeight = CARD_HEIGHT + CARD_GAP;
@@ -64,6 +73,7 @@ export const useVisibleCards = ({
     const endRow = Math.ceil(viewBottom / effectiveCardHeight) + renderBuffer;
 
     const cardsToRender: VisibleCard[] = [];
+    const currentlyVisibleKeys = new Set<string>();
 
     // Iterate over the visible virtual grid range
     for (let row = startRow; row < endRow; row++) {
@@ -77,6 +87,7 @@ export const useVisibleCards = ({
           const cardData = basePattern[patternIndex];
           const cardX = col * effectiveCardWidth;
           const cardY = row * effectiveCardHeight;
+          const cardKey = `${cardData.id}-${col}-${row}`;
 
           cardsToRender.push({
             ...cardData,
@@ -85,11 +96,42 @@ export const useVisibleCards = ({
             virtualCol: col,
             virtualRow: row,
             patternIndex: patternIndex,
-            key: `${cardData.id}-${col}-${row}`
+            key: cardKey
           });
+
+          currentlyVisibleKeys.add(cardKey);
         }
       }
     }
+
+    // Create a new map of previous cards
+    // This is used to fade out cards which is important to make centerToCard look smooth
+    const newPrevVisibleCards: Record<string, VisibleCard> = {};
+
+    // Add fading cards that were previously visible but not currently visible
+    Object.values(prevVisibleCardsRef.current).forEach(prevCard => {
+      if (!currentlyVisibleKeys.has(prevCard.key)) {
+        if (!prevCard.isFading) {
+          prevCard.isFading = true;
+          prevCard.fadeStartTime = nowRef.current;
+        }
+
+        const fadeTime = nowRef.current - (prevCard.fadeStartTime || 0);
+        if (fadeTime < FADE_DURATION_MS) {
+          cardsToRender.push(prevCard);
+          newPrevVisibleCards[prevCard.key] = prevCard;
+        }
+      }
+    });
+
+    cardsToRender
+      .filter(card => !card.isFading)
+      .forEach(card => {
+        newPrevVisibleCards[card.key] = card;
+      });
+
+    prevVisibleCardsRef.current = newPrevVisibleCards;
+
     return cardsToRender;
   }, [basePattern, position, zoomLevel, viewportSize]);
 };

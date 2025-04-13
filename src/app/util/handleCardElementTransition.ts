@@ -8,7 +8,7 @@ type HandleCardElementTransitionProps = {
   type: 'open' | 'close' | 'reposition';
   reverse?: boolean;
   onTransitionEnd: () => void;
-  setCardIsTransitioning: (isTransitioning: boolean) => void;
+  setCardIsExpanding: (isTransitioning: boolean) => void;
   expandedCard: HTMLElement | null;
 };
 
@@ -17,11 +17,11 @@ export function handleCardElementTransition({
   parentScale = 1,
   clickedCard,
   onTransitionEnd,
-  setCardIsTransitioning,
+  setCardIsExpanding,
   expandedCard
 }: HandleCardElementTransitionProps) {
   const initialElements = calculateTransitionValues(clickedCard, parentScale, expandedCard);
-  setCardIsTransitioning(true);
+  setCardIsExpanding(true);
 
   if (type === 'open') {
     const navElements = initialElements.filter(element => element.type === 'nav');

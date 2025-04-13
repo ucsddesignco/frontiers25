@@ -39,7 +39,7 @@ function Fog() {
       <div
         style={{
           opacity: showGalleryFog ? 1 : 0,
-          transitionDuration: showGalleryFog ? '1200ms' : '500ms'
+          transitionDuration: showGalleryFog ? '1200ms' : '600ms'
         }}
         id="persistent-fog"
         className={`pointer-events-none fixed inset-0 z-[1] transition-[opacity] ease-in-out`}
