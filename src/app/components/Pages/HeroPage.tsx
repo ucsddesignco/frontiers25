@@ -48,7 +48,7 @@ export default function HeroPage({ scrollToSection, showExpanded }: HeroPageProp
             <button
               key={'expanded-button-' + id}
               onClick={() => scrollToSection(id as SectionId)}
-              className="relative rounded-[51px] bg-[var(--card-button-color)] px-6 py-2 outline-dashed outline-[2px] outline-[var(--card-accent-color)]"
+              className="relative cursor-pointer rounded-[51px] bg-[var(--card-button-color)] px-6 py-2 outline-dashed outline-[2px] outline-[var(--card-accent-color)]"
             >
               <span
                 className={`${id}-bg absolute inset-0 z-[0] rounded-full bg-[var(--card-button-color)] transition-[transform,width] duration-card ease-in-out`}
@@ -66,7 +66,7 @@ export default function HeroPage({ scrollToSection, showExpanded }: HeroPageProp
           onClick={() => {
             window.open(APPLY_LINK, '_blank');
           }}
-          className="relative rounded-full p-2 transition-transform duration-card ease-in-out"
+          className="relative cursor-pointer rounded-full p-2 transition-transform duration-card ease-in-out"
         >
           <span className="apply-bg absolute inset-0 z-[0] h-full w-full rounded-full bg-[var(--card-accent-color)] transition-[transform,width] duration-card ease-in-out"></span>
           <span className="apply-text relative z-[1] mx-auto block w-fit text-[var(--card-primary-color)] transition-transform duration-card ease-in-out">

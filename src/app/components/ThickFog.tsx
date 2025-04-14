@@ -13,7 +13,6 @@ function ThickFog({
     requestAnimationFrame(() => {
       if (fogRef.current) {
         if (status === 'previous') {
-          console.log('weee previous');
           fogRef.current.style.opacity = '0';
         } else {
           fogRef.current.style.opacity = '1';

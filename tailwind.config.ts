@@ -15,6 +15,12 @@ export default {
       transitionDuration: {
         card: 'var(--card-duration)',
         'card-half': 'calc(var(--card-duration) / 2)'
+      },
+      cursor: {
+        auto: "url('/default-cursor.svg') 6 6, auto",
+        pointer: "url('/default-cursor.svg') 6 6, pointer", // temporary
+        grab: "url('/grab-cursor.svg') 6 6, grab",
+        grabbing: "url('/grabbing-cursor.svg') 6 6, grabbing"
       }
     }
   },

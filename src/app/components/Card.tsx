@@ -71,7 +71,7 @@ const Card: React.FC<CardProps> = ({ card, onClick, onMouseDown, onLearnMore, cl
                 <button
                   onClick={onLearnMore}
                   style={{ backgroundColor: card.buttonColor }}
-                  className="learn-more w-full rounded-full p-2 transition-[transform,opacity] duration-[300ms,200ms] ease-in-out"
+                  className="learn-more w-full cursor-pointer rounded-full p-2 transition-[transform,opacity] duration-[300ms,200ms] ease-in-out"
                 >
                   Learn More
                 </button>
@@ -79,7 +79,7 @@ const Card: React.FC<CardProps> = ({ card, onClick, onMouseDown, onLearnMore, cl
                 {NAV_BUTTONS.map(({ id, label }) => (
                   <button
                     key={'card-button-' + id}
-                    className="pointer-events-none absolute rounded-full px-6 py-2"
+                    className="pointer-events-none absolute cursor-pointer rounded-full px-6 py-2"
                   >
                     <span
                       style={{ backgroundColor: card.buttonColor, outlineColor: card.accent }}
@@ -99,7 +99,7 @@ const Card: React.FC<CardProps> = ({ card, onClick, onMouseDown, onLearnMore, cl
                   window.open(APPLY_LINK, '_blank');
                 }}
                 style={{ color: card.buttonColor }}
-                className="apply relative rounded-full p-2 transition-transform duration-card ease-in-out"
+                className="apply relative cursor-pointer rounded-full p-2 transition-transform duration-card ease-in-out"
               >
                 <span
                   style={{ backgroundColor: card.accent }}

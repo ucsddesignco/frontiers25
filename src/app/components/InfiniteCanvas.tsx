@@ -91,7 +91,7 @@ const InfiniteCanvas = () => {
           onMouseDown={e => {
             e.stopPropagation();
           }}
-          className="fixed left-6 top-5 z-[10] flex select-none items-center gap-1 rounded-full bg-[#2E2437] px-5 py-[0.625rem] text-lg text-white sm:left-12 sm:top-10"
+          className="fixed left-6 top-5 z-[10] flex cursor-pointer select-none items-center gap-1 rounded-full bg-[#2E2437] px-5 py-[0.625rem] text-lg text-white sm:left-12 sm:top-10"
         >
           <span>
             <GalleryIcon />
@@ -120,7 +120,6 @@ const InfiniteCanvas = () => {
                 }
               : () => {
                   if (!didDrag && selectedCard !== card.patternIndex) {
-                    console.log('centering card and selecting it');
                     // We keep track of current too in case user pans canvas and selectCard is null
                     previousSelectedCards.current = [selectedCard, card.patternIndex];
                     centerToCard(card.x, card.y);

@@ -22,6 +22,9 @@ body {
   color: var(--foreground);
   background: var(--background);
   overflow: hidden;
+  cursor:
+    url('/default-cursor.svg') 6 6,
+    auto;
 }
 img,
 picture,
