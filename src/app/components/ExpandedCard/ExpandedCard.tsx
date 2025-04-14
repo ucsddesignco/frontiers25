@@ -12,13 +12,13 @@ import { useShallow } from 'zustand/shallow';
 export type SectionId = 'faq' | 'agenda' | 'judges';
 
 type ExpandedCardProps = {
-  isExpanded: boolean;
+  showExpanded: boolean;
 };
 
-const ExpandedCardComponent = ({ isExpanded }: ExpandedCardProps) => {
-  const { openedCard, expandedCardRef } = useCanvasStore(
+const ExpandedCardComponent = ({ showExpanded }: ExpandedCardProps) => {
+  const { expandedCard, expandedCardRef } = useCanvasStore(
     useShallow(state => ({
-      openedCard: state.openedCard,
+      expandedCard: state.expandedCard,
       expandedCardRef: state.expandedCardRef
     }))
   );
@@ -53,7 +53,7 @@ const ExpandedCardComponent = ({ isExpanded }: ExpandedCardProps) => {
     const expandedCard = expandedCardRef.current;
     if (!expandedCard) return;
 
-    if (!isExpanded) {
+    if (!showExpanded) {
       expandedCard.style.transitionProperty = 'opacity';
       return;
     }
@@ -70,7 +70,7 @@ const ExpandedCardComponent = ({ isExpanded }: ExpandedCardProps) => {
       expandedCard.addEventListener('scroll', handleScroll);
       return () => expandedCard.removeEventListener('scroll', handleScroll);
     }
-  }, [isExpanded, expandedCardRef]);
+  }, [showExpanded, expandedCardRef]);
 
   return (
     <>
@@ -79,22 +79,22 @@ const ExpandedCardComponent = ({ isExpanded }: ExpandedCardProps) => {
         id="card-content-expanded"
         style={
           {
-            '--card-primary-color': openedCard?.primary,
-            '--card-accent-color': openedCard?.accent,
-            '--card-button-color': openedCard?.buttonColor,
-            '--card-border-color': openedCard?.borderColor,
-            '--card-scrollbar-color': openedCard?.scrollbarColor,
-            color: openedCard?.accent,
-            backgroundColor: !isExpanded ? 'transparent' : openedCard?.primary
+            '--card-primary-color': expandedCard?.primary,
+            '--card-accent-color': expandedCard?.accent,
+            '--card-button-color': expandedCard?.buttonColor,
+            '--card-border-color': expandedCard?.borderColor,
+            '--card-scrollbar-color': expandedCard?.scrollbarColor,
+            color: expandedCard?.accent,
+            backgroundColor: !showExpanded ? 'transparent' : expandedCard?.primary
           } as React.CSSProperties
         }
-        className={`${isExpanded ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'} absolute z-[1] mx-auto h-full w-full overflow-y-scroll transition-opacity duration-[0.2s] ease-in-out`}
+        className={`${showExpanded ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'} absolute z-[1] mx-auto h-full w-full overflow-y-scroll transition-opacity duration-[0.2s] ease-in-out`}
       >
-        <HeroPage scrollToSection={scrollToSection} isExpanded={isExpanded} />
-        {/* It is necessary for these pages to have isExpanded so that they continue to fade even when scrolling */}
-        <FAQPage ref={faqRef} isExpanded={isExpanded} />
-        <AgendaPage ref={agendaRef} isExpanded={isExpanded} />
-        <JudgesPage ref={judgesRef} isExpanded={isExpanded} />
+        <HeroPage scrollToSection={scrollToSection} showExpanded={showExpanded} />
+        {/* It is necessary for these pages to have showExpanded so that they continue to fade even when scrolling */}
+        <FAQPage ref={faqRef} showExpanded={showExpanded} />
+        <AgendaPage ref={agendaRef} showExpanded={showExpanded} />
+        <JudgesPage ref={judgesRef} showExpanded={showExpanded} />
       </div>
     </>
   );

@@ -9,45 +9,34 @@ import { VisibleCard } from './useVisibleCards';
 export function useCardInteractions() {
   const {
     zoomLevel,
-    openedCard,
+    expandedCard,
     cardIsExpanding,
-    userHasInteracted,
-    setOpenedCard,
+    setExpandedCard,
     setCardIsExpanding,
-    isExpanded,
-    setIsExpanded,
-    setDisableDragging,
-    setUserHasInteracted,
-    setShowMiddleFog,
-    showGalleryFog,
-    setShowGalleryFog,
+    showExpanded,
+    setShowExpanded,
+    showLightFog,
+    setShowLightFog,
     expandedCardRef
   } = useCanvasStore(
     useShallow((state: CanvasState) => ({
       zoomLevel: state.zoomLevel,
-      openedCard: state.openedCard,
-      setOpenedCard: state.setOpenedCard,
+      expandedCard: state.expandedCard,
+      setExpandedCard: state.setExpandedCard,
       cardIsExpanding: state.cardIsExpanding,
-      userHasInteracted: state.userHasInteracted,
       setCardIsExpanding: state.setCardIsExpanding,
-      isExpanded: state.isExpanded,
-      setIsExpanded: state.setIsExpanded,
-      setDisableDragging: state.setDisableDragging,
-      setUserHasInteracted: state.setUserHasInteracted,
-      setShowMiddleFog: state.setShowMiddleFog,
-      showGalleryFog: state.showGalleryFog,
-      setShowGalleryFog: state.setShowGalleryFog,
+      showExpanded: state.showExpanded,
+      setShowExpanded: state.setShowExpanded,
+      showLightFog: state.showLightFog,
+      setShowLightFog: state.setShowLightFog,
       expandedCardRef: state.expandedCardRef
     }))
   );
 
   const handleLearnMore = useCallback(
     (card: VisibleCard) => {
-      if (card.isFading || openedCard !== null || cardIsExpanding) return;
-      if (!userHasInteracted) setShowMiddleFog(false);
-      if (showGalleryFog) setShowGalleryFog(false);
-      setOpenedCard(card);
-      setDisableDragging(true);
+      if (card.isFading || expandedCard !== null || cardIsExpanding) return;
+      if (showLightFog) setShowLightFog(false);
 
       const clickedCard = document.getElementById(`card-container-${card.key}`);
       const cardContent = document.getElementById(`card-content-${card.key}`);
@@ -56,7 +45,9 @@ export function useCardInteractions() {
 
       if (!canvasGrid || !clickedCard || !cardBg || !cardContent) return;
 
-      clickedCard.style.zIndex = '1';
+      setExpandedCard(card);
+
+      clickedCard.style.zIndex = '3';
       const hoverScale = 1.1;
       // Maintain hover scale while transitioning
       clickedCard.style.transform = `scale(${hoverScale})`;
@@ -99,46 +90,42 @@ export function useCardInteractions() {
         parentScale,
         setCardIsExpanding,
         onTransitionEnd: () => {
-          setIsExpanded(true);
+          setShowExpanded(true);
           setCardIsExpanding(false);
         },
         expandedCard: expandedCardRef.current
       });
     },
     [
-      openedCard,
+      expandedCard,
       cardIsExpanding,
-      userHasInteracted,
-      setShowMiddleFog,
-      showGalleryFog,
-      setShowGalleryFog,
-      setOpenedCard,
-      setDisableDragging,
+      showLightFog,
+      setShowLightFog,
+      setExpandedCard,
       zoomLevel,
       setCardIsExpanding,
       expandedCardRef,
-      setIsExpanded
+      setShowExpanded
     ]
   );
 
   const handleGalleryClick = useCallback(() => {
-    if (!userHasInteracted) setUserHasInteracted(true);
-    if (openedCard === null || cardIsExpanding || !isExpanded) return;
+    if (expandedCard === null || cardIsExpanding || !showExpanded) return;
 
-    const clickedCard = document.getElementById(`card-container-${openedCard.key}`);
-    const cardContent = document.getElementById(`card-content-${openedCard.key}`);
-    const cardBg = document.getElementById(`card-bg-${openedCard.key}`);
+    const clickedCard = document.getElementById(`card-container-${expandedCard.key}`);
+    const cardContent = document.getElementById(`card-content-${expandedCard.key}`);
+    const cardBg = document.getElementById(`card-bg-${expandedCard.key}`);
 
     if (!clickedCard || !cardBg || !cardContent) return;
 
-    if (!showGalleryFog) setShowGalleryFog(true);
+    if (!showLightFog) setShowLightFog(true);
 
     cardContent.style.transition = 'none';
     cardContent.style.opacity = '1';
     cardBg.style.transform = 'scale(1)';
     clickedCard.style.transform = '';
 
-    setIsExpanded(false);
+    setShowExpanded(false);
 
     let parentScale = parseFloat(window.getComputedStyle(clickedCard).transform.split(',')[3]) || 1;
 
@@ -159,10 +146,9 @@ export function useCardInteractions() {
           parentScale: parentScale,
           setCardIsExpanding,
           onTransitionEnd: () => {
-            clickedCard.style.zIndex = '0';
-            setDisableDragging(false);
+            clickedCard.style.zIndex = '';
             setCardIsExpanding(false);
-            setOpenedCard(null);
+            setExpandedCard(null);
           },
           expandedCard: expandedCardRef.current
         });
@@ -170,19 +156,16 @@ export function useCardInteractions() {
       expandedCard: expandedCardRef.current
     });
   }, [
-    userHasInteracted,
-    setUserHasInteracted,
-    openedCard,
+    expandedCard,
     cardIsExpanding,
-    isExpanded,
-    showGalleryFog,
-    setShowGalleryFog,
-    setIsExpanded,
+    showExpanded,
+    showLightFog,
+    setShowLightFog,
+    setShowExpanded,
     zoomLevel,
     setCardIsExpanding,
     expandedCardRef,
-    setDisableDragging,
-    setOpenedCard
+    setExpandedCard
   ]);
 
   return {

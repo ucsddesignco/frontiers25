@@ -9,8 +9,6 @@ export interface CanvasState {
   position: { x: number; y: number };
   zoomLevel: number;
   dragging: boolean;
-  disableDragging: boolean;
-  userHasInteracted: boolean;
   didDrag: boolean;
 
   // Refs
@@ -18,29 +16,29 @@ export interface CanvasState {
   gridRef: RefObject<HTMLDivElement | null>;
   expandedCardRef: RefObject<HTMLDivElement | null>;
 
-  openedCard: VisibleCard | null;
+  selectedCard: number | null; // pattern index of the selected card
+  expandedCard: VisibleCard | null;
   basePattern: CardType[];
-  isExpanded: boolean;
+  showExpanded: boolean;
   cardIsExpanding: boolean;
   showMiddleFog: boolean;
-  showGalleryFog: boolean;
+  showLightFog: boolean;
   isTransitionEnabled: boolean;
 
   // Canvas actions
   setPosition: (position: { x: number; y: number }) => void;
   setZoomLevel: (level: number) => void;
   setDragging: (dragging: boolean) => void;
-  setDisableDragging: (disable: boolean) => void;
-  setUserHasInteracted: (interacted: boolean) => void;
   setDidDrag: (didDrag: boolean) => void;
   setShowMiddleFog: (show: boolean) => void;
-  setShowGalleryFog: (show: boolean) => void;
+  setShowLightFog: (show: boolean) => void;
   setTransitionEnabled: (enabled: boolean) => void;
 
   // Card actions
-  setOpenedCard: (card: VisibleCard | null) => void;
+  setSelectedCard: (cardKey: number | null) => void;
+  setExpandedCard: (card: VisibleCard | null) => void;
   setBasePattern: (pattern: CardType[]) => void;
-  setIsExpanded: (show: boolean) => void;
+  setShowExpanded: (show: boolean) => void;
   setCardIsExpanding: (transitioning: boolean) => void;
 }
 
@@ -49,11 +47,9 @@ export const useCanvasStore = create<CanvasState>((set, _get) => ({
   position: { x: 0, y: 0 },
   zoomLevel: 1,
   dragging: false,
-  disableDragging: false,
-  userHasInteracted: false,
   didDrag: false,
   showMiddleFog: true,
-  showGalleryFog: true,
+  showLightFog: true,
   isTransitionEnabled: false,
 
   // Refs
@@ -62,23 +58,23 @@ export const useCanvasStore = create<CanvasState>((set, _get) => ({
   expandedCardRef: createRef<HTMLDivElement>(),
 
   basePattern: [],
-  openedCard: null,
-  isExpanded: false,
+  selectedCard: null,
+  expandedCard: null,
+  showExpanded: false,
   cardIsExpanding: false,
 
   // Actions to update state
   setPosition: position => set({ position }),
   setShowMiddleFog: showMiddleFog => set({ showMiddleFog }),
-  setShowGalleryFog: showGalleryFog => set({ showGalleryFog }),
+  setShowLightFog: showLightFog => set({ showLightFog }),
   setZoomLevel: zoomLevel => set({ zoomLevel }),
   setDragging: dragging => set({ dragging }),
-  setDisableDragging: disableDragging => set({ disableDragging }),
-  setUserHasInteracted: userHasInteracted => set({ userHasInteracted }),
   setDidDrag: didDrag => set({ didDrag }),
 
   setBasePattern: basePattern => set({ basePattern }),
-  setOpenedCard: openedCard => set({ openedCard }),
+  setSelectedCard: selectedCard => set({ selectedCard }),
+  setExpandedCard: expandedCard => set({ expandedCard }),
   setCardIsExpanding: cardIsExpanding => set({ cardIsExpanding }),
-  setIsExpanded: isExpanded => set({ isExpanded }),
+  setShowExpanded: showExpanded => set({ showExpanded }),
   setTransitionEnabled: enabled => set({ isTransitionEnabled: enabled })
 }));

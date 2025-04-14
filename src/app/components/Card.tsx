@@ -5,8 +5,8 @@ import { APPLY_LINK } from './constants';
 interface CardProps {
   card: VisibleCard;
   onClick: (e: React.MouseEvent<HTMLDivElement>) => void;
-  onLearnMore: (card: VisibleCard) => void;
-  userHasInteracted: boolean;
+  onMouseDown?: (e: React.MouseEvent<HTMLDivElement>) => void;
+  onLearnMore: (e: React.MouseEvent<HTMLButtonElement>) => void;
   className?: string;
 }
 
@@ -16,7 +16,7 @@ const NAV_BUTTONS = [
   { id: 'judges', label: 'Judges' }
 ];
 
-const Card: React.FC<CardProps> = ({ card, onClick, onLearnMore, className = '' }) => {
+const Card: React.FC<CardProps> = ({ card, onClick, onMouseDown, onLearnMore, className = '' }) => {
   // Calculate opacity for fading cards
   const opacity = card.isFading
     ? Math.max(0, 1 - (Date.now() - (card.fadeStartTime || 0)) / 300)
@@ -27,6 +27,7 @@ const Card: React.FC<CardProps> = ({ card, onClick, onLearnMore, className = '' 
       <div
         id={`card-container-${card.key}`}
         onClick={onClick}
+        onMouseDown={onMouseDown}
         className={`${className} relative z-[0] h-full cursor-pointer transition-[transform,opacity] duration-[0.2s] ease-out`}
         style={{ opacity }}
       >
@@ -68,10 +69,7 @@ const Card: React.FC<CardProps> = ({ card, onClick, onLearnMore, className = '' 
               </p>
               <div className="relative flex w-full justify-center">
                 <button
-                  onClick={e => {
-                    e.stopPropagation();
-                    onLearnMore(card);
-                  }}
+                  onClick={onLearnMore}
                   style={{ backgroundColor: card.buttonColor }}
                   className="learn-more w-full rounded-full p-2 transition-[transform,opacity] duration-[300ms,200ms] ease-in-out"
                 >
@@ -117,7 +115,7 @@ const Card: React.FC<CardProps> = ({ card, onClick, onLearnMore, className = '' 
             </div>
           </div>
         </div>
-        <p className="mt-2 text-center text-sm text-[#666666]">
+        <p className="pt-2 text-center text-sm text-[#666666]">
           Made by {card.author}
           <span className="ml-3 text-xs">{card.lastUpdated}</span>
         </p>

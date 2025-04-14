@@ -3,7 +3,7 @@ import { SectionId } from '../ExpandedCard/ExpandedCard';
 
 type HeroPageProps = {
   scrollToSection: (id: SectionId) => void;
-  isExpanded: boolean;
+  showExpanded: boolean;
 };
 
 const NAV_BUTTONS = [
@@ -12,10 +12,10 @@ const NAV_BUTTONS = [
   { id: 'judges', label: 'Judges' }
 ];
 
-export default function HeroPage({ scrollToSection, isExpanded }: HeroPageProps) {
+export default function HeroPage({ scrollToSection, showExpanded }: HeroPageProps) {
   return (
     <section
-      className={`${isExpanded ? 'opacity-100' : 'opacity-0'} hero-page mx-auto flex h-screen w-full max-w-[40rem] flex-col items-center justify-center pb-24 transition-none lg:text-lg`}
+      className={`${showExpanded ? 'opacity-100' : 'opacity-0'} hero-page mx-auto flex h-screen w-full max-w-[40rem] flex-col items-center justify-center pb-24 transition-none lg:text-lg`}
     >
       <svg
         className="svg transition-transform duration-card ease-in-out"

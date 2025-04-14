@@ -8,6 +8,7 @@ export const CARD_GAP = 100; // px
 export const DOT_BACKGROUND_SIZE = 100; // px
 export const APPLY_LINK = 'https://ucsddesign.co/';
 export const DRAG_THRESHOLD = 5; // px
+export const MIDDLE_CARD_INDEX = Math.floor((GRID_COLUMNS * GRID_ROWS) / 2);
 
 export type CardType = {
   id: string;

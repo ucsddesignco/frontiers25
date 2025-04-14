@@ -8,7 +8,8 @@ import {
   CARD_GAP,
   MIN_ZOOM,
   MAX_ZOOM,
-  DRAG_THRESHOLD
+  DRAG_THRESHOLD,
+  MIDDLE_CARD_INDEX
 } from '../components/constants';
 import { throttle } from '../util/throttle';
 import { useShallow } from 'zustand/shallow';
@@ -20,38 +21,36 @@ export function useCanvasActions() {
     position,
     zoomLevel,
     dragging,
-    disableDragging,
-    userHasInteracted,
     didDrag,
     setPosition,
     setZoomLevel,
-    openedCard,
+    expandedCard,
     setDragging,
     setDidDrag,
-    setUserHasInteracted,
     gridRef,
     isTransitionEnabled,
     setTransitionEnabled,
-    cardIsExpanding
+    cardIsExpanding,
+    setSelectedCard,
+    selectedCard
   } = useCanvasStore(
     useShallow((state: CanvasState) => ({
       containerRef: state.containerRef,
       position: state.position,
       zoomLevel: state.zoomLevel,
       dragging: state.dragging,
-      disableDragging: state.disableDragging,
-      userHasInteracted: state.userHasInteracted,
       didDrag: state.didDrag,
       setPosition: state.setPosition,
       setZoomLevel: state.setZoomLevel,
-      openedCard: state.openedCard,
+      expandedCard: state.expandedCard,
       setDragging: state.setDragging,
       setDidDrag: state.setDidDrag,
-      setUserHasInteracted: state.setUserHasInteracted,
       gridRef: state.gridRef,
       isTransitionEnabled: state.isTransitionEnabled,
       setTransitionEnabled: state.setTransitionEnabled,
-      cardIsExpanding: state.cardIsExpanding
+      cardIsExpanding: state.cardIsExpanding,
+      setSelectedCard: state.setSelectedCard,
+      selectedCard: state.selectedCard
     }))
   );
   const transitionTimerRef = useRef<NodeJS.Timeout>(null);
@@ -157,21 +156,16 @@ export function useCanvasActions() {
   const handleMouseDown = useCallback(
     (e: MouseEvent<HTMLDivElement>): void => {
       e.preventDefault(); // Prevent text selection and default drag behavior
-      if (disableDragging || e.button !== 0 || cardIsExpanding) return; // Only allow left click for drag
-      if (!userHasInteracted) setUserHasInteracted(true);
+
+      // Exit if dragging disabled, not left click, card expanding, or click was on a card
+      if (e.button !== 0 || cardIsExpanding) return;
+
       setDragging(true);
       setDidDrag(false);
       startPositionRef.current = { x: e.clientX, y: e.clientY };
       movementAccumulator.current = { x: 0, y: 0 };
     },
-    [
-      disableDragging,
-      cardIsExpanding,
-      userHasInteracted,
-      setUserHasInteracted,
-      setDragging,
-      setDidDrag
-    ]
+    [cardIsExpanding, setDragging, setDidDrag]
   );
 
   const handleMouseMove = useCallback(
@@ -188,6 +182,10 @@ export function useCanvasActions() {
           }
         }
 
+        if (selectedCard !== null) {
+          setSelectedCard(null);
+        }
+
         throttledSetPosition({
           x: position.x + movementAccumulator.current.x,
           y: position.y + movementAccumulator.current.y
@@ -198,10 +196,12 @@ export function useCanvasActions() {
       dragging,
       isTransitionEnabled,
       didDrag,
-      setDidDrag,
+      selectedCard,
+      throttledSetPosition,
       position.x,
       position.y,
-      throttledSetPosition
+      setDidDrag,
+      setSelectedCard
     ]
   );
 
@@ -231,8 +231,7 @@ export function useCanvasActions() {
         return;
       }
 
-      if (disableDragging || isTransitionEnabled) return;
-      if (!userHasInteracted) setUserHasInteracted(true);
+      if (cardIsExpanding || isTransitionEnabled) return;
 
       setDidDrag(false);
 
@@ -258,21 +257,17 @@ export function useCanvasActions() {
         movementAccumulator.current = { x: 0, y: 0 };
       }
     },
-    [
-      isTransitionEnabled,
-      disableDragging,
-      userHasInteracted,
-      setUserHasInteracted,
-      setTransitionEnabled,
-      setDragging,
-      setDidDrag
-    ]
+    [isTransitionEnabled, cardIsExpanding, setDidDrag, setTransitionEnabled, setDragging]
   );
 
   const handleTouchMove = useCallback(
     (e: TouchEvent<HTMLDivElement>): void => {
       e.preventDefault();
-      if (openedCard !== null || isTransitionEnabled) return;
+      if (expandedCard !== null || isTransitionEnabled) return;
+
+      if (selectedCard !== null) {
+        setSelectedCard(null);
+      }
 
       // Handle pinch-to-zoom
       if (e.touches.length === 2 && lastTouchRef.current && lastPinchDistanceRef.current !== null) {
@@ -325,16 +320,18 @@ export function useCanvasActions() {
       }
     },
     [
-      openedCard,
+      expandedCard,
       isTransitionEnabled,
+      selectedCard,
       dragging,
-      didDrag,
-      setDidDrag,
+      setSelectedCard,
       calculateZoomUpdate,
       zoomLevel,
       position,
+      setDidDrag,
       setPosition,
       setZoomLevel,
+      didDrag,
       throttledSetPosition
     ]
   );
@@ -377,9 +374,7 @@ export function useCanvasActions() {
     (e: WheelEvent): void => {
       e.preventDefault(); // Prevent default browser scroll/zoom
 
-      if (openedCard !== null || isTransitionEnabled) return;
-
-      if (!userHasInteracted) setUserHasInteracted(true);
+      if (expandedCard !== null || isTransitionEnabled) return;
 
       // Handle Ctrl + Wheel for zooming
       if (e.ctrlKey) {
@@ -397,11 +392,14 @@ export function useCanvasActions() {
         }
       }
       // Handle trackpad scroll/pan (no Ctrl key)
-      else if (!disableDragging) {
+      else {
         const sensitivity = 1.0; // Pan sensitivity
         movementAccumulator.current.x -= e.deltaX * sensitivity;
         movementAccumulator.current.y -= e.deltaY * sensitivity;
         setDidDrag(true);
+        if (selectedCard !== null) {
+          setSelectedCard(null);
+        }
         throttledSetPosition({
           x: position.x + movementAccumulator.current.x,
           y: position.y + movementAccumulator.current.y
@@ -409,18 +407,17 @@ export function useCanvasActions() {
       }
     },
     [
-      openedCard,
+      expandedCard,
       isTransitionEnabled,
-      userHasInteracted,
-      setUserHasInteracted,
-      disableDragging,
-      setDidDrag,
       calculateZoomUpdate,
       zoomLevel,
       position,
       setPosition,
       setZoomLevel,
-      throttledSetPosition
+      setDidDrag,
+      selectedCard,
+      throttledSetPosition,
+      setSelectedCard
     ]
   );
 
@@ -481,6 +478,8 @@ export function useCanvasActions() {
   // Center the canvas initially
   useEffect(() => {
     centerToCard();
+    // set selected card to the middle card initially by finding the key of the middle card
+    setSelectedCard(MIDDLE_CARD_INDEX);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Run only once on mount
 
