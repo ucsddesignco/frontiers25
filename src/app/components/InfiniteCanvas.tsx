@@ -15,6 +15,7 @@ import { useViewportSize } from '@/app/hooks/useViewportSize';
 import { useShallow } from 'zustand/shallow';
 import LightFog from './LightFog';
 import ThickFog from './ThickFog';
+import SelectedIsland from './SelectedIsland/SelectedIsland';
 
 const InfiniteCanvas = () => {
   const {
@@ -98,6 +99,7 @@ const InfiniteCanvas = () => {
           </span>
           Gallery
         </button>
+        <SelectedIsland selectedCard={selectedCard} />
         <div
           ref={gridRef}
           id="canvas-grid"

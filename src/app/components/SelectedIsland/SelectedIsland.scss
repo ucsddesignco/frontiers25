@@ -1,0 +1,80 @@
+//   Credit: https://stackoverflow.com/questions/51496204/border-gradient-with-border-radius/51496341#51496341
+#selected-island {
+  background-image: linear-gradient(#f5f5f5, #f5f5f5), linear-gradient(to top, #d8d7d9, white 75%);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  border: 2px solid transparent;
+
+  p {
+    text-shadow:
+      0px -1px 1px rgba(0, 0, 0, 0.12),
+      0px 1px 1px #fff;
+  }
+
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    position: relative;
+    padding: 8px 15px;
+    border-radius: 35px;
+
+    background: rgba(26, 22, 34, 0.25);
+    overflow: hidden;
+    box-shadow:
+      0px 2px 12px 0px rgba(255, 0, 0, 0.1),
+      0px -3px 0px 0px #fff inset;
+
+    svg {
+      transform: translateY(-1px);
+    }
+
+    p {
+      color: white;
+      text-shadow:
+        0px -1px 1px rgba(0, 0, 0, 0.12),
+        0px 1px 1px rgba(0, 0, 0, 0.24);
+    }
+
+    #top-highlight {
+      width: calc(100% - 6px);
+      height: calc(100% - 4px);
+      position: absolute;
+      inset: 0;
+      top: 4px;
+      margin-inline: auto;
+      border-radius: 35px;
+      box-shadow: 0px 2px 0px 0px #fff inset;
+    }
+
+    // Blur background
+    &::before {
+      content: '';
+      width: 150%;
+      height: 200%;
+      border-radius: 35px;
+      position: absolute;
+      inset: 0;
+      left: -25%;
+      z-index: -1;
+      background: rgba(26, 22, 34, 0.8);
+      background-blend-mode: hard-light;
+      filter: blur(12px);
+      backdrop-filter: blur(6px);
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      z-index: 0;
+      inset: 0;
+      padding: 2px; /* border thickness */
+      border-radius: 35px;
+      background: linear-gradient(to top, #4d4857, #ffffff);
+      mask:
+        linear-gradient(#000 0 0) exclude,
+        linear-gradient(#000 0 0) content-box;
+    }
+  }
+}

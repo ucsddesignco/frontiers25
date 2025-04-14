@@ -50,6 +50,7 @@ export const fakeCardData: DatabaseCard[] = [
   { id: 'card-44', primary: '#607D8B', accent: '#EAC6B4', author: 'Design Co', lastUpdated: "2025-04-12T11:00:00.000Z" },
   { id: 'card-45', primary: '#455A64', accent: '#ECEFF1', author: 'Design Co', lastUpdated: "2025-04-12T12:00:00.000Z" },
   { id: 'card-46', primary: '#A1887F', accent: '#3E2723', author: 'Design Co', lastUpdated: "2025-04-12T14:00:00.000Z" },
+  { id: 'card-47', primary: '#BCAAA4', accent: '#5D4037', author: 'Design Co', lastUpdated: "2025-04-12T13:00:00.000Z" },
   { id: 'card-48', primary: '#FFAB91', accent: '#D84315', author: 'Design Co', lastUpdated: "2025-04-13T09:00:00.000Z" },
-  { id: 'card-47', primary: '#BCAAA4', accent: '#5D4037', author: 'Design Co', lastUpdated: "2025-04-12T13:00:00.000Z" }
+  { id: 'card-49', primary: '#D1C4E9', accent: '#311B92', author: 'Design Co', lastUpdated: "2025-04-11T12:00:00.000Z" },
 ];
