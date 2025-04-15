@@ -55,6 +55,11 @@ const ExpandedCardComponent = ({ showExpanded }: ExpandedCardProps) => {
 
     if (!showExpanded) {
       expandedCard.style.transitionProperty = 'opacity';
+      if (expandedCard.scrollTop > 0) {
+        setTimeout(() => {
+          expandedCard.scrollTo({ top: 0 });
+        }, 100);
+      }
       return;
     }
 
@@ -88,7 +93,7 @@ const ExpandedCardComponent = ({ showExpanded }: ExpandedCardProps) => {
             backgroundColor: !showExpanded ? 'transparent' : expandedCard?.primary
           } as React.CSSProperties
         }
-        className={`${showExpanded ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'} absolute z-[1] mx-auto h-full w-full overflow-y-scroll transition-opacity duration-[0.2s] ease-in-out`}
+        className={`${showExpanded ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'} absolute z-[3] mx-auto h-full w-full overflow-y-scroll transition-opacity duration-[0.2s] ease-in-out`}
       >
         <HeroPage scrollToSection={scrollToSection} showExpanded={showExpanded} />
         {/* It is necessary for these pages to have showExpanded so that they continue to fade even when scrolling */}

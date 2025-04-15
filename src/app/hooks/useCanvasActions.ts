@@ -152,6 +152,54 @@ export function useCanvasActions() {
     [gridRef, containerRef, cardIsExpanding, setZoomLevel, setPosition, setTransitionEnabled]
   );
 
+  const centerViewOnScreen = useCallback(() => {
+    if (transitionTimerRef.current) {
+      clearTimeout(transitionTimerRef.current);
+      transitionTimerRef.current = null;
+    }
+
+    if (!containerRef.current || cardIsExpanding || isTransitionEnabled) return;
+
+    setTransitionEnabled(true); // Enable transition for smooth recentering
+
+    const currentZoom = zoomLevel;
+    const currentPosition = position;
+    const newZoomLevel = 1;
+
+    // Reset zoom level to 1
+    setZoomLevel(1);
+
+    const viewportWidth = containerRef.current.clientWidth;
+    const viewportHeight = containerRef.current.clientHeight;
+
+    const viewportCenterX = viewportWidth / 2;
+    const viewportCenterY = viewportHeight / 2;
+
+    // Calculate the world coordinates under the viewport center before zooming
+    const worldX = (viewportCenterX - currentPosition.x) / currentZoom;
+    const worldY = (viewportCenterY - currentPosition.y) / currentZoom;
+
+    // Calculate the new canvas position to keep the world point under the viewport center
+    const newPositionX = viewportCenterX - worldX * newZoomLevel;
+    const newPositionY = viewportCenterY - worldY * newZoomLevel;
+
+    setPosition({ x: newPositionX, y: newPositionY });
+
+    transitionTimerRef.current = setTimeout(() => {
+      setTransitionEnabled(false);
+      transitionTimerRef.current = null;
+    }, 350);
+  }, [
+    containerRef,
+    cardIsExpanding,
+    isTransitionEnabled,
+    zoomLevel,
+    position,
+    setZoomLevel,
+    setPosition,
+    setTransitionEnabled
+  ]);
+
   // ---- PANNING HANDLERS ----
   const handleMouseDown = useCallback(
     (e: MouseEvent<HTMLDivElement>): void => {
@@ -376,6 +424,10 @@ export function useCanvasActions() {
 
       if (expandedCard !== null || isTransitionEnabled) return;
 
+      if (selectedCard !== null) {
+        setSelectedCard(null);
+      }
+
       // Handle Ctrl + Wheel for zooming
       if (e.ctrlKey) {
         const mouseX = e.clientX;
@@ -494,6 +546,7 @@ export function useCanvasActions() {
   }, [centerToCard]);
 
   return {
-    centerToCard
+    centerToCard,
+    centerViewOnScreen
   };
 }

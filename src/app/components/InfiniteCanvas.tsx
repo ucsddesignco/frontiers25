@@ -1,14 +1,13 @@
 'use client';
 
 import { CanvasState, useCanvasStore } from '../stores/canvasStore';
-import { CSSProperties, useRef } from 'react';
+import { CSSProperties, useCallback, useRef, useState } from 'react';
 import { CARD_WIDTH, CARD_HEIGHT, DOT_BACKGROUND_SIZE, MIDDLE_CARD_INDEX } from './constants';
 import { useCanvasActions } from '../hooks/useCanvasActions';
 import Card from './Card';
 import { useCardInteractions } from '../hooks/useCardInteractions';
 import { useInitializeCards } from '../hooks/useInitializeCards';
 import ExpandedCard from './ExpandedCard/ExpandedCard';
-import { GalleryIcon } from '../assets/GalleryIcon';
 import { useVisibleCards } from '@/app/hooks/useVisibleCards';
 import { useBackgroundDots } from '@/app/hooks/useBackgroundDots';
 import { useViewportSize } from '@/app/hooks/useViewportSize';
@@ -16,6 +15,8 @@ import { useShallow } from 'zustand/shallow';
 import LightFog from './LightFog';
 import ThickFog from './ThickFog';
 import SelectedIsland from './SelectedIsland/SelectedIsland';
+import ResetButton from './ResetButton';
+import BackgroundDots from './BackgroundDots';
 
 const InfiniteCanvas = () => {
   const {
@@ -42,17 +43,19 @@ const InfiniteCanvas = () => {
       isTransitionEnabled: state.isTransitionEnabled,
       didDrag: state.didDrag,
       selectedCard: state.selectedCard,
-      setSelectedCard: state.setSelectedCard
+      setSelectedCard: state.setSelectedCard,
+      setZoomLevel: state.setZoomLevel
     }))
   );
 
+  const [wasZoomed, setWasZoomed] = useState(false);
   const previousSelectedCards = useRef<Array<number | null>>([MIDDLE_CARD_INDEX]); // Length of 2 [old, current]
   const backgroundRef = useRef<HTMLDivElement>(null);
   const isInitialLoad = useRef(true);
 
   useInitializeCards();
 
-  const { centerToCard } = useCanvasActions();
+  const { centerToCard, centerViewOnScreen } = useCanvasActions();
 
   const { handleLearnMore, handleGalleryClick } = useCardInteractions();
 
@@ -67,6 +70,13 @@ const InfiniteCanvas = () => {
 
   useBackgroundDots({ backgroundRef, position, zoomLevel });
 
+  const handleResetZoom = useCallback(() => {
+    if (zoomLevel !== 1) {
+      centerViewOnScreen();
+      setWasZoomed(true);
+    }
+  }, [setWasZoomed, centerViewOnScreen, zoomLevel]);
+
   return (
     <>
       <ExpandedCard showExpanded={showExpanded} />
@@ -76,29 +86,11 @@ const InfiniteCanvas = () => {
         className="relative h-screen w-screen cursor-grab overflow-hidden active:cursor-grabbing"
       >
         <LightFog />
-        <div
-          ref={backgroundRef}
-          id="background-dots"
-          className="absolute inset-0"
-          style={{
-            backgroundSize: `${DOT_BACKGROUND_SIZE}px ${DOT_BACKGROUND_SIZE}px`
-          }}
-        ></div>
-        <button
-          onClick={e => {
-            e.stopPropagation();
-            handleGalleryClick();
-          }}
-          onMouseDown={e => {
-            e.stopPropagation();
-          }}
-          className="fixed left-6 top-5 z-[10] flex cursor-pointer select-none items-center gap-1 rounded-full bg-[#2E2437] px-5 py-[0.625rem] text-lg text-white sm:left-12 sm:top-10"
-        >
-          <span>
-            <GalleryIcon />
-          </span>
-          Gallery
-        </button>
+
+        <BackgroundDots position={position} zoomLevel={zoomLevel} />
+
+        <ResetButton handleGalleryClick={handleGalleryClick} handleResetZoom={handleResetZoom} />
+
         <SelectedIsland selectedCard={selectedCard} />
         <div
           ref={gridRef}
@@ -115,6 +107,7 @@ const InfiniteCanvas = () => {
             const selectedClass = isSelected ? 'scale-[1.1] z-[2] selected' : '';
 
             const previousClass = isPrevious && !isSelected ? 'z-[1]' : '';
+            const showThickFog = (isSelected || isPrevious) && zoomLevel === 1 && !wasZoomed;
 
             const handleCardClick = card.isFading
               ? (e: React.MouseEvent<HTMLDivElement>) => {
@@ -124,6 +117,9 @@ const InfiniteCanvas = () => {
                   if (!didDrag && selectedCard !== card.patternIndex) {
                     // We keep track of current too in case user pans canvas and selectCard is null
                     previousSelectedCards.current = [selectedCard, card.patternIndex];
+                    if (wasZoomed) {
+                      setWasZoomed(false);
+                    }
                     centerToCard(card.x, card.y);
                     setSelectedCard(card.patternIndex);
                   }
@@ -143,7 +139,7 @@ const InfiniteCanvas = () => {
                   } as CSSProperties
                 }
               >
-                {(isSelected || isPrevious) && zoomLevel >= 1 && (
+                {showThickFog && (
                   <ThickFog
                     status={isSelected ? 'selected' : 'previous'}
                     isInitialLoad={isInitialLoad}
