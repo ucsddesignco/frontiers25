@@ -48,3 +48,5 @@ async function connectDB() : Promise<mongoose.Connection> {
 }
 
 export default connectDB;
+
+//Adaptation of https://medium.com/@nithishreddy0627/connecting-your-next-js-project-to-mongodb-atlas-using-mongoose-a-step-by-step-guide-2d2552b5d7ca
