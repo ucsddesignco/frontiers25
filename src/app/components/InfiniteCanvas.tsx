@@ -2,7 +2,7 @@
 
 import { CanvasState, useCanvasStore } from '../stores/canvasStore';
 import { CSSProperties, useCallback, useRef, useState } from 'react';
-import { CARD_WIDTH, CARD_HEIGHT, DOT_BACKGROUND_SIZE, MIDDLE_CARD_INDEX } from './constants';
+import { CARD_WIDTH, CARD_HEIGHT, MIDDLE_CARD_INDEX } from './constants';
 import { useCanvasActions } from '../hooks/useCanvasActions';
 import Card from './Card';
 import { useCardInteractions } from '../hooks/useCardInteractions';
