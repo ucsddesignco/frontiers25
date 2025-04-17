@@ -10,7 +10,7 @@ import mongoose from "mongoose";
  */
 const Card = new mongoose.Schema({
     user: {
-        type: Number,
+        type: String,
         required : true
     },
     font: {
@@ -38,4 +38,4 @@ const Card = new mongoose.Schema({
     }
 });
 
-export default mongoose.models.Card || mongoose.model('Card', Card);
+export default mongoose.models?.Card || mongoose.model('Card', Card, 'CardData');

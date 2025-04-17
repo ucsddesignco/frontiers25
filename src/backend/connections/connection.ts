@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const mongoPass = process.env.MONGO_PASS
 const mongoUser = process.env. MONGO_USER
-const DB_url = `mongodb+srv://${mongoUser}:${mongoPass}@dco-internal-tool.zyu6n.mongodb.net/?retryWrites=true&w=majority&appName=DCo-Internal-Tool`
+const DB_url = `mongodb+srv://${mongoUser}:${mongoPass}@dco-internal-tool.zyu6n.mongodb.net/DCo-Frontiers-2025?retryWrites=true&w=majority&appName=DCo-Internal-Tool`
 
 if(!mongoPass){
     throw new Error(
@@ -30,6 +30,7 @@ if(!cached){
 }
 
 async function connectDB() : Promise<mongoose.Connection> {
+    console.log("Connecting to MongoDB...");
     if(cached.conn){
         return cached.conn;
     }
