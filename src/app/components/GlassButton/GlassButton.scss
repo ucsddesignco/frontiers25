@@ -31,14 +31,23 @@
     pointer-events: none;
   }
 
+  .color-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(26, 22, 34, 0.25);
+    z-index: -2;
+  }
+
   .blur-background {
     position: absolute;
     inset: 0;
     border-radius: 35px;
     background-blend-mode: hard-light;
-    filter: blur(12px);
-    backdrop-filter: blur(6px);
-    height: 178%;
+    -webkit-mask-image: linear-gradient(to top, black 80%, rgba(0, 0, 0, 0.75) 100%);
+    mask-image: linear-gradient(to top, black 80%, rgba(0, 0, 0, 0.75) 100%);
+    backdrop-filter: blur(12px);
+    filter: blur(6px);
+    height: 158%;
     width: 118%;
     transform: translateX(-9%);
     z-index: -1;
@@ -58,12 +67,10 @@
   p {
     text-shadow:
       0px -1px 1px rgba(0, 0, 0, 0.12),
-      0px 1px 1px rgba(0, 0, 0, 0.24);
+      0px 1px 1px var(--text-shadow-color);
   }
 
   svg {
-    // Vertically center SVG with text
-    margin-top: calc(1ex - 1cap);
     filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.24))
       drop-shadow(0px -1px 1px rgba(0, 0, 0, 0.12));
   }

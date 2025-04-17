@@ -1,12 +1,7 @@
 import { useMemo, useRef } from 'react';
 import { CardType } from '../components/constants';
-import {
-  GRID_COLUMNS,
-  GRID_ROWS,
-  CARD_WIDTH,
-  CARD_HEIGHT,
-  CARD_GAP
-} from '../components/constants';
+import { GRID_COLUMNS, GRID_ROWS } from '../components/constants';
+import { CanvasState } from '../stores/canvasStore';
 
 type Position = {
   x: number;
@@ -19,6 +14,7 @@ type ViewportSize = {
 };
 
 type UseVisibleCardsProps = {
+  cardSize: CanvasState['cardSize'];
   basePattern: CardType[];
   position: Position;
   zoomLevel: number;
@@ -41,6 +37,7 @@ export type VisibleCard = CardType & {
 const FADE_DURATION_MS = 250;
 
 export const useVisibleCards = ({
+  cardSize,
   basePattern,
   position,
   zoomLevel,
@@ -58,8 +55,8 @@ export const useVisibleCards = ({
 
     const renderBuffer = zoomLevel <= 1 ? 0 : 1;
 
-    const effectiveCardWidth = CARD_WIDTH + CARD_GAP;
-    const effectiveCardHeight = CARD_HEIGHT + CARD_GAP;
+    const effectiveCardWidth = cardSize.width + cardSize.gap;
+    const effectiveCardHeight = cardSize.height + cardSize.gap;
 
     const viewLeft = -position.x / zoomLevel;
     const viewTop = -position.y / zoomLevel;

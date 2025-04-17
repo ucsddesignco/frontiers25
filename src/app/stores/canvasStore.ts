@@ -5,6 +5,9 @@ import { RefObject } from 'react';
 import { VisibleCard } from '../hooks/useVisibleCards';
 
 export interface CanvasState {
+  // Card state
+  cardSize: { width: number; height: number; gap: number };
+
   // Canvas state
   position: { x: number; y: number };
   zoomLevel: number;
@@ -35,6 +38,7 @@ export interface CanvasState {
   setTransitionEnabled: (enabled: boolean) => void;
 
   // Card actions
+  setCardSize: (size: { width: number; height: number; gap: number }) => void;
   setSelectedCard: (cardKey: number | null) => void;
   setExpandedCard: (card: VisibleCard | null) => void;
   setBasePattern: (pattern: CardType[]) => void;
@@ -44,6 +48,7 @@ export interface CanvasState {
 
 export const useCanvasStore = create<CanvasState>((set, _get) => ({
   // Initial state
+  cardSize: { width: 0, height: 0, gap: 0 },
   position: { x: 0, y: 0 },
   zoomLevel: 1,
   dragging: false,
@@ -64,6 +69,7 @@ export const useCanvasStore = create<CanvasState>((set, _get) => ({
   cardIsExpanding: false,
 
   // Actions to update state
+  setCardSize: cardSize => set({ cardSize }),
   setPosition: position => set({ position }),
   setShowMiddleFog: showMiddleFog => set({ showMiddleFog }),
   setShowLightFog: showLightFog => set({ showLightFog }),

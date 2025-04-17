@@ -64,8 +64,8 @@ const Card: React.FC<CardProps> = ({ card, onClick, onMouseDown, onLearnMore, cl
             </div>
 
             <div className="flex flex-col gap-3">
-              <p className="description w-[21.5ch] transition-transform duration-card ease-in-out">
-                A 7-hour design sprint to solve UX problems.
+              <p className="description transition-transform duration-card ease-in-out">
+                A 2-day sprint where UCSD designers ideate and iterate.
               </p>
               <div className="relative flex w-full justify-center">
                 <button
@@ -116,7 +116,7 @@ const Card: React.FC<CardProps> = ({ card, onClick, onMouseDown, onLearnMore, cl
           </div>
         </div>
         <p className="pt-2 text-center text-sm text-[#666666]">
-          Made by {card.author}
+          Made By {card.author}
           <span className="ml-3 text-xs">{card.lastUpdated}</span>
         </p>
       </div>

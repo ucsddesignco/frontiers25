@@ -15,7 +15,7 @@ const NAV_BUTTONS = [
 export default function HeroPage({ scrollToSection, showExpanded }: HeroPageProps) {
   return (
     <section
-      className={`${showExpanded ? 'opacity-100' : 'opacity-0'} hero-page mx-auto flex h-screen w-full max-w-[40rem] flex-col items-center justify-center pb-24 transition-none lg:text-lg`}
+      className={`${showExpanded ? 'opacity-100' : 'opacity-0'} hero-page mx-auto flex h-screen w-full max-w-[40rem] flex-col items-center justify-center pb-24 transition-none`}
     >
       <svg
         className="svg transition-transform duration-card ease-in-out"
@@ -32,9 +32,12 @@ export default function HeroPage({ scrollToSection, showExpanded }: HeroPageProp
           <p className="location transition-transform duration-card ease-in-out">DIB Room 208</p>
         </div>
         <p className="time transition-transform duration-card ease-in-out">9am-5pm</p>
-        <div className="flex flex-col lg:text-lg">
-          <p className="description w-[21.5ch] transition-transform duration-card ease-in-out">
-            A 7-hour design sprint to solve UX problems.
+        <div className="flex flex-col">
+          <p
+            data-expanded-description
+            className="description transition-transform duration-card ease-in-out"
+          >
+            A 2-day sprint where UCSD designers ideate and iterate.
           </p>
         </div>
       </div>

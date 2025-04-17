@@ -1,6 +1,5 @@
 import { useShallow } from 'zustand/shallow';
-import { useCanvasStore } from '../stores/canvasStore';
-import { CARD_HEIGHT, CARD_WIDTH } from './constants';
+import { CanvasState, useCanvasStore } from '../stores/canvasStore';
 import { CSSProperties, memo, RefObject } from 'react';
 import ThickFog from './ThickFog';
 import Card from './Card';
@@ -9,23 +8,23 @@ import { VisibleCard } from '../hooks/useVisibleCards';
 type CardGridProps = {
   wasZoomed: boolean;
   setWasZoomed: (wasZoomed: boolean) => void;
-  gridRef: RefObject<HTMLDivElement | null>;
   visibleCards: VisibleCard[];
   isInitialLoad: RefObject<boolean>;
   handleLearnMore: (card: VisibleCard) => void;
   centerToCard: (x: number, y: number) => void;
   checkPrevious: (index: number) => boolean | undefined;
+  cardSize: CanvasState['cardSize'];
 };
 
 function CardGrid({
   wasZoomed,
   setWasZoomed,
-  gridRef,
   visibleCards,
   isInitialLoad,
   handleLearnMore,
   centerToCard,
-  checkPrevious
+  checkPrevious,
+  cardSize
 }: CardGridProps) {
   const {
     position,
@@ -34,7 +33,8 @@ function CardGrid({
     setSelectedCard,
     didDrag,
     cardIsExpanding,
-    isTransitionEnabled
+    isTransitionEnabled,
+    gridRef
   } = useCanvasStore(
     useShallow(state => ({
       position: state.position,
@@ -43,7 +43,8 @@ function CardGrid({
       setSelectedCard: state.setSelectedCard,
       didDrag: state.didDrag,
       cardIsExpanding: state.cardIsExpanding,
-      isTransitionEnabled: state.isTransitionEnabled
+      isTransitionEnabled: state.isTransitionEnabled,
+      gridRef: state.gridRef
     }))
   );
 
@@ -87,8 +88,8 @@ function CardGrid({
                 position: 'absolute',
                 left: `${card.x}px`,
                 top: `${card.y}px`,
-                width: `${CARD_WIDTH}px`,
-                height: `${CARD_HEIGHT}px`,
+                width: `${cardSize.width}px`,
+                height: `${cardSize.height}px`,
                 zIndex: card.isFading ? -1 : ''
               } as CSSProperties
             }

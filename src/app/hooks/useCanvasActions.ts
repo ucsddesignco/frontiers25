@@ -1,11 +1,8 @@
-import { useEffect, useRef, useCallback, RefObject } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { CanvasState, useCanvasStore } from '../stores/canvasStore';
 import {
   GRID_COLUMNS,
   GRID_ROWS,
-  CARD_WIDTH,
-  CARD_HEIGHT,
-  CARD_GAP,
   MIN_ZOOM,
   MAX_ZOOM,
   MIDDLE_CARD_INDEX
@@ -63,7 +60,8 @@ export function useCanvasActions() {
     setTransitionEnabled,
     cardIsExpanding,
     setSelectedCard,
-    selectedCard
+    selectedCard,
+    cardSize
   } = useCanvasStore(
     useShallow((state: CanvasState) => ({
       containerRef: state.containerRef,
@@ -81,7 +79,8 @@ export function useCanvasActions() {
       setTransitionEnabled: state.setTransitionEnabled,
       cardIsExpanding: state.cardIsExpanding,
       setSelectedCard: state.setSelectedCard,
-      selectedCard: state.selectedCard
+      selectedCard: state.selectedCard,
+      cardSize: state.cardSize
     }))
   );
   const transitionTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -120,12 +119,12 @@ export function useCanvasActions() {
       let focusPointY: number;
 
       if (cardX !== undefined && cardY !== undefined) {
-        focusPointX = cardX + CARD_WIDTH / 2;
-        focusPointY = cardY + CARD_HEIGHT / 2;
+        focusPointX = cardX + cardSize.width / 2;
+        focusPointY = cardY + cardSize.height / 2;
         setTransitionEnabled(true);
       } else {
-        const totalWidth = GRID_COLUMNS * CARD_WIDTH + (GRID_COLUMNS - 1) * CARD_GAP;
-        const totalHeight = GRID_ROWS * CARD_HEIGHT + (GRID_ROWS - 1) * CARD_GAP;
+        const totalWidth = GRID_COLUMNS * cardSize.width + (GRID_COLUMNS - 1) * cardSize.gap;
+        const totalHeight = GRID_ROWS * cardSize.height + (GRID_ROWS - 1) * cardSize.gap;
         focusPointX = totalWidth / 2;
         focusPointY = totalHeight / 2;
       }
@@ -141,7 +140,17 @@ export function useCanvasActions() {
         }, 350);
       }
     },
-    [gridRef, containerRef, cardIsExpanding, setZoomLevel, setPosition, setTransitionEnabled]
+    [
+      gridRef,
+      containerRef,
+      cardIsExpanding,
+      setZoomLevel,
+      setPosition,
+      cardSize.width,
+      cardSize.height,
+      cardSize.gap,
+      setTransitionEnabled
+    ]
   );
 
   const centerViewOnScreen = useCallback(() => {
@@ -297,10 +306,11 @@ export function useCanvasActions() {
 
   // Center the canvas initially
   useEffect(() => {
+    if (cardSize.width === 0) return;
     centerToCard();
     setSelectedCard(MIDDLE_CARD_INDEX);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [cardSize]);
 
   // Recenter the canvas on window resize
   useEffect(() => {

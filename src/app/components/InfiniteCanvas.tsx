@@ -18,7 +18,7 @@ import CardGrid from './CardGrid';
 import { usePreviousCards } from '../hooks/usePreviousCards';
 
 const InfiniteCanvas = () => {
-  const { containerRef, showExpanded, basePattern, position, zoomLevel, gridRef, selectedCard } =
+  const { containerRef, showExpanded, basePattern, position, zoomLevel, selectedCard, cardSize } =
     useCanvasStore(
       useShallow((state: CanvasState) => ({
         containerRef: state.containerRef,
@@ -26,9 +26,9 @@ const InfiniteCanvas = () => {
         basePattern: state.basePattern,
         position: state.position,
         zoomLevel: state.zoomLevel,
-        gridRef: state.gridRef,
         isTransitionEnabled: state.isTransitionEnabled,
-        selectedCard: state.selectedCard
+        selectedCard: state.selectedCard,
+        cardSize: state.cardSize
       }))
     );
 
@@ -45,6 +45,7 @@ const InfiniteCanvas = () => {
   const viewportSize = useViewportSize();
 
   const visibleCards = useVisibleCards({
+    cardSize,
     basePattern,
     position,
     zoomLevel,
@@ -79,9 +80,9 @@ const InfiniteCanvas = () => {
         <SelectedIsland selectedCard={selectedCard} />
 
         <CardGrid
+          cardSize={cardSize}
           centerToCard={centerToCard}
           checkPrevious={checkPrevious}
-          gridRef={gridRef}
           handleLearnMore={handleLearnMore}
           isInitialLoad={isInitialLoad}
           setWasZoomed={setWasZoomed}

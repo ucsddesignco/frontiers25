@@ -24,16 +24,23 @@ function GlassButton({
   const blurColorClass =
     color === 'light' ? 'bg-[rgba(255,255,255,0.80)]' : 'bg-[rgba(26,22,34,0.80)]';
   const gradientColor = color === 'light' ? '#D8D7D9' : '#4D4857';
-  const textColor = color === 'light' ? 'text-black' : 'text-white';
+  const textShadowColor = color === 'light' ? '#FFF' : 'rgba(0, 0, 0, 0.24)';
+  const textColor = color === 'light' ? 'text-[#1A1622]' : 'text-white';
 
   return (
     <div className={`${className} isolate`}>
       <button
-        style={{ '--gradient-color': gradientColor } as CSSProperties}
+        style={
+          {
+            '--gradient-color': gradientColor,
+            '--text-shadow-color': textShadowColor
+          } as CSSProperties
+        }
         className={`${sizeClass} ${textColor} glass-button cursor-pointer`}
         onClick={onClick}
         onMouseDown={onMouseDown}
       >
+        <div className="color-overlay"></div>
         <div className={`${blurColorClass} blur-background`}></div>
         <div className="top-highlight"></div>
         {children}
