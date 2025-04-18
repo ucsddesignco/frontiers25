@@ -16,6 +16,7 @@ import ResetButton from './ResetButton';
 import BackgroundDots from './BackgroundDots';
 import CardGrid from './CardGrid';
 import { usePreviousCards } from '../hooks/usePreviousCards';
+import SignInButton from './SignInButton';
 
 const InfiniteCanvas = () => {
   const { containerRef, showExpanded, basePattern, position, zoomLevel, selectedCard, cardSize } =
@@ -76,6 +77,8 @@ const InfiniteCanvas = () => {
         <BackgroundDots position={position} zoomLevel={zoomLevel} />
 
         <ResetButton handleGalleryClick={handleGalleryClick} handleResetZoom={handleResetZoom} />
+
+        <SignInButton />
 
         <SelectedIsland selectedCard={selectedCard} />
 
