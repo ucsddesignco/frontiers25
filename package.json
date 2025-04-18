@@ -14,6 +14,7 @@
   "dependencies": {
     "lint-staged": "^15.5.0",
     "next": "15.3.0",
+    "prettier": "^3.5.3",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
