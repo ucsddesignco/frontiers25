@@ -10,7 +10,7 @@ function SignInButton() {
         e.stopPropagation();
       }}
       text="Sign In"
-      className="fixed right-4 top-5 z-[4]"
+      className="fixed right-9 top-5 z-[4]"
     >
       {<ResetZoomIcon />}
     </GlassButton>
