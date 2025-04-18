@@ -3,9 +3,19 @@ import createCard from '../cardFunctions';
 import { fakeCardData } from '@/app/fake-data/data';
 
 /**
+ * POST /api/createCard
+ * The JSON object structure expected in the request body:
+ * {
+ *   user: string,       // The user identifier
+ *   font: string,       // The font style for the card
+ *   shape: string,      // The shape of the card
+ *   p_color: string,    // The primary color of the card
+ *   s_color: string,    // The secondary color of the card
+ *   a_color: string     // The accent color of the card
+ * }
  * 
- * @param req - JSON with all of the card properties
- * @returns 
+ * @param req - JSON object containing the above fields
+ * @returns NextResponse
  */
 export async function POST(req: NextRequest){
     try{

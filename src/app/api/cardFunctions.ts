@@ -1,6 +1,17 @@
 import card from "../../backend/models/card"
 import connectDB from "../../backend/connections/connection"
 
+
+/**
+ * Creates a new card in the database
+ * @param user : user id from session
+ * @param font : a int the indicates which type to use for title
+ * @param shape : a int that indicates with of the corner shapes to use
+ * @param p_color : hex for primary color
+ * @param s_color : hex for secondary color
+ * @param a_color : hex for acescent color
+ * @returns 
+ */
 export default async function createCard(
     user : string,
     font : number,
