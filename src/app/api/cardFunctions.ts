@@ -11,7 +11,6 @@ export default async function createCard(
 ) {
     try{
         await connectDB();
-
         return await card.create({
             user: user,
             font: font,
