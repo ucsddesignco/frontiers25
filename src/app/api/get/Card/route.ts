@@ -4,12 +4,11 @@ import { getCardByID } from "../../cardFunctions";
 /**
  * TODO: add security 
  * GET /api/get/card
- * @param req : NextRequest
- * @returns NextResponse
+ * @param req : MongoDB Object _id
+ * @returns JSON object with _id
  */
 export async function GET(req: NextRequest) {
     const searchID = new URL(req.url).searchParams.get("id");
-    console.log("Searching for card with ID:", searchID);
     if (!searchID) {
         return NextResponse.json({ error: "Missing ID" }, { status: 400 });
     }

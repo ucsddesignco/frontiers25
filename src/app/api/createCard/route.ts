@@ -15,7 +15,7 @@ import { fakeCardData } from '@/app/fake-data/data';
  * }
  * 
  * @param req - JSON object containing the above fields
- * @returns NextResponse
+ * @returns NextResponse - JSON of the card that was created
  */
 export async function POST(req: NextRequest){
     try{
@@ -28,7 +28,6 @@ export async function POST(req: NextRequest){
             }
         }
         /** Create the card **/
-        console.log("Received data:", { user: body.user, font: body.font, shape: body.shape, p_color: body.p_color, s_color: body.s_color, a_color: body.a_color });
         const card = await createCard(body.user, body.font, body.shape, body.p_color, body.s_color, body.a_color);
         return NextResponse.json(card);
     }

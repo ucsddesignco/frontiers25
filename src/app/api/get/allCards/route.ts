@@ -3,12 +3,11 @@ import { getAllCards } from '../../cardFunctions';
 
 /**
  * GET /api/get/allCards
- * @returns NextResponse
+ * @returns Array of JSON objects of all cards 
  */
 export async function GET(req: NextRequest) {
     try {
         const cards = await getAllCards();
-        console.log("Fetched cards:", cards);
         return NextResponse.json(cards);
     } catch (error) {
         console.error("Error fetching cards:", error);

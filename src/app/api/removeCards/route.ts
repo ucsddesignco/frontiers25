@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { removeCardByID } from "../cardFunctions";
 
+/**
+ * remove a card object with _id
+ * @param MongoDB _id
+ * @returns JSON object of the removed card
+ */
 export async function GET(req: NextRequest) {
     const cardID = new URL(req.url).searchParams.get("id");
-    console.log("Searching for card with ID:", cardID);
     if (!cardID) {
         return NextResponse.json({ error: "Missing ID" }, { status: 400 });
     }

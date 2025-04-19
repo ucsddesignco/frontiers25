@@ -1,6 +1,8 @@
 'use client';
 import React, { useState } from 'react';
 
+
+/**Example Card Function Calls - And What I used for testing */
 const CardTest: React.FC = () => {
     const [response, setResponse] = useState(null);
 
@@ -62,7 +64,7 @@ const CardTest: React.FC = () => {
     /**
      * Example function to get a card by ID
      */
-    const cardID = "6802f0438946092dae7be8a9";
+    const cardID = "6804037a8c43a4b9bfece959";
     const getCardbyID = async () => {
         try {
             console.log('Fetching card with ID:', cardID);
@@ -104,7 +106,7 @@ const CardTest: React.FC = () => {
      * Example function to remove a card by ID
      */
     const removeCard = async () => {
-        const cardID = "6802ff9a996fd091eeb48e11";
+        const cardID = "6802fb87996fd091eeb48e09";
         try {
             const res = await fetch(`/api/removeCards?id=${cardID}`, {
                 method: 'GET',
@@ -120,9 +122,8 @@ const CardTest: React.FC = () => {
     };
 
     const updateCard = async () => {
-        const cardID = '6802fb87996fd091eeb48e09'
         const updateData = {
-            id: '6802fb87996fd091eeb48e09',
+            id: '6804037a8c43a4b9bfece959',
             font: 69,
             shape: 420,
             p_color: '#color1',

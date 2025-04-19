@@ -9,7 +9,7 @@ import connectDB from "../../backend/connections/connection"
  * @param p_color : hex for primary color
  * @param s_color : hex for secondary color
  * @param a_color : hex for acescent color
- * @returns 
+ * @returns JSON of created card
  */
 export default async function createCard(
     user : string,
@@ -38,7 +38,7 @@ export default async function createCard(
 
 /**
  * Gets all cards from the database
- * @returns 
+ * @returns Array of card JSON objects
  */
 export async function getAllCards() {
     try {
@@ -54,7 +54,7 @@ export async function getAllCards() {
 /**
  * Gets a card by user id from the database
  * @param user : user id from session
- * @returns 
+ * @returns Card with _id
  */
 export async function getCardByID(id: string) {
     try {
@@ -70,7 +70,7 @@ export async function getCardByID(id: string) {
 /**
  * Gets a card by user id from the database
  * @param user : user id from session
- * @returns 
+ * @returns All user cards
  */
 export async function getCardByUser(user: string) {
     try {
@@ -84,10 +84,9 @@ export async function getCardByUser(user: string) {
 }
 
 /**
- *  TODO: add api
  * Deletes a card by mongoID id from the database
  * @param id : id from mongoDB
- * @returns 
+ * @returns JSON of removed card
  */
 export async function removeCardByID(id: string) {
     try {
@@ -101,13 +100,13 @@ export async function removeCardByID(id: string) {
 }
 
 /**
- * TODO: add api
  * Updates a card by mongoID id from the database
  * @param id : id from mongoDB
  * @param font : a int the indicates which type to use for title
  * @param shape : a int that indicates with of the corner shapes to use
  * @param p_color : hex for primary color
- * @param s_color : hex for secondary color     
+ * @param s_color : hex for secondary color   
+ * @returns Update parameters   
  */
 export async function updateCardByID(
     id: string,
@@ -117,7 +116,6 @@ export async function updateCardByID(
     s_color?: string,
     a_color?: string
 ) {
-    // console.log('received data:', id, font, shape, p_color, s_color, a_color);
     try {
         await connectDB();
         const updateData: any = {};
