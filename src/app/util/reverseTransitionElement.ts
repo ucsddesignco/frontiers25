@@ -29,6 +29,7 @@ export function reverseTransitionElement({
     return initialElement;
   }
   if (type === 'button') {
+    initialElement.style.transition = `transform var(--card-duration) ease-in-out, width var(--card-duration) ease-in-out`;
     initialElement.style.width = '100%';
     initialElement.style.height = '100%';
     initialElement.style.transform = '';
@@ -41,6 +42,7 @@ export function reverseTransitionElement({
     return initialElement;
   }
 
+  initialElement.style.transition = `transform var(--card-duration) ease-in-out, opacity var(--card-duration) linear`;
   initialElement.style.transform = 'scale(1)';
 
   return initialElement;

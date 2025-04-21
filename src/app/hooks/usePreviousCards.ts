@@ -20,6 +20,7 @@ export const usePreviousCards = (selectedCard: number | null) => {
   };
 
   useEffect(() => {
+    if (window.innerWidth < 768) return;
     const map = previousSelectedCards.current;
 
     map.keys().forEach(key => {

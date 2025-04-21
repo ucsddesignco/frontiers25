@@ -4,6 +4,7 @@ import { handleCardElementTransition } from '../util/handleCardElementTransition
 import { CanvasState } from '../stores/canvasStore';
 import { useShallow } from 'zustand/shallow';
 import { VisibleCard } from './useVisibleCards';
+import { MOBILE_BREAKPOINT } from '../components/constants';
 
 // Hook for card interactions
 export function useCardInteractions() {
@@ -48,7 +49,10 @@ export function useCardInteractions() {
       setExpandedCard(card);
 
       clickedCard.style.zIndex = '3';
-      const hoverScale = 1.1;
+      let hoverScale = 1.1;
+      if (window.innerWidth < MOBILE_BREAKPOINT) {
+        hoverScale = 1;
+      }
       // Maintain hover scale while transitioning
       clickedCard.style.transform = `scale(${hoverScale})`;
       clickedCard.style.transformOrigin = 'center center';

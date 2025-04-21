@@ -1,4 +1,4 @@
-import { TransformProperties } from '../components/constants';
+import { MOBILE_BREAKPOINT, TransformProperties } from '../components/constants';
 import { calculateElements } from './calculateElements';
 
 export type TransitionElementType = 'nav' | 'button' | 'learn-more' | 'reposition' | '';
@@ -34,11 +34,16 @@ export const calculateTransitionValues = (
     'judges-text'
   ];
 
+  let timeElementName = 'time';
+  if (window.innerWidth < MOBILE_BREAKPOINT) {
+    timeElementName = 'mobile-time';
+  }
+
   const elementNames = [
     'svg',
     'date',
     'location',
-    'time',
+    timeElementName,
     'description',
     'learn-more',
     'apply-bg',

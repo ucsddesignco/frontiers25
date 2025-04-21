@@ -37,7 +37,7 @@ function ThickFog({
         backgroundImage:
           'radial-gradient(circle, rgba(233, 233, 233, 0.5) 0%, rgba(232, 232, 232, 1) 50%)'
       }}
-      className={`${opacityClass} ${transitionClass} pointer-events-none absolute left-1/2 top-1/2 h-[200vh] w-[200vw] -translate-x-1/2 -translate-y-1/2`}
+      className={`${opacityClass} ${transitionClass} pointer-events-none absolute left-1/2 top-1/2 hidden h-[200vh] w-[200vw] -translate-x-1/2 -translate-y-1/2 lg:block`}
     ></div>
   );
 }

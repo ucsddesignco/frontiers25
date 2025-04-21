@@ -54,12 +54,19 @@ const Card: React.FC<CardProps> = ({ card, onClick, onMouseDown, onLearnMore, cl
               </svg>
               <div className="flex w-full justify-between pt-3">
                 <div>
-                  <p className="date transition-transform duration-card ease-in-out">Wed May 8</p>
-                  <p className="location transition-transform duration-card ease-in-out">
+                  <p className="date w-fit transition-transform duration-card ease-in-out">
+                    Wed May 8
+                  </p>
+                  <p className="location w-fit transition-transform duration-card ease-in-out">
                     DIB Room 208
                   </p>
                 </div>
-                <p className="time transition-transform duration-card ease-in-out">9am-5pm</p>
+                <p className="time hidden h-fit w-fit transition-transform duration-card ease-in-out lg:block">
+                  9am-5pm
+                </p>
+                <p className="mobile-time h-fit w-fit transition-transform duration-card ease-in-out lg:hidden">
+                  9am-5pm
+                </p>
               </div>
             </div>
 
@@ -79,7 +86,7 @@ const Card: React.FC<CardProps> = ({ card, onClick, onMouseDown, onLearnMore, cl
                 {NAV_BUTTONS.map(({ id, label }) => (
                   <button
                     key={'card-button-' + id}
-                    className="pointer-events-none absolute cursor-pointer rounded-full px-6 py-2"
+                    className="pointer-events-none absolute cursor-pointer rounded-full px-6 py-2 opacity-0 lg:opacity-100"
                   >
                     <span
                       style={{ backgroundColor: card.buttonColor, outlineColor: card.accent }}

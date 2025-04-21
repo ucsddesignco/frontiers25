@@ -1,6 +1,7 @@
 import { transitionElement } from './transitionElement';
 import { reverseTransitionElement } from './reverseTransitionElement';
 import { calculateTransitionValues } from './calculateTransitionValues.ts';
+import { MOBILE_BREAKPOINT } from '../components/constants';
 
 type HandleCardElementTransitionProps = {
   parentScale: number;
@@ -75,14 +76,26 @@ export function handleCardElementTransition({
         element: element.element,
         type: element.type,
         onTransitionEnd: () => {
-          if (index === initialElements.length - 1) {
-            reverseTransitionElement({
-              element: learnMoreElement,
-              type: 'learn-more',
-              onTransitionEnd: () => {
-                onTransitionEnd();
-              }
-            });
+          if (window.innerWidth < MOBILE_BREAKPOINT) {
+            if (index === 0) {
+              reverseTransitionElement({
+                element: learnMoreElement,
+                type: 'learn-more',
+                onTransitionEnd: () => {
+                  onTransitionEnd();
+                }
+              });
+            }
+          } else {
+            if (index === initialElements.length - 1) {
+              reverseTransitionElement({
+                element: learnMoreElement,
+                type: 'learn-more',
+                onTransitionEnd: () => {
+                  onTransitionEnd();
+                }
+              });
+            }
           }
         }
       });

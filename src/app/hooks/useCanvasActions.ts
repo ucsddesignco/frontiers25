@@ -5,7 +5,8 @@ import {
   GRID_ROWS,
   MIN_ZOOM,
   MAX_ZOOM,
-  MIDDLE_CARD_INDEX
+  MIDDLE_CARD_INDEX,
+  MOBILE_BREAKPOINT
 } from '../components/constants';
 import { throttle } from '../util/throttle';
 import { useShallow } from 'zustand/shallow';
@@ -129,8 +130,15 @@ export function useCanvasActions() {
         focusPointY = totalHeight / 2;
       }
 
-      const targetX = viewportWidth / 2 - focusPointX * 1;
-      const targetY = viewportHeight / 2 - focusPointY * 1;
+      let targetX = viewportWidth / 2 - focusPointX * 1;
+      let targetY = viewportHeight / 2 - focusPointY * 1;
+
+      if (window.innerWidth < MOBILE_BREAKPOINT && cardX === undefined && cardY === undefined) {
+        const cardHeight = cardSize.height + cardSize.gap;
+        const rowY = MIDDLE_CARD_INDEX * cardHeight;
+        targetX = (viewportWidth - cardSize.width) / 2;
+        targetY = viewportHeight / 2 - (rowY + cardSize.height / 2);
+      }
       setPosition({ x: targetX, y: targetY });
 
       if (cardX !== undefined && cardY !== undefined) {
@@ -307,6 +315,11 @@ export function useCanvasActions() {
   // Center the canvas initially
   useEffect(() => {
     if (cardSize.width === 0) return;
+    if (window.innerWidth < 768) {
+      const mobileGap = window.innerWidth - cardSize.width;
+      setPosition({ x: mobileGap / 2, y: 0 });
+      // return;
+    }
     centerToCard();
     setSelectedCard(MIDDLE_CARD_INDEX);
     // eslint-disable-next-line react-hooks/exhaustive-deps

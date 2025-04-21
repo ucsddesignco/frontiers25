@@ -6,7 +6,7 @@ type PageTitleProps = {
 export default function PageTitle({ title, subtitle }: PageTitleProps) {
   return (
     <>
-      <h2 className="text-center text-[5rem] font-bold uppercase">{title}</h2>
+      <h2 className="text-center text-[4rem] font-bold uppercase lg:text-[5rem]">{title}</h2>
       <p className="text-center text-base">{subtitle}</p>
     </>
   );
