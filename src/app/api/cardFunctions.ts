@@ -1,3 +1,4 @@
+'use server';
 import card from "../../backend/models/card"
 import connectDB from "../../backend/connections/connection"
 
@@ -21,7 +22,7 @@ export default async function createCard(
 ) {
     try{
         await connectDB();
-        return await card.create({
+        const new_card = await card.create({
             user: user,
             author: author,
             font: font,
@@ -30,6 +31,7 @@ export default async function createCard(
             a_color: a_color,
             last_updated: new Date()
         })
+        return JSON.stringify(new_card);
     }
     catch (error) {
         console.error("Error creating card:", error);
@@ -44,7 +46,8 @@ export default async function createCard(
 export async function getAllCards() {
     try {
         await connectDB();
-        return await card.find({});
+        const cards = await card.find();
+        return JSON.stringify(cards);
     }
     catch (error) {
         console.error("Error fetching cards:", error);
@@ -60,7 +63,8 @@ export async function getAllCards() {
 export async function getCardByID(id: string) {
     try {
         await connectDB();
-        return await card.find({_id: id});
+        const found = await card.find({_id: id});
+        return JSON.stringify(found);
     }
     catch (error) {
         console.error("Error fetching card by user:", error);
@@ -76,7 +80,8 @@ export async function getCardByID(id: string) {
 export async function getCardByUser(user: string) {
     try {
         await connectDB();
-        return await card.find({user: user});
+        const found = await card.find({user: user});
+        return JSON.stringify(found);
     }
     catch (error) { 
         console.error("Error fetching card by user:", error);
@@ -92,7 +97,8 @@ export async function getCardByUser(user: string) {
 export async function removeCardByID(id: string) {
     try {
         await connectDB();
-        return await card.deleteOne({_id: id});
+        const removed = await card.deleteOne({_id: id});
+        return JSON.stringify(removed);
     }
     catch (error) { 
         console.error("Error deleting card by id:", error);
