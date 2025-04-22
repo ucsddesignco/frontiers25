@@ -13,6 +13,11 @@ const Card = new mongoose.Schema({
         type: String,
         required : true
     },
+    author: {
+        type: String,
+        required: true,
+        //validator TODO
+    },
     font: {
         type: Number,
         required : true
@@ -26,15 +31,14 @@ const Card = new mongoose.Schema({
         required: true,
         //validator TODO
     },
-    s_color: {
-        type: String,
-        required: true,
-        //validator TODO
-    },
     a_color: {
         type: String,
         required: true,
         //validator TODO
+    },
+    last_updated: {
+        type: Date,
+        required: true   
     }
 });
 

@@ -9,8 +9,7 @@ import { updateCardByID } from '../cardFunctions';
  *   font: string,       // The font style for the card
  *   shape: string,      // The shape of the card
  *   p_color: string,    // The primary color of the card
- *   s_color: string,    // The secondary color of the card
- *   a_color: string     // The accent color of the card
+ *   a_color: string,    // The accent color of the card
  * }
  * @returns a json of what has been updated
  * PUT /api/updateCard
@@ -24,7 +23,7 @@ export async function POST(req: NextRequest) {
                 return NextResponse.json({ error: `Missing field: ${field}` }, { status: 400 });
             }
         }
-        const updatedCard = await updateCardByID(body.id, body.font, body.shape, body.p_color, body.s_color, body.a_color);
+        const updatedCard = await updateCardByID(body.id, body.font, body.shape, body.p_color, body.a_color);
         return NextResponse.json(updatedCard);
     }
     catch (error) {

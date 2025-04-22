@@ -13,21 +13,22 @@ import connectDB from "../../backend/connections/connection"
  */
 export default async function createCard(
     user : string,
+    author : string,
     font : number,
     shape : number,
     p_color : string,
-    s_color : string,
-    a_color : string
+    a_color : string,
 ) {
     try{
         await connectDB();
         return await card.create({
             user: user,
+            author: author,
             font: font,
             shape: shape, 
             p_color: p_color,
-            s_color: s_color,
-            a_color: a_color
+            a_color: a_color,
+            last_updated: new Date()
         })
     }
     catch (error) {
@@ -113,8 +114,7 @@ export async function updateCardByID(
     font?: number,
     shape?: number,
     p_color?: string,
-    s_color?: string,
-    a_color?: string
+    a_color?: string,
 ) {
     try {
         await connectDB();
@@ -122,8 +122,8 @@ export async function updateCardByID(
         if (font !== undefined) updateData.font = font;
         if (shape !== undefined) updateData.shape = shape;
         if (p_color !== undefined) updateData.p_color = p_color;
-        if (s_color !== undefined) updateData.s_color = s_color;
         if (a_color !== undefined) updateData.a_color = a_color;
+        updateData.last_updated = new Date();
         const doc = await card.findByIdAndUpdate(id, { $set: updateData }, { new: true });
         
         if (!doc) {

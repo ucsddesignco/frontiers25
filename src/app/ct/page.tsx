@@ -12,10 +12,10 @@ const CardTest: React.FC = () => {
     const createCard = async () => {
         const cardData = {
             user: 'testUser',
+            author: 'testAuthor',
             font: 1,
             shape: 2,
             p_color: '#FF5733',
-            s_color: '#33FF57',
             a_color: '#3357FF',
         };
 
@@ -123,11 +123,10 @@ const CardTest: React.FC = () => {
 
     const updateCard = async () => {
         const updateData = {
-            id: '6804037a8c43a4b9bfece959',
+            id: '68071878d28df8281c4c39f8',
             font: 69,
             shape: 420,
             p_color: '#color1',
-            s_color: 'lawl',
             a_color: 'hehe haha'
         }
         try{
