@@ -1,5 +1,9 @@
 #card-content-expanded::-webkit-scrollbar {
-  width: 10px;
+  width: 6px;
+
+  @media (min-width: 768px) {
+    width: 10px;
+  }
 }
 
 #card-content-expanded::-webkit-scrollbar-track {

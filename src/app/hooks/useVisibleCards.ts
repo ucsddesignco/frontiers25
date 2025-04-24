@@ -47,6 +47,9 @@ export const useVisibleCards = ({
   // Ref to track the current timestamp for cleanup calculations
   const nowRef = useRef<number>(Date.now());
 
+  const isMobile =
+    typeof window !== 'undefined' ? window.innerWidth < 768 : viewportSize.width < 768;
+
   return useMemo(() => {
     if (!basePattern.length || !viewportSize.width || !viewportSize.height || zoomLevel <= 0)
       return [];
@@ -58,45 +61,72 @@ export const useVisibleCards = ({
     const effectiveCardWidth = cardSize.width + cardSize.gap;
     const effectiveCardHeight = cardSize.height + cardSize.gap;
 
-    const viewLeft = -position.x / zoomLevel;
-    const viewTop = -position.y / zoomLevel;
-    const viewRight = (-position.x + viewportSize.width) / zoomLevel;
-    const viewBottom = (-position.y + viewportSize.height) / zoomLevel;
-
-    // Determine the range of virtual grid cells visible in the viewport
-    const startCol = Math.floor(viewLeft / effectiveCardWidth) - renderBuffer;
-    const endCol = Math.ceil(viewRight / effectiveCardWidth) + renderBuffer;
-    const startRow = Math.floor(viewTop / effectiveCardHeight) - renderBuffer;
-    const endRow = Math.ceil(viewBottom / effectiveCardHeight) + renderBuffer;
-
     const cardsToRender: VisibleCard[] = [];
     const currentlyVisibleKeys = new Set<string>();
 
-    // Iterate over the visible virtual grid range
-    for (let row = startRow; row < endRow; row++) {
-      for (let col = startCol; col < endCol; col++) {
-        // Map the virtual grid coordinates to the base pattern coordinates
-        const patternCol = ((col % GRID_COLUMNS) + GRID_COLUMNS) % GRID_COLUMNS;
-        const patternRow = ((row % GRID_ROWS) + GRID_ROWS) % GRID_ROWS;
-        const patternIndex = patternRow * GRID_COLUMNS + patternCol;
+    if (isMobile) {
+      const viewTop = -position.y / zoomLevel;
+      const viewBottom = (-position.y + viewportSize.height) / zoomLevel;
+      const renderBuffer = zoomLevel <= 1 ? 0 : 1;
+      const effectiveCardHeight = cardSize.height + cardSize.gap;
+      const totalCards = basePattern.length;
+      const startIndex = Math.floor(viewTop / effectiveCardHeight) - renderBuffer;
+      const endIndex = Math.ceil(viewBottom / effectiveCardHeight) + renderBuffer;
+      for (let i = startIndex; i < endIndex; i++) {
+        const wrappedIndex = ((i % totalCards) + totalCards) % totalCards;
+        const cardData = basePattern[wrappedIndex];
+        const cardX = 0;
+        const cardY = i * effectiveCardHeight;
+        const cardKey = `${cardData.id}-0-${i}`;
+        cardsToRender.push({
+          ...cardData,
+          x: cardX,
+          y: cardY,
+          virtualCol: 0,
+          virtualRow: i,
+          patternIndex: wrappedIndex,
+          key: cardKey
+        });
+        currentlyVisibleKeys.add(cardKey);
+      }
+    } else {
+      const viewLeft = -position.x / zoomLevel;
+      const viewTop = -position.y / zoomLevel;
+      const viewRight = (-position.x + viewportSize.width) / zoomLevel;
+      const viewBottom = (-position.y + viewportSize.height) / zoomLevel;
 
-        if (patternIndex >= 0 && patternIndex < basePattern.length) {
-          const cardData = basePattern[patternIndex];
-          const cardX = col * effectiveCardWidth;
-          const cardY = row * effectiveCardHeight;
-          const cardKey = `${cardData.id}-${col}-${row}`;
+      // Determine the range of virtual grid cells visible in the viewport
+      const startCol = Math.floor(viewLeft / effectiveCardWidth) - renderBuffer;
+      const endCol = Math.ceil(viewRight / effectiveCardWidth) + renderBuffer;
+      const startRow = Math.floor(viewTop / effectiveCardHeight) - renderBuffer;
+      const endRow = Math.ceil(viewBottom / effectiveCardHeight) + renderBuffer;
 
-          cardsToRender.push({
-            ...cardData,
-            x: cardX,
-            y: cardY,
-            virtualCol: col,
-            virtualRow: row,
-            patternIndex: patternIndex,
-            key: cardKey
-          });
+      // Iterate over the visible virtual grid range
+      for (let row = startRow; row < endRow; row++) {
+        for (let col = startCol; col < endCol; col++) {
+          // Map the virtual grid coordinates to the base pattern coordinates
+          const patternCol = ((col % GRID_COLUMNS) + GRID_COLUMNS) % GRID_COLUMNS;
+          const patternRow = ((row % GRID_ROWS) + GRID_ROWS) % GRID_ROWS;
+          const patternIndex = patternRow * GRID_COLUMNS + patternCol;
 
-          currentlyVisibleKeys.add(cardKey);
+          if (patternIndex >= 0 && patternIndex < basePattern.length) {
+            const cardData = basePattern[patternIndex];
+            const cardX = col * effectiveCardWidth;
+            const cardY = row * effectiveCardHeight;
+            const cardKey = `${cardData.id}-${col}-${row}`;
+
+            cardsToRender.push({
+              ...cardData,
+              x: cardX,
+              y: cardY,
+              virtualCol: col,
+              virtualRow: row,
+              patternIndex: patternIndex,
+              key: cardKey
+            });
+
+            currentlyVisibleKeys.add(cardKey);
+          }
         }
       }
     }
@@ -130,5 +160,16 @@ export const useVisibleCards = ({
     prevVisibleCardsRef.current = newPrevVisibleCards;
 
     return cardsToRender;
-  }, [basePattern, position, zoomLevel, viewportSize]);
+  }, [
+    basePattern,
+    viewportSize.width,
+    viewportSize.height,
+    zoomLevel,
+    cardSize.width,
+    cardSize.gap,
+    cardSize.height,
+    isMobile,
+    position.y,
+    position.x
+  ]);
 };

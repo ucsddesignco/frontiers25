@@ -61,7 +61,7 @@ function CardGrid({
       {visibleCards.map(card => {
         const isSelected = selectedCard === card.patternIndex;
         const isPrevious = checkPrevious(card.patternIndex);
-        const selectedClass = isSelected ? 'scale-[1.1] z-[2] selected' : '';
+        const selectedClass = isSelected ? 'lg:scale-[1.1] z-[2] selected' : '';
 
         const previousClass = isPrevious && !isSelected ? 'z-[1]' : '';
         const showThickFog = (isSelected || isPrevious) && zoomLevel === 1 && !wasZoomed;
@@ -112,7 +112,7 @@ function CardGrid({
                   }
                 }
               }}
-              className={`${selectedClass} ${previousClass} ${cardIsExpanding ? '' : 'hover:scale-[1.1]'}`}
+              className={`${selectedClass} ${previousClass} ${cardIsExpanding ? '' : 'lg:hover:scale-[1.1]'}`}
             />
           </div>
         );

@@ -9,6 +9,7 @@ export const DOT_BACKGROUND_SIZE = 100; // px
 export const APPLY_LINK = 'https://ucsddesign.co/';
 export const DRAG_THRESHOLD = 8; // px
 export const MIDDLE_CARD_INDEX = Math.floor((GRID_COLUMNS * GRID_ROWS) / 2);
+export const MOBILE_BREAKPOINT = 768; // px
 
 export type CardType = {
   id: string;

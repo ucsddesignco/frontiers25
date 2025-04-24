@@ -1,7 +1,8 @@
-import { TouchEvent, useCallback, RefObject } from 'react';
+import { TouchEvent, useCallback, RefObject, useRef } from 'react';
 import { CanvasState } from '../stores/canvasStore';
 import { DRAG_THRESHOLD } from '../components/constants';
 import { VisibleCard } from './useVisibleCards';
+import { useViewportSize } from './useViewportSize';
 
 type Position = { x: number; y: number };
 
@@ -58,9 +59,22 @@ export function useTouchHandlers({
   throttledSetPosition,
   calculateZoomUpdate
 }: UseTouchHandlersProps) {
+  const viewportSize = useViewportSize();
+  const isMobile =
+    typeof window !== 'undefined' ? window.innerWidth < 768 : viewportSize.width < 768;
+
+  // --- Momentum state ---
+  // Store recent Y positions and timestamps for velocity calculation
+  const recentYRef = useRef<{ y: number; time: number }[]>([]);
+  const momentumAnimRef = useRef<number | null>(null);
+  const velocityYRef = useRef<number>(0);
+  const isMomentumActiveRef = useRef<boolean>(false);
+
   const handleTouchStart = useCallback(
     (e: TouchEvent<HTMLDivElement>): void => {
-      e.preventDefault();
+      if (e.touches.length > 1) {
+        e.preventDefault();
+      }
       if (isTransitionEnabled) {
         if (transitionTimerRef.current) {
           clearTimeout(transitionTimerRef.current);
@@ -94,6 +108,13 @@ export function useTouchHandlers({
         startPositionRef.current = { x: touch.clientX, y: touch.clientY };
         setDragging(true);
         movementAccumulator.current = { x: 0, y: 0 };
+        // Reset momentum tracking
+        recentYRef.current = [{ y: touch.clientY, time: Date.now() }];
+        if (momentumAnimRef.current) {
+          cancelAnimationFrame(momentumAnimRef.current);
+          momentumAnimRef.current = null;
+        }
+        isMomentumActiveRef.current = false;
       }
     },
     [
@@ -106,7 +127,10 @@ export function useTouchHandlers({
       lastPinchDistanceRef,
       lastTouchRef,
       startPositionRef,
-      movementAccumulator
+      movementAccumulator,
+      recentYRef,
+      momentumAnimRef,
+      isMomentumActiveRef
     ]
   );
 
@@ -148,9 +172,17 @@ export function useTouchHandlers({
       // Handle panning with single finger
       if (dragging && lastTouchRef.current && e.touches.length === 1) {
         const touch = e.touches[0];
-        const movementX = touch.clientX - lastTouchRef.current.x;
+        let movementX = touch.clientX - lastTouchRef.current.x;
         const movementY = touch.clientY - lastTouchRef.current.y;
         lastTouchRef.current = { x: touch.clientX, y: touch.clientY };
+
+        // --- Track recent Y positions for velocity ---
+        if (isMobile) {
+          const now = Date.now();
+          recentYRef.current.push({ y: touch.clientY, time: now });
+          // Keep only last 5 samples within 100ms
+          recentYRef.current = recentYRef.current.filter(pt => now - pt.time < 100);
+        }
 
         if (!didDrag && startPositionRef.current) {
           const dx = touch.clientX - startPositionRef.current.x;
@@ -158,6 +190,10 @@ export function useTouchHandlers({
           if (Math.sqrt(dx * dx + dy * dy) > DRAG_THRESHOLD) {
             setDidDrag(true);
           }
+        }
+
+        if (isMobile) {
+          movementX = 0;
         }
 
         movementAccumulator.current.x += movementX;
@@ -172,8 +208,9 @@ export function useTouchHandlers({
       expandedCard,
       isTransitionEnabled,
       selectedCard,
+      lastTouchRef,
+      lastPinchDistanceRef,
       dragging,
-      didDrag,
       setSelectedCard,
       calculateZoomUpdate,
       zoomLevel,
@@ -181,11 +218,12 @@ export function useTouchHandlers({
       setDidDrag,
       setPosition,
       setZoomLevel,
-      throttledSetPosition,
-      lastTouchRef,
-      lastPinchDistanceRef,
+      didDrag,
       startPositionRef,
-      movementAccumulator
+      isMobile,
+      movementAccumulator,
+      throttledSetPosition,
+      recentYRef
     ]
   );
 
@@ -202,6 +240,35 @@ export function useTouchHandlers({
         movementAccumulator.current = { x: 0, y: 0 };
         setDragging(false);
       }
+      // --- Calculate and apply momentum for mobile vertical pan ---
+      if (isMobile && recentYRef.current.length >= 2 && !isMomentumActiveRef.current) {
+        const last = recentYRef.current[recentYRef.current.length - 1];
+        const first = recentYRef.current[0];
+        const dt = last.time - first.time || 1;
+        const dy = last.y - first.y;
+        const velocityY = dy / dt; // px/ms
+        // Only apply if velocity is significant
+        if (Math.abs(velocityY) > 0.2) {
+          // tune threshold as needed
+          velocityYRef.current = velocityY * 16.67; // px/frame (assuming ~60fps)
+          isMomentumActiveRef.current = true;
+          let currentY = position.y;
+          const friction = 0.95; // tune for slower/faster stop
+          function animate() {
+            velocityYRef.current *= friction;
+            currentY += velocityYRef.current;
+            setPosition({ x: position.x, y: currentY });
+            if (Math.abs(velocityYRef.current) > 0.5) {
+              momentumAnimRef.current = requestAnimationFrame(animate);
+            } else {
+              isMomentumActiveRef.current = false;
+              momentumAnimRef.current = null;
+            }
+          }
+          momentumAnimRef.current = requestAnimationFrame(animate);
+        }
+      }
+      recentYRef.current = [];
       lastPinchDistanceRef.current = null;
       lastTouchRef.current = null;
       startPositionRef.current = null;
@@ -214,7 +281,12 @@ export function useTouchHandlers({
       movementAccumulator,
       lastPinchDistanceRef,
       lastTouchRef,
-      startPositionRef
+      startPositionRef,
+      isMobile,
+      recentYRef,
+      isMomentumActiveRef,
+      velocityYRef,
+      momentumAnimRef
     ]
   );
 
