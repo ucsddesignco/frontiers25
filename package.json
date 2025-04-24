@@ -12,12 +12,18 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@radix-ui/react-accordion": "^1.2.8",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "lint-staged": "^15.5.0",
+    "lucide-react": "^0.503.0",
     "next": "15.3.0",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "sass": "^1.86.3",
+    "tailwind-merge": "^3.2.0",
+    "tailwindcss-animate": "^1.0.7",
     "zustand": "^5.0.3"
   },
   "devDependencies": {
@@ -39,5 +45,5 @@
     ],
     "*.{html,scss,css,yml}": "prettier --write"
   },
-  "packageManager": "pnpm@10.5.2+sha512.da9dc28cd3ff40d0592188235ab25d3202add8a207afbedc682220e4a0029ffbff4562102b9e6e46b4e3f9e8bd53e6d05de48544b0c57d4b0179e22c76d1199b"
+  "packageManager": "pnpm@10.9.0"
 }
