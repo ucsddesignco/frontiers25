@@ -12,7 +12,7 @@ export default function JudgesPage({ ref, showExpanded }: JudgesPageProps) {
       ref={ref}
       className={`${showExpanded ? 'opacity-100' : 'opacity-0'} h-screen w-full transition-opacity duration-[0.2s] ease-in-out`}
     >
-      <PageTitle title="Judges" subtitle="Judges" />
+      <PageTitle title="Judges" subtitle="Judges"/>
     </section>
   );
 }
