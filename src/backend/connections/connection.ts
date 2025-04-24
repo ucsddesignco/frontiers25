@@ -1,44 +1,51 @@
-// import mongoose from 'mongoose';
+import mongoose from 'mongoose';
 
-// //const DATABASE_URL = TODO
+//const mongoPass = process.env.MONGO_PASS
+//const mongoUser = process.env. MONGO_USER
+//const DB_url = mongodb+srv://${mongoUser}:${mongoPass}@dco-internal-tool.zyu6n.mongodb.net/DCo-Frontiers-2025?retryWrites=true&w=majority&appName=DCo-Internal-Tool
+const DB_url = process.env.DATABASE_URL;
+/*if(!mongoPass){
+    throw new Error(
+        'mongoose password is undefined'
+    );
+} else if (!mongoUser){
+    throw new Error(
+        'mongoose username is undefined'
+    );
+}*/
 
-// if (!DATABASE_URL) {
-//   throw new Error(
-//     'Please define the DATABASE_URL environment variable inside .env.local'
-//   );
-// }
+type Cached = {
+  conn: mongoose.Connection | null;
+  promise: Promise<mongoose.Connection> | null;
+};
 
-// type Cache = {
-//   conn: mongoose.Connection | null;
-//   promise: Promise<mongoose.Connection> | null;
-// };
+declare global {
+  // eslint-disable-next-line no-var
+  var mongoose: Cached;
+}
 
-// declare global {
-//   var mongoose: Cache;
-// }
+let cached = global.mongoose;
 
-// let cached = global.mongoose;
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
+}
 
-// if (!cached) {
-//   cached = global.mongoose = { conn: null, promise: null };
-// }
+async function connectDB(): Promise<mongoose.Connection> {
+  console.log('Connecting to MongoDB...');
+  if (cached.conn) {
+    return cached.conn;
+  }
 
-// async function connectDB(): Promise<mongoose.Connection> {
-//   if (cached.conn) {
-//     return cached.conn;
-//   }
+  if (!cached.promise) {
+    const opts = { bufferCommands: false };
 
-//   if (!cached.promise) {
-//     const opts = {
-//       bufferCommands: false,
-//     };
+    cached.promise = mongoose.connect(DB_url!, opts).then(mongoose => {
+      return mongoose.connection;
+    });
+  }
 
-//     cached.promise = mongoose.connect(DATABASE_URL!, opts).then((mongoose) => {
-//       return mongoose.connection;
-//     });
-//   }
-//   cached.conn = await cached.promise;
-//   return cached.conn;
-// }
+  cached.conn = await cached.promise;
+  return cached.conn;
+}
 
-// export default connectDB;
+export default connectDB;
