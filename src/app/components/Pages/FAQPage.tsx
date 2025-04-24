@@ -40,8 +40,8 @@ export default function FAQPage({ ref, showExpanded }: FAQPageProps) {
     return (
       <> 
         {faqItems.map((item, index) => (
-          <Accordion type="single" collapsible className="gap-4 w-full max-w-[90%]">
-              <AccordionItem value="item-1">
+          <Accordion type="single" collapsible className="gap-4 w-full max-w-[90%]" key={index}>
+              <AccordionItem value={`item-${index}`}>
                 <AccordionTrigger>
                   <p className='md:max-w-[66%] text-start text-lg'>{item.question}</p>
                 </AccordionTrigger>
