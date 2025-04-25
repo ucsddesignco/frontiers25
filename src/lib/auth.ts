@@ -34,11 +34,11 @@ export const auth = betterAuth({
       }
 
       console.log(ctx.context.newSession);
-      if (!ctx.body?.email.endsWith('@ucsd.edu')) {
-        throw new APIError('BAD_REQUEST', {
-          message: 'Email must end with @example.com'
-        });
-      }
+      //   if (!ctx.body?.email.endsWith('@ucsd.edu')) {
+      //     throw new APIError('BAD_REQUEST', {
+      //       message: 'Email must end with @example.com'
+      //     });
+      //   }
     })
   }
 });
