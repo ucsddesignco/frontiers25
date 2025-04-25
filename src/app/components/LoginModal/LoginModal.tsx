@@ -33,11 +33,11 @@ export default function LoginModal({ open, onOpenChange }: LoginModalProps) {
       const { error } = await authClient.signIn.social(
         {
           provider: 'google',
-          callbackURL: '/dashboard'
+          callbackURL: '/'
         },
         {
           onRequest: () => setLoading(true),
-          onSuccess: () => router.push('/dashboard'),
+          onSuccess: () => router.push('/'),
           onError: ctx => setError(ctx.error.message || 'Sign in failed')
         }
       );
