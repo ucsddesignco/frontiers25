@@ -52,7 +52,7 @@ export default function JudgesPage({ ref, showExpanded }: JudgesPageProps) {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {judges.map((judge, index) => (
           <div key={index} className="flex flex-col items-center">
-            <img src={judge.image} alt={`${judge.first} ${judge.last}`} className="w-[200px] h-[250px]" />
+            <img src={judge.image} alt={`${judge.first} ${judge.last}`} className="w-[200px] h-[250px] pb-2" />
             <h3 className="text-lg font-bold">{`${judge.first} ${judge.last}`}</h3>
             <p className="text-sm">{judge.position}</p>
           </div>
