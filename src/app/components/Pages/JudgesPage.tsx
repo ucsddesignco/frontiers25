@@ -7,12 +7,71 @@ type JudgesPageProps = {
 };
 
 export default function JudgesPage({ ref, showExpanded }: JudgesPageProps) {
+
+  const judges = [
+    {
+      fist: "Judge 1",
+      last: "last 1",
+      position: "Position 1 @ UCSD",
+      image: "JudgeImage.jpg"
+    },
+    {
+      first: "Judge 2",
+      last: "last 2",
+      position: "Position 2 @ UCSD",
+      image: "JudgeImage.jpg"
+    },
+    {
+      first: "Judge 3",
+      last: "last 3",
+      position: "Position 3 @ UCSD",
+      image: "JudgeImage.jpg"
+    },
+  {
+      first: "Judge 4",
+      last: "last 4",
+      position: "Position 4 @ UCSD",
+      image: "JudgeImage.jpg"
+    },
+    {
+      first: "Judge 5",
+      last: "last 5",
+      position: "Position 5 @ UCSD",
+      image: "JudgeImage.jpg"
+    },
+    {
+      first: "Judge 6",
+      last: "last 6",
+      position: "Position 6 @ UCSD",
+      image: "JudgeImage.jpg"
+    },
+  ]
+
+  function renderJudges() {
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {judges.map((judge, index) => (
+          <div key={index} className="flex flex-col items-center">
+            <img src={judge.image} alt={`${judge.first} ${judge.last}`} className="w-[200px] h-[250px]" />
+            <h3 className="text-lg font-bold">{`${judge.first} ${judge.last}`}</h3>
+            <p className="text-sm">{judge.position}</p>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   return (
     <section
       ref={ref}
       className={`${showExpanded ? 'opacity-100' : 'opacity-0'} w-full transition-opacity duration-[0.2s] ease-in-out`}
     >
       <PageTitle title="Judges" subtitle="Judges"/>
+      <div className='h-full w-full flex flex-col items-center pt-[5%]'>
+        <div className='flex flex-col items-center gap-5 md:w-max-[90%] lg:max-w-[60%]'>
+          {renderJudges()}
+        </div>
+      </div>
     </section>
   );
 }
