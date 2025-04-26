@@ -33,6 +33,10 @@ export default function FAQPage({ ref, showExpanded }: FAQPageProps) {
     {
       question: "How should I prepare for Design Frontiers if I have no design experience?",
       answer: "Answer 6"
+    },
+    {
+      question: "What should I bring to Design Frontiers?",
+      answer: "Answer 7"
     }
   ]
 
@@ -58,7 +62,7 @@ export default function FAQPage({ ref, showExpanded }: FAQPageProps) {
   return (
     <section
       ref={ref}
-      className={`${showExpanded ? 'opacity-100' : 'opacity-0'} h-screen w-full transition-opacity duration-[0.2s] ease-in-out`}
+      className={`${showExpanded ? 'opacity-100' : 'opacity-0'} w-full transition-opacity duration-[0.2s] ease-in-out`}
     >
       <div className='flex h-full w-full flex-col items-center'>
         {/*Page title and Subtitle*/}
