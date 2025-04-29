@@ -116,6 +116,8 @@ const InfiniteCanvas = () => {
         {/* Desktop */}
         <ResetButton handleGalleryClick={handleGalleryClick} handleResetZoom={handleResetZoom} />
 
+        <SignInButton />
+
         {/* Mobile */}
         <GalleryButton
           handleGalleryClick={() => {
