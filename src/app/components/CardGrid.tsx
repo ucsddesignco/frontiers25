@@ -59,7 +59,8 @@ function CardGrid({
       }}
     >
       {visibleCards.map(card => {
-        const isSelected = selectedCard === card.patternIndex;
+        const patternIndexString = card.patternIndex.toString();
+        const isSelected = selectedCard === patternIndexString;
         const isPrevious = checkPrevious(card.patternIndex);
         const selectedClass = isSelected ? 'scale-[1.1] z-[3] selected' : '';
 
@@ -71,12 +72,12 @@ function CardGrid({
               e.preventDefault();
             }
           : () => {
-              if (!didDrag && selectedCard !== card.patternIndex) {
+              if (!didDrag && selectedCard !== patternIndexString) {
                 if (wasZoomed) {
                   setWasZoomed(false);
                 }
                 centerToCard(card.x, card.y);
-                setSelectedCard(card.patternIndex);
+                setSelectedCard(patternIndexString);
               }
             };
 
@@ -107,7 +108,7 @@ function CardGrid({
                 e.stopPropagation();
                 if (!didDrag) {
                   handleLearnMore(card);
-                  if (selectedCard !== card.patternIndex) {
+                  if (selectedCard !== patternIndexString) {
                     setSelectedCard(null);
                   }
                 }
