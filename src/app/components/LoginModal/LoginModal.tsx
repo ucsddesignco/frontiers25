@@ -25,7 +25,6 @@ export default function LoginModal({ open, onOpenChange }: LoginModalProps) {
   const router = useRouter();
 
   const handleGoogleSignIn = async () => {
-    console.log('HELLO!!!');
     setLoading(true);
     setError('');
 
