@@ -1,7 +1,7 @@
 'use client';
 
 import { CanvasState, useCanvasStore } from '../stores/canvasStore';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useCanvasActions } from '../hooks/useCanvasActions';
 import { useCardInteractions } from '../hooks/useCardInteractions';
 import { useInitializeCards } from '../hooks/useInitializeCards';
@@ -17,25 +17,39 @@ import BackgroundDots from './BackgroundDots';
 import CardGrid from './CardGrid';
 import { usePreviousCards } from '../hooks/usePreviousCards';
 import SignInButton from './SignInButton';
+import { MOBILE_BREAKPOINT } from './constants';
+import GalleryButton from './GalleryButton';
 
 const InfiniteCanvas = () => {
-  const { containerRef, showExpanded, basePattern, position, zoomLevel, selectedCard, cardSize } =
-    useCanvasStore(
-      useShallow((state: CanvasState) => ({
-        containerRef: state.containerRef,
-        showExpanded: state.showExpanded,
-        basePattern: state.basePattern,
-        position: state.position,
-        zoomLevel: state.zoomLevel,
-        isTransitionEnabled: state.isTransitionEnabled,
-        selectedCard: state.selectedCard,
-        cardSize: state.cardSize
-      }))
-    );
+  const {
+    containerRef,
+    showExpanded,
+    basePattern,
+    position,
+    zoomLevel,
+    selectedCard,
+    cardSize,
+    showMobileGallery,
+    setShowMobileGallery
+  } = useCanvasStore(
+    useShallow((state: CanvasState) => ({
+      containerRef: state.containerRef,
+      showExpanded: state.showExpanded,
+      basePattern: state.basePattern,
+      position: state.position,
+      zoomLevel: state.zoomLevel,
+      isTransitionEnabled: state.isTransitionEnabled,
+      selectedCard: state.selectedCard,
+      cardSize: state.cardSize,
+      showMobileGallery: state.showMobileGallery,
+      setShowMobileGallery: state.setShowMobileGallery
+    }))
+  );
 
   const [wasZoomed, setWasZoomed] = useState(false);
   const backgroundRef = useRef<HTMLDivElement>(null);
   const isInitialLoad = useRef(true);
+  const centeredCardIndex = useCanvasStore(state => state.centeredCardIndex);
 
   useInitializeCards();
 
@@ -50,7 +64,8 @@ const InfiniteCanvas = () => {
     basePattern,
     position,
     zoomLevel,
-    viewportSize
+    viewportSize,
+    showMobileGallery
   });
 
   useBackgroundDots({ backgroundRef, position, zoomLevel });
@@ -64,6 +79,28 @@ const InfiniteCanvas = () => {
 
   const { checkPrevious } = usePreviousCards(selectedCard);
 
+  // Sync scroll/center position when switching modes
+  useEffect(() => {
+    if (window.innerWidth > MOBILE_BREAKPOINT || centeredCardIndex == null || cardSize.width === 0)
+      return;
+    if (showMobileGallery) {
+      // Gallery mode: zoom out, no transition
+      const col =
+        centeredCardIndex % (basePattern.length > 0 ? Math.min(basePattern.length, 7) : 1);
+      const row = Math.floor(
+        centeredCardIndex / (basePattern.length > 0 ? Math.min(basePattern.length, 7) : 1)
+      );
+      const x = col * (cardSize.width + cardSize.gap);
+      const y = row * (cardSize.height + cardSize.gap);
+      centerToCard(x, y, 0.7, false);
+    } else {
+      // Single-column: zoom in, no transition
+      const y = centeredCardIndex * (cardSize.height + cardSize.gap);
+      centerToCard(0, y, 1, false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showMobileGallery]);
+
   return (
     <>
       <ExpandedCard showExpanded={showExpanded} />
@@ -76,9 +113,19 @@ const InfiniteCanvas = () => {
 
         <BackgroundDots position={position} zoomLevel={zoomLevel} />
 
+        {/* Desktop */}
         <ResetButton handleGalleryClick={handleGalleryClick} handleResetZoom={handleResetZoom} />
 
-        <SignInButton />
+        {/* Mobile */}
+        <GalleryButton
+          handleGalleryClick={() => {
+            setShowMobileGallery(true);
+          }}
+          handleGoBack={() => {
+            setShowMobileGallery(false);
+          }}
+          showMobileGallery={showMobileGallery}
+        />
 
         <SelectedIsland selectedCard={selectedCard} />
 

@@ -52,7 +52,7 @@ function CardGrid({
     <div
       ref={gridRef}
       id="canvas-grid"
-      className={`${isTransitionEnabled ? 'transition-transform duration-[0.35s] ease-in-out' : ''} relative select-none will-change-transform`}
+      className={`${isTransitionEnabled ? 'duration-[0.35s] transition-transform ease-in-out' : ''} relative select-none will-change-transform`}
       style={{
         transform: `translate(${position.x}px, ${position.y}px) scale(${zoomLevel})`,
         transformOrigin: 'top left' // Align with coordinate system
@@ -61,7 +61,7 @@ function CardGrid({
       {visibleCards.map(card => {
         const isSelected = selectedCard === card.patternIndex;
         const isPrevious = checkPrevious(card.patternIndex);
-        const selectedClass = isSelected ? 'lg:scale-[1.1] z-[2] selected' : '';
+        const selectedClass = isSelected ? 'scale-[1.1] z-[3] selected' : '';
 
         const previousClass = isPrevious && !isSelected ? 'z-[1]' : '';
         const showThickFog = (isSelected || isPrevious) && zoomLevel === 1 && !wasZoomed;

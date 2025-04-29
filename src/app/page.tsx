@@ -18,7 +18,7 @@ export default function Home() {
     if (window.innerWidth < 768) {
       width = Math.min(window.innerWidth * 0.8, 320);
       height = width * (4 / 3);
-      gap = 100;
+      gap = 65;
     }
     setCardSize({ width, height, gap });
     descriptionElement.style.width = `${width - 2 * PADDING}px`;
