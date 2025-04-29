@@ -62,7 +62,8 @@ export function useCanvasActions() {
     cardIsExpanding,
     setSelectedCard,
     selectedCard,
-    cardSize
+    cardSize,
+    showMobileGallery
   } = useCanvasStore(
     useShallow((state: CanvasState) => ({
       containerRef: state.containerRef,
@@ -81,7 +82,8 @@ export function useCanvasActions() {
       cardIsExpanding: state.cardIsExpanding,
       setSelectedCard: state.setSelectedCard,
       selectedCard: state.selectedCard,
-      cardSize: state.cardSize
+      cardSize: state.cardSize,
+      showMobileGallery: state.showMobileGallery
     }))
   );
   const transitionTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -101,8 +103,9 @@ export function useCanvasActions() {
   );
 
   // Function to center the view either on a specific card or the grid center
+  // Accepts optional zoom and withTransition arguments
   const centerToCard = useCallback(
-    (cardX?: number, cardY?: number) => {
+    (cardX?: number, cardY?: number, zoom: number = 1, withTransition: boolean = true) => {
       const gridElement = gridRef.current;
       if (!gridElement || !containerRef.current || cardIsExpanding) return;
 
@@ -111,7 +114,7 @@ export function useCanvasActions() {
         transitionTimerRef.current = null;
       }
 
-      setZoomLevel(1);
+      setZoomLevel(zoom);
 
       const viewportWidth = containerRef.current.clientWidth;
       const viewportHeight = containerRef.current.clientHeight;
@@ -122,7 +125,7 @@ export function useCanvasActions() {
       if (cardX !== undefined && cardY !== undefined) {
         focusPointX = cardX + cardSize.width / 2;
         focusPointY = cardY + cardSize.height / 2;
-        setTransitionEnabled(true);
+        if (withTransition) setTransitionEnabled(true);
       } else {
         const totalWidth = GRID_COLUMNS * cardSize.width + (GRID_COLUMNS - 1) * cardSize.gap;
         const totalHeight = GRID_ROWS * cardSize.height + (GRID_ROWS - 1) * cardSize.gap;
@@ -130,8 +133,8 @@ export function useCanvasActions() {
         focusPointY = totalHeight / 2;
       }
 
-      let targetX = viewportWidth / 2 - focusPointX * 1;
-      let targetY = viewportHeight / 2 - focusPointY * 1;
+      let targetX = viewportWidth / 2 - focusPointX * zoom;
+      let targetY = viewportHeight / 2 - focusPointY * zoom;
 
       if (window.innerWidth < MOBILE_BREAKPOINT && cardX === undefined && cardY === undefined) {
         const cardHeight = cardSize.height + cardSize.gap;
@@ -141,7 +144,7 @@ export function useCanvasActions() {
       }
       setPosition({ x: targetX, y: targetY });
 
-      if (cardX !== undefined && cardY !== undefined) {
+      if (cardX !== undefined && cardY !== undefined && withTransition) {
         transitionTimerRef.current = setTimeout(() => {
           setTransitionEnabled(false);
           transitionTimerRef.current = null;
@@ -250,7 +253,8 @@ export function useCanvasActions() {
       setZoomLevel,
       setTransitionEnabled,
       throttledSetPosition,
-      calculateZoomUpdate // Pass the utility function
+      calculateZoomUpdate,
+      showMobileGallery
     }
   );
 
@@ -318,10 +322,10 @@ export function useCanvasActions() {
     if (window.innerWidth < 768) {
       const mobileGap = window.innerWidth - cardSize.width;
       setPosition({ x: mobileGap / 2, y: 0 });
-      // return;
     }
+
     centerToCard();
-    setSelectedCard(MIDDLE_CARD_INDEX);
+    setSelectedCard(MIDDLE_CARD_INDEX.toString());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cardSize]);
 

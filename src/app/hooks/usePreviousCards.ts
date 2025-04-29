@@ -1,8 +1,9 @@
 import { useEffect, useRef } from 'react';
 import { MIDDLE_CARD_INDEX } from '../components/constants';
+import { CanvasState } from '../stores/canvasStore';
 
 // Used for applying Thick Fogs on previous cards
-export const usePreviousCards = (selectedCard: number | null) => {
+export const usePreviousCards = (selectedCard: CanvasState['selectedCard']) => {
   const previousSelectedCards = useRef(new Map([[MIDDLE_CARD_INDEX, -1]]));
   const checkPrevious = (index: number) => {
     const map = previousSelectedCards.current;
@@ -27,7 +28,7 @@ export const usePreviousCards = (selectedCard: number | null) => {
       map.set(key, Date.now());
     });
     if (selectedCard) {
-      map.set(selectedCard, -1);
+      map.set(parseInt(selectedCard), -1);
     }
   }, [selectedCard]);
 

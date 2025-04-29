@@ -40,7 +40,7 @@ const Card: React.FC<CardProps> = ({ card, onClick, onMouseDown, onLearnMore, cl
           <div
             id={`card-content-${card.key}`}
             style={{ color: card.accent }}
-            className={`relative flex h-full flex-col items-center justify-between p-[36px] text-[#530B67] transition-transform duration-card ease-in-out`}
+            className={`relative flex h-full flex-col items-center justify-between p-[36px] transition-transform duration-card ease-in-out`}
           >
             <div className="w-full">
               <svg
@@ -124,7 +124,7 @@ const Card: React.FC<CardProps> = ({ card, onClick, onMouseDown, onLearnMore, cl
         </div>
         <p className="pt-2 text-center text-sm text-[#666666]">
           Made By {card.author}
-          <span className="ml-3 text-xs">{card.lastUpdated}</span>
+          <span className="ml-3">{card.lastUpdated}</span>
         </p>
       </div>
     </>

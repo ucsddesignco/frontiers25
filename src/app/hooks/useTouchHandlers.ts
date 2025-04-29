@@ -10,7 +10,7 @@ interface UseTouchHandlersProps {
   dragging: boolean;
   isTransitionEnabled: boolean;
   didDrag: boolean;
-  selectedCard: number | null;
+  selectedCard: CanvasState['selectedCard'];
   position: Position;
   zoomLevel: number;
   expandedCard: VisibleCard | null;
@@ -34,6 +34,7 @@ interface UseTouchHandlersProps {
     centerX: number,
     centerY: number
   ) => { newZoomLevel: number; newPosition: Position } | null;
+  showMobileGallery: boolean;
 }
 
 export function useTouchHandlers({
@@ -57,7 +58,8 @@ export function useTouchHandlers({
   setZoomLevel,
   setTransitionEnabled,
   throttledSetPosition,
-  calculateZoomUpdate
+  calculateZoomUpdate,
+  showMobileGallery
 }: UseTouchHandlersProps) {
   const viewportSize = useViewportSize();
   const isMobile =
@@ -192,7 +194,7 @@ export function useTouchHandlers({
           }
         }
 
-        if (isMobile) {
+        if (isMobile && !showMobileGallery) {
           movementX = 0;
         }
 
@@ -218,12 +220,12 @@ export function useTouchHandlers({
       setDidDrag,
       setPosition,
       setZoomLevel,
+      isMobile,
       didDrag,
       startPositionRef,
-      isMobile,
+      showMobileGallery,
       movementAccumulator,
-      throttledSetPosition,
-      recentYRef
+      throttledSetPosition
     ]
   );
 
