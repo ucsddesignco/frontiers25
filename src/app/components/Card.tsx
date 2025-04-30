@@ -28,7 +28,7 @@ const Card: React.FC<CardProps> = ({ card, onClick, onMouseDown, onLearnMore, cl
         id={`card-container-${card.key}`}
         onClick={onClick}
         onMouseDown={onMouseDown}
-        className={`${className} relative z-[0] h-full cursor-pointer transition-[transform,opacity] duration-[0.2s] ease-out`}
+        className={`${className} duration-[0.2s] relative z-[0] h-full cursor-pointer transition-[transform,opacity] ease-out`}
         style={{ opacity }}
       >
         <div className="relative h-full">

@@ -16,6 +16,7 @@ import ResetButton from './ResetButton';
 import BackgroundDots from './BackgroundDots';
 import CardGrid from './CardGrid';
 import { usePreviousCards } from '../hooks/usePreviousCards';
+import SignInButton from './SignInButton';
 import { MOBILE_BREAKPOINT } from './constants';
 import GalleryButton from './GalleryButton';
 import MobileGalleryFog from './MobileGalleryFog';
@@ -155,6 +156,8 @@ const InfiniteCanvas = ({ data }: InfiniteCanvasProps) => {
 
         {/* Desktop */}
         <ResetButton handleGalleryClick={handleGalleryClick} handleResetZoom={handleResetZoom} />
+
+        <SignInButton />
 
         {/* Mobile */}
         <GalleryButton
