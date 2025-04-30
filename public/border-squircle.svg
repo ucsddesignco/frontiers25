@@ -1,0 +1,6 @@
+<svg width="52" height="51" viewBox="0 0 52 51" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="border-squircle">
+<path id="corner" d="M20 1.5V1.5C29.3188 1.5 33.9782 1.5 37.6537 3.02241C42.5542 5.05229 46.4477 8.94577 48.4776 13.8463C50 17.5218 50 22.1812 50 31.5V31.5" stroke="#222222" stroke-width="3"/>
+<path id="dotted line" d="M21 1.5H2V49.5H50V30.5" stroke="#222222" stroke-width="3" stroke-dasharray="3 3"/>
+</g>
+</svg>

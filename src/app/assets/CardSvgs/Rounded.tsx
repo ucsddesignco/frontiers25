@@ -1,0 +1,22 @@
+import { CardSvgProps } from '@/app/components/customization/SimplifiedCard';
+
+export const Rounded = ({ bgColor, borderColor }: CardSvgProps) => (
+  <svg
+    width="300"
+    height="400"
+    viewBox="0 0 300 400"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M0 12C0 5.37257 5.37258 0 12 0H288C294.627 0 300 5.37258 300 12V388C300 394.627 294.627 400 288 400H12C5.37259 400 0 394.627 0 388V12Z"
+      fill={bgColor}
+    />
+    <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M288 3H12C7.02943 3 3 7.02943 3 12V388C3 392.971 7.02944 397 12 397H288C292.971 397 297 392.971 297 388V12C297 7.02944 292.971 3 288 3ZM12 0C5.37258 0 0 5.37257 0 12V388C0 394.627 5.37259 400 12 400H288C294.627 400 300 394.627 300 388V12C300 5.37258 294.627 0 288 0H12Z"
+      fill={borderColor}
+    />
+  </svg>
+);

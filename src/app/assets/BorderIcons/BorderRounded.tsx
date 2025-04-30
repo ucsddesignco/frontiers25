@@ -1,0 +1,19 @@
+export const BorderRounded = () => (
+  <svg width="52" height="51" viewBox="0 0 52 51" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g id="border-rounded">
+      <path
+        id="corner"
+        d="M20 1.5H42C46.4183 1.5 50 5.08172 50 9.5V31.5"
+        stroke="#222222"
+        stroke-width="3"
+      />
+      <path
+        id="dotted line"
+        d="M21 1.5H2V49.5H50V30.5"
+        stroke="#222222"
+        stroke-width="3"
+        stroke-dasharray="3 3"
+      />
+    </g>
+  </svg>
+);

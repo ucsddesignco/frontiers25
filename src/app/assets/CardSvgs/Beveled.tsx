@@ -1,0 +1,24 @@
+import { CardSvgProps } from '@/app/components/customization/SimplifiedCard';
+
+export const Beveled = ({ bgColor, borderColor }: CardSvgProps) => (
+  <svg
+    width="300"
+    height="400"
+    viewBox="0 0 300 400"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M35 0H265L300 35V365L265 400H35L0 365V35L35 0Z"
+      fill={bgColor}
+    />
+    <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M36.2426 3L3 36.2426V363.757L36.2426 397H263.757L297 363.757V36.2426L263.757 3H36.2426ZM265 0H35L0 35V365L35 400H265L300 365V35L265 0Z"
+      fill={borderColor}
+    />
+  </svg>
+);
