@@ -1,5 +1,5 @@
 import { CardType } from '../components/constants';
-type DatabaseCard = Omit<CardType, 'borderColor' | 'buttonColor' | 'scrollbarColor'>;
+export type DatabaseCard = Omit<CardType, 'borderColor' | 'buttonColor' | 'scrollbarColor'>;
 
 // prettier-ignore
 export const fakeCardData: DatabaseCard[] = [

@@ -19,8 +19,13 @@ import { usePreviousCards } from '../hooks/usePreviousCards';
 import { MOBILE_BREAKPOINT } from './constants';
 import GalleryButton from './GalleryButton';
 import MobileGalleryFog from './MobileGalleryFog';
+import { DatabaseCard } from '../fake-data/data';
 
-const InfiniteCanvas = () => {
+type InfiniteCanvasProps = {
+  data: DatabaseCard[];
+};
+
+const InfiniteCanvas = ({ data }: InfiniteCanvasProps) => {
   const {
     containerRef,
     showExpanded,
@@ -32,7 +37,8 @@ const InfiniteCanvas = () => {
     showMobileGallery,
     setShowMobileGallery,
     showMobileGalleryFog,
-    setShowMobileGalleryFog
+    setShowMobileGalleryFog,
+    setCardSize
   } = useCanvasStore(
     useShallow((state: CanvasState) => ({
       containerRef: state.containerRef,
@@ -46,7 +52,8 @@ const InfiniteCanvas = () => {
       showMobileGallery: state.showMobileGallery,
       setShowMobileGallery: state.setShowMobileGallery,
       showMobileGalleryFog: state.showMobileGalleryFog,
-      setShowMobileGalleryFog: state.setShowMobileGalleryFog
+      setShowMobileGalleryFog: state.setShowMobileGalleryFog,
+      setCardSize: state.setCardSize
     }))
   );
 
@@ -55,7 +62,7 @@ const InfiniteCanvas = () => {
   const isInitialLoad = useRef(true);
   const centeredCardIndex = useCanvasStore(state => state.centeredCardIndex);
 
-  useInitializeCards();
+  useInitializeCards({ data });
 
   const { centerToCard, centerViewOnScreen } = useCanvasActions();
 
@@ -114,6 +121,23 @@ const InfiniteCanvas = () => {
       }, 250);
     }, 250);
   };
+
+  useEffect(() => {
+    const descriptionElement = document.querySelector('[data-expanded-description]') as HTMLElement;
+    const PADDING = 36;
+    if (!descriptionElement) return;
+    let width = 300;
+    let height = 400;
+    let gap = 100;
+
+    if (window.innerWidth < 768) {
+      width = Math.min(window.innerWidth * 0.8, 320);
+      height = width * (4 / 3);
+      gap = 65;
+    }
+    setCardSize({ width, height, gap });
+    descriptionElement.style.width = `${width - 2 * PADDING}px`;
+  }, [setCardSize]);
 
   return (
     <>

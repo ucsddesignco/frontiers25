@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useCanvasStore } from '../stores/canvasStore';
-import { fakeCardData } from '../fake-data/data';
+import { DatabaseCard } from '../fake-data/data';
 import { CardType } from '../components/constants';
 import { generateColorVariations } from '../utils/colorUtils';
 
@@ -22,12 +22,12 @@ function formatRelativeTime(isoString: string): string {
   return `${diffDays}d`;
 }
 
-export function useInitializeCards() {
+export function useInitializeCards({ data }: { data: DatabaseCard[] }) {
   const { setBasePattern } = useCanvasStore();
 
   useEffect(() => {
     // Process the fake data to format timestamps and generate colors before setting state
-    const processedData: CardType[] = fakeCardData.map(card => {
+    const processedData: CardType[] = data.map(card => {
       const { borderColor, buttonColor, scrollbarColor } = generateColorVariations(
         card.primary,
         card.accent
