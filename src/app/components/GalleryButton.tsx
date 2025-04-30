@@ -4,30 +4,36 @@ import ResetZoomIcon from '../assets/ResetZoomIcon';
 import GlassButton from './GlassButton/GlassButton';
 
 type GalleryButtonProps = {
-  handleGalleryClick: () => void;
+  handleShowGallery: () => void;
+  handleHideGallery: () => void;
   handleGoBack: () => void;
   showMobileGallery: boolean;
+  showExpanded: boolean;
 };
 
 function GalleryButton({
-  handleGalleryClick,
+  handleShowGallery,
+  handleHideGallery,
   handleGoBack,
-  showMobileGallery
+  showMobileGallery,
+  showExpanded
 }: GalleryButtonProps) {
   return (
     <GlassButton
       onClick={e => {
         e.stopPropagation();
-        if (!showMobileGallery) {
-          handleGalleryClick();
-        } else {
+        if (showExpanded) {
           handleGoBack();
+        } else if (!showMobileGallery) {
+          handleShowGallery();
+        } else {
+          handleHideGallery();
         }
       }}
       onMouseDown={e => {
         e.stopPropagation();
       }}
-      text={!showMobileGallery ? 'Gallery' : 'Go Back'}
+      text={!showMobileGallery && !showExpanded ? 'Gallery' : 'Go Back'}
       className="fixed left-6 top-5 z-[4] lg:hidden"
     >
       {!showMobileGallery ? <ResetZoomIcon /> : <BackIcon />}

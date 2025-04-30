@@ -147,6 +147,9 @@ export function useTouchHandlers({
 
       // Handle pinch-to-zoom
       if (e.touches.length === 2 && lastTouchRef.current && lastPinchDistanceRef.current !== null) {
+        if (window.innerWidth < 768 && !showMobileGallery) {
+          return;
+        }
         const touch1 = e.touches[0];
         const touch2 = e.touches[1];
         const dx = touch1.clientX - touch2.clientX;

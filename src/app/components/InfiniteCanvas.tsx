@@ -18,6 +18,7 @@ import CardGrid from './CardGrid';
 import { usePreviousCards } from '../hooks/usePreviousCards';
 import { MOBILE_BREAKPOINT } from './constants';
 import GalleryButton from './GalleryButton';
+import MobileGalleryFog from './MobileGalleryFog';
 
 const InfiniteCanvas = () => {
   const {
@@ -29,7 +30,9 @@ const InfiniteCanvas = () => {
     selectedCard,
     cardSize,
     showMobileGallery,
-    setShowMobileGallery
+    setShowMobileGallery,
+    showMobileGalleryFog,
+    setShowMobileGalleryFog
   } = useCanvasStore(
     useShallow((state: CanvasState) => ({
       containerRef: state.containerRef,
@@ -41,7 +44,9 @@ const InfiniteCanvas = () => {
       selectedCard: state.selectedCard,
       cardSize: state.cardSize,
       showMobileGallery: state.showMobileGallery,
-      setShowMobileGallery: state.setShowMobileGallery
+      setShowMobileGallery: state.setShowMobileGallery,
+      showMobileGalleryFog: state.showMobileGalleryFog,
+      setShowMobileGalleryFog: state.setShowMobileGalleryFog
     }))
   );
 
@@ -91,7 +96,7 @@ const InfiniteCanvas = () => {
       );
       const x = col * (cardSize.width + cardSize.gap);
       const y = row * (cardSize.height + cardSize.gap);
-      centerToCard(x, y, 0.7, false);
+      centerToCard(x, y, 0.6, false);
     } else {
       // Single-column: zoom in, no transition
       const y = centeredCardIndex * (cardSize.height + cardSize.gap);
@@ -99,6 +104,16 @@ const InfiniteCanvas = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showMobileGallery]);
+
+  const handleMobileGalleryFog = (show: boolean) => {
+    setShowMobileGalleryFog(true);
+    setTimeout(() => {
+      setShowMobileGallery(show);
+      setTimeout(() => {
+        setShowMobileGalleryFog(false);
+      }, 250);
+    }, 250);
+  };
 
   return (
     <>
@@ -110,6 +125,8 @@ const InfiniteCanvas = () => {
       >
         <LightFog />
 
+        <MobileGalleryFog showFog={showMobileGalleryFog} />
+
         <BackgroundDots position={position} zoomLevel={zoomLevel} />
 
         {/* Desktop */}
@@ -117,13 +134,15 @@ const InfiniteCanvas = () => {
 
         {/* Mobile */}
         <GalleryButton
-          handleGalleryClick={() => {
-            setShowMobileGallery(true);
+          handleShowGallery={() => {
+            handleMobileGalleryFog(true);
           }}
-          handleGoBack={() => {
-            setShowMobileGallery(false);
+          handleHideGallery={() => {
+            handleMobileGalleryFog(false);
           }}
+          handleGoBack={handleGalleryClick}
           showMobileGallery={showMobileGallery}
+          showExpanded={showExpanded}
         />
 
         <SelectedIsland selectedCard={selectedCard} />
