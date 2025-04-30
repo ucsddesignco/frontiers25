@@ -2,6 +2,7 @@ import { memo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { authClient } from '@/lib/auth-client';
 import ResetZoomIcon from '../assets/ResetZoomIcon';
+import LoginIcon from '../assets/LoginIcon';
 import GlassButton from './GlassButton/GlassButton';
 import LoginModal from './LoginModal/LoginModal';
 import { Button } from '@/components/ui/button';
@@ -33,7 +34,7 @@ function SignInButton() {
           text="Sign In"
           className="fixed right-9 top-5 z-[4]"
         >
-          <ResetZoomIcon />
+          <LoginIcon />
         </GlassButton>
 
         <LoginModal open={modalOpen} onOpenChange={setModalOpen} />
