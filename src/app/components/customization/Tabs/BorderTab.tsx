@@ -1,9 +1,11 @@
 'use client';
 
-import { BorderBeveled } from '@/app/assets/BorderIcons/BorderBeveled';
-import { BorderRounded } from '@/app/assets/BorderIcons/BorderRounded';
-import { BorderRectangular } from '@/app/assets/BorderIcons/BorderRectangular';
-import { BorderSquircle } from '@/app/assets/BorderIcons/BorderSquircle';
+import {
+  BorderRectangular,
+  BorderRounded,
+  BorderBeveled,
+  BorderSquircle
+} from '@/app/assets/BorderIcons';
 import { borderStyle, useCustomizationStore } from '@/app/stores/customizationStore';
 
 import { useShallow } from 'zustand/shallow';
@@ -29,7 +31,7 @@ export function BorderTab() {
   };
 
   return (
-    <div className="h-full w-full p-2">
+    <div className="h-full w-full">
       <RadioGroup
         value={borderStyle}
         onValueChange={value => setBorderStyle(value as borderStyle)}
@@ -41,10 +43,9 @@ export function BorderTab() {
             <Label
               htmlFor={`style-${style}`}
               className={clsx(
-                'flex h-full w-full items-center justify-center rounded-lg border-2 transition-colors',
+                'flex h-full w-full cursor-pointer items-center justify-center rounded-xl transition-colors',
                 {
-                  'border-blue-600 bg-blue-100': borderStyle === style,
-                  'border-gray-300 hover:border-blue-400': borderStyle !== style
+                  'bg-[#FFFFFFCC] bg-blend-hard-light backdrop-blur-sm': borderStyle === style
                 }
               )}
             >

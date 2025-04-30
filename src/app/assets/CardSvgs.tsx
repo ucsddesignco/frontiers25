@@ -1,5 +1,44 @@
 import { CardSvgProps } from '@/app/components/customization/SimplifiedCard';
 
+export const Rectangular = ({ bgColor, borderColor }: CardSvgProps) => (
+  <svg
+    width="300"
+    height="400"
+    viewBox="0 0 300 400"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M0 0H300V400H0V0Z" fill={bgColor} />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M297 3H3V397H297V3ZM0 0V400H300V0H0Z"
+      fill={borderColor}
+    />
+  </svg>
+);
+
+export const Rounded = ({ bgColor, borderColor }: CardSvgProps) => (
+  <svg
+    width="300"
+    height="400"
+    viewBox="0 0 300 400"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M0 12C0 5.37257 5.37258 0 12 0H288C294.627 0 300 5.37258 300 12V388C300 394.627 294.627 400 288 400H12C5.37259 400 0 394.627 0 388V12Z"
+      fill={bgColor}
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M288 3H12C7.02943 3 3 7.02943 3 12V388C3 392.971 7.02944 397 12 397H288C292.971 397 297 392.971 297 388V12C297 7.02944 292.971 3 288 3ZM12 0C5.37258 0 0 5.37257 0 12V388C0 394.627 5.37259 400 12 400H288C294.627 400 300 394.627 300 388V12C300 5.37258 294.627 0 288 0H12Z"
+      fill={borderColor}
+    />
+  </svg>
+);
+
 export const Squircle = ({ bgColor, borderColor }: CardSvgProps) => (
   <svg
     width="300"
@@ -13,9 +52,32 @@ export const Squircle = ({ bgColor, borderColor }: CardSvgProps) => (
       fill={bgColor}
     />
     <path
-      fill-rule="evenodd"
-      clip-rule="evenodd"
+      fillRule="evenodd"
+      clipRule="evenodd"
       d="M213.6 3H86.4C68.3345 3 55.0263 3.00412 44.6488 4.12844C34.3275 5.24669 27.2618 7.44413 21.5497 11.5942C17.7294 14.3698 14.3698 17.7294 11.5942 21.5497C7.44413 27.2618 5.24669 34.3275 4.12844 44.6488C3.00412 55.0263 3 68.3344 3 86.4V313.6C3 331.666 3.00412 344.974 4.12844 355.351C5.24669 365.672 7.44413 372.738 11.5942 378.45C14.3698 382.271 17.7294 385.63 21.5497 388.406C27.2618 392.556 34.3275 394.753 44.6488 395.872C55.0263 396.996 68.3345 397 86.4 397H213.6C231.666 397 244.974 396.996 255.351 395.872C265.672 394.753 272.738 392.556 278.45 388.406C282.271 385.63 285.63 382.271 288.406 378.45C292.556 372.738 294.753 365.672 295.872 355.351C296.996 344.974 297 331.666 297 313.6V86.4C297 68.3345 296.996 55.0263 295.872 44.6488C294.753 34.3275 292.556 27.2618 288.406 21.5497C285.63 17.7294 282.271 14.3698 278.45 11.5942C272.738 7.44413 265.672 5.24669 255.351 4.12844C244.974 3.00412 231.666 3 213.6 3ZM9.16718 19.7863C0 32.4039 0 50.4026 0 86.4V313.6C0 349.597 0 367.596 9.16718 380.214C12.1278 384.289 15.7114 387.872 19.7863 390.833C32.4039 400 50.4026 400 86.4 400H213.6C249.597 400 267.596 400 280.214 390.833C284.289 387.872 287.872 384.289 290.833 380.214C300 367.596 300 349.597 300 313.6V86.4C300 50.4026 300 32.4039 290.833 19.7863C287.872 15.7114 284.289 12.1278 280.214 9.16718C267.596 0 249.597 0 213.6 0H86.4C50.4026 0 32.4039 0 19.7863 9.16718C15.7114 12.1278 12.1278 15.7114 9.16718 19.7863Z"
+      fill={borderColor}
+    />
+  </svg>
+);
+
+export const Beveled = ({ bgColor, borderColor }: CardSvgProps) => (
+  <svg
+    width="300"
+    height="400"
+    viewBox="0 0 300 400"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M35 0H265L300 35V365L265 400H35L0 365V35L35 0Z"
+      fill={bgColor}
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M36.2426 3L3 36.2426V363.757L36.2426 397H263.757L297 363.757V36.2426L263.757 3H36.2426ZM265 0H35L0 35V365L35 400H265L300 365V35L265 0Z"
       fill={borderColor}
     />
   </svg>

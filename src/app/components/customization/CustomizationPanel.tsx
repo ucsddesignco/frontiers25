@@ -1,6 +1,6 @@
 'use client';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-
+import { BorderIcon } from '@/app/assets/BorderIcons';
 import { BorderTab } from './Tabs/BorderTab';
 import { TypographyTab } from './Tabs/TypographyTab/TypographyTab';
 import { ColorTab } from './Tabs/ColorTab';
@@ -49,29 +49,11 @@ export function CustomizationPanel() {
           </svg>
         </TabsTrigger>
         <TabsTrigger value="border" className="hover:cursor-pointer">
-          <svg
-            width="33"
-            height="32"
-            viewBox="0 0 33 32"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M11.6719 4H18.6719C24.1947 4 28.6719 8.47715 28.6719 14V21"
-              stroke="#4D4857"
-              strokeWidth="3"
-            />
-            <path
-              d="M16.6719 4H4.67188V28H28.6719V16"
-              stroke="#4D4857"
-              strokeWidth="3"
-              strokeDasharray="3 3"
-            />
-          </svg>
+          <BorderIcon />
         </TabsTrigger>
       </TabsList>
 
-      <div className="mt-8 h-[260px]">
+      <div className="h-[240px]">
         <TabsContent value="color">
           <ColorTab />
         </TabsContent>

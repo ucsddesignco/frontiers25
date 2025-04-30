@@ -6,6 +6,7 @@ import { Check, X } from 'lucide-react';
 import { contrastRatio } from 'wcag-contrast-utils';
 
 type selectedColor = 'primary' | 'accent';
+type textColor = 'black' | 'white';
 
 import { useCustomizationStore } from '@/app/stores/customizationStore';
 import { useShallow } from 'zustand/shallow';
@@ -14,6 +15,8 @@ export function ColorTab() {
   const [selectedColor, setSelectedColor] = useState<selectedColor>('primary');
 
   const [contrastIsGood, setContrastIsGood] = useState<boolean>();
+  const [primaryText, setPrimaryText] = useState<textColor>();
+  const [accentText, setAccentText] = useState<textColor>();
 
   const { primary, accent, setPrimary, setAccent } = useCustomizationStore(
     useShallow(state => ({
@@ -30,6 +33,11 @@ export function ColorTab() {
       const accentHex = parseColor(accent).toString('hex');
       const contrast = contrastRatio(primaryHex, accentHex);
       setContrastIsGood(contrast >= 4.5);
+
+      const primaryContrast = contrastRatio(primaryHex, '#000');
+      const accentContrast = contrastRatio(accentHex, '#000');
+      setPrimaryText(primaryContrast <= 7 ? 'white' : 'black');
+      setAccentText(accentContrast <= 7 ? 'white' : 'black');
     }, 200); // 200ms debounce
 
     return () => clearTimeout(handler); // cleanup on new effect call
@@ -47,7 +55,8 @@ export function ColorTab() {
           }`}
           style={{
             backgroundColor: primary,
-            boxShadow: '0px -1px 1px 0px rgba(0, 0, 0, 0.12), 0px 1px 1px 0px #FFF'
+            boxShadow: '0px -1px 1px 0px rgba(0, 0, 0, 0.12), 0px 1px 1px 0px #FFF',
+            color: primaryText
           }}
         >
           <p>Primary</p>
@@ -69,7 +78,8 @@ export function ColorTab() {
           }`}
           style={{
             backgroundColor: accent,
-            boxShadow: '0px -1px 1px 0px rgba(0, 0, 0, 0.12), 0px 1px 1px 0px #FFF'
+            boxShadow: '0px -1px 1px 0px rgba(0, 0, 0, 0.12), 0px 1px 1px 0px #FFF',
+            color: accentText
           }}
         >
           <p>Accent</p>
