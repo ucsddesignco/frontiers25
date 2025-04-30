@@ -77,8 +77,8 @@ const Card: React.FC<CardProps> = ({ card, onClick, onMouseDown, onLearnMore, cl
               <div className="relative flex w-full justify-center">
                 <button
                   onClick={onLearnMore}
-                  style={{ backgroundColor: card.buttonColor }}
-                  className="learn-more duration-[300ms,200ms] w-full cursor-pointer rounded-full p-2 transition-[transform,opacity] ease-in-out"
+                  style={{ backgroundColor: card.buttonColor, transitionDuration: '300ms,200ms' }}
+                  className="learn-more w-full cursor-pointer rounded-full p-2 transition-[transform,opacity] ease-in-out"
                 >
                   Learn More
                 </button>

@@ -117,7 +117,11 @@ export function useCanvasActions() {
       setZoomLevel(zoom);
 
       const viewportWidth = containerRef.current.clientWidth;
-      const viewportHeight = containerRef.current.clientHeight;
+      let viewportHeight = containerRef.current.clientHeight;
+
+      if (window.innerWidth < MOBILE_BREAKPOINT) {
+        viewportHeight = window.innerHeight;
+      }
 
       let focusPointX: number;
       let focusPointY: number;
