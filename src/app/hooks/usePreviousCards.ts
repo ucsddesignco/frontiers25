@@ -23,10 +23,11 @@ export const usePreviousCards = (selectedCard: CanvasState['selectedCard']) => {
   useEffect(() => {
     if (window.innerWidth < 768) return;
     const map = previousSelectedCards.current;
-
-    map.keys().forEach(key => {
-      map.set(key, Date.now());
-    });
+    for (const key of map.keys()) {
+      if (key !== MIDDLE_CARD_INDEX) {
+        map.set(key, Date.now());
+      }
+    }
     if (selectedCard) {
       map.set(parseInt(selectedCard), -1);
     }

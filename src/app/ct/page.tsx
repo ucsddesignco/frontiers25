@@ -17,7 +17,7 @@ const CardTest: React.FC = () => {
       primary: '#FF5733',
       accent: '#3357FF'
     };
-
+    console.log('Creating card with data:', cardData);
     try {
       const res = await fetch('/api/createCard', {
         method: 'POST',
