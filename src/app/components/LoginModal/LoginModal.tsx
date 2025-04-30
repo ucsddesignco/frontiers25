@@ -55,23 +55,27 @@ export default function LoginModal({ open, onOpenChange }: LoginModalProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="login-dialog sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle className="dialog-title">Want to save your creation?</DialogTitle>
-          <DialogDescription className="dialog-description">You need to log in</DialogDescription>
+          <DialogTitle className="dialog-title justify-center">
+            Want to save your creation?
+          </DialogTitle>
+          <DialogDescription className="dialog-description justify-center">
+            You need to log in
+          </DialogDescription>
         </DialogHeader>
         <DialogFooter className="modal-footer">
           <DialogClose asChild>
             <GlassButton
               onClick={() => {}}
               onMouseDown={e => e.stopPropagation()}
-              text="I Just Want to Mess Around"
-              className="modal-button justify-center"
+              text="No Thanks"
+              className="modal-button justify-center lg:block"
             ></GlassButton>
           </DialogClose>
           <GlassButton
             onClick={handleGoogleSignIn}
             onMouseDown={e => e.stopPropagation()}
-            text="Log In Via Email"
-            className="modal-button justify-center"
+            text="Log In Via UCSD"
+            className="modal-button justify-center lg:block"
             color="dark"
           >
             <svg
