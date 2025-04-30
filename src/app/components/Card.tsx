@@ -40,7 +40,7 @@ const Card: React.FC<CardProps> = ({ card, onClick, onMouseDown, onLearnMore, cl
           <div
             id={`card-content-${card.key}`}
             style={{ color: card.accent }}
-            className={`relative flex h-full flex-col items-center justify-between p-[36px] text-[#530B67] transition-transform duration-card ease-in-out`}
+            className={`relative flex h-full flex-col items-center justify-between p-[36px] transition-transform duration-card ease-in-out`}
           >
             <div className="w-full">
               <svg
@@ -54,24 +54,31 @@ const Card: React.FC<CardProps> = ({ card, onClick, onMouseDown, onLearnMore, cl
               </svg>
               <div className="flex w-full justify-between pt-3">
                 <div>
-                  <p className="date transition-transform duration-card ease-in-out">Wed May 8</p>
-                  <p className="location transition-transform duration-card ease-in-out">
+                  <p className="date w-fit transition-transform duration-card ease-in-out">
+                    Wed May 8
+                  </p>
+                  <p className="location w-fit transition-transform duration-card ease-in-out">
                     DIB Room 208
                   </p>
                 </div>
-                <p className="time transition-transform duration-card ease-in-out">9am-5pm</p>
+                <p className="time hidden h-fit w-fit transition-transform duration-card ease-in-out lg:block">
+                  9am-5pm
+                </p>
+                <p className="mobile-time h-fit w-fit transition-transform duration-card ease-in-out lg:hidden">
+                  9am-5pm
+                </p>
               </div>
             </div>
 
             <div className="flex flex-col gap-3">
-              <p className="description w-[21.5ch] transition-transform duration-card ease-in-out">
-                A 7-hour design sprint to solve UX problems.
+              <p className="description transition-transform duration-card ease-in-out">
+                A 2-day sprint where UCSD designers ideate and iterate.
               </p>
               <div className="relative flex w-full justify-center">
                 <button
                   onClick={onLearnMore}
-                  style={{ backgroundColor: card.buttonColor }}
-                  className="learn-more w-full cursor-pointer rounded-full p-2 transition-[transform,opacity] duration-[300ms,200ms] ease-in-out"
+                  style={{ backgroundColor: card.buttonColor, transitionDuration: '300ms,200ms' }}
+                  className="learn-more w-full cursor-pointer rounded-full p-2 transition-[transform,opacity] ease-in-out"
                 >
                   Learn More
                 </button>
@@ -79,7 +86,7 @@ const Card: React.FC<CardProps> = ({ card, onClick, onMouseDown, onLearnMore, cl
                 {NAV_BUTTONS.map(({ id, label }) => (
                   <button
                     key={'card-button-' + id}
-                    className="pointer-events-none absolute cursor-pointer rounded-full px-6 py-2"
+                    className="pointer-events-none absolute cursor-pointer rounded-full px-6 py-2 opacity-0 lg:opacity-100"
                   >
                     <span
                       style={{ backgroundColor: card.buttonColor, outlineColor: card.accent }}
@@ -116,8 +123,8 @@ const Card: React.FC<CardProps> = ({ card, onClick, onMouseDown, onLearnMore, cl
           </div>
         </div>
         <p className="pt-2 text-center text-sm text-[#666666]">
-          Made by {card.author}
-          <span className="ml-3 text-xs">{card.lastUpdated}</span>
+          Made By {card.author}
+          <span className="ml-3">{card.lastUpdated}</span>
         </p>
       </div>
     </>

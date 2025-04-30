@@ -1,11 +1,10 @@
 import InfiniteCanvas from './components/InfiniteCanvas';
+import { fakeCardData } from './fake-data/data';
 
 export default function Home() {
   return (
-    <div className="font-[family-name:var(--font-geist-sans)]">
-      <main>
-        <InfiniteCanvas />
-      </main>
-    </div>
+    <main className="font-[family-name:var(--font-geist-sans)]">
+      <InfiniteCanvas data={fakeCardData} />
+    </main>
   );
 }

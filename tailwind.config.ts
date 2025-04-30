@@ -18,7 +18,7 @@ export default {
       },
       cursor: {
         auto: "url('/default-cursor.svg') 6 6, auto",
-        pointer: "url('/default-cursor.svg') 6 6, pointer", // temporary
+        pointer: "url('/pointer-cursor.svg') 6 6, pointer",
         grab: "url('/grab-cursor.svg') 6 6, grab",
         grabbing: "url('/grabbing-cursor.svg') 6 6, grabbing"
       }

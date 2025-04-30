@@ -1,5 +1,5 @@
 import { CardType } from '../components/constants';
-type DatabaseCard = Omit<CardType, 'borderColor' | 'buttonColor' | 'scrollbarColor'>;
+export type DatabaseCard = Omit<CardType, 'borderColor' | 'buttonColor' | 'scrollbarColor'>;
 
 // prettier-ignore
 export const fakeCardData: DatabaseCard[] = [
@@ -28,7 +28,6 @@ export const fakeCardData: DatabaseCard[] = [
   { id: 'card-22', primary: '#FFCDD2', accent: '#BF360C', author: 'Design Co', lastUpdated: "2025-04-08T11:55:00.000Z" },
   { id: 'card-23', primary: '#BBDEFB', accent: '#212121', author: 'Design Co', lastUpdated: "2025-04-08T08:00:00.000Z" },
   { id: 'card-24', primary: '#FFCDD2', accent: '#530B67', author: 'Design Co', lastUpdated: "2025-04-07T18:00:00.000Z" },
-  { id: 'card-21', primary: '#C8E6C9', accent: '#1B5E20', author: 'Design Co', lastUpdated: "2025-04-01T12:00:00.000Z" },
   { id: 'card-25', primary: '#B3E5FC', accent: '#01579B', author: 'Design Co', lastUpdated: "2025-04-09T11:00:00.000Z" },
   { id: 'card-27', primary: '#F0F4C3', accent: '#827717', author: 'Design Co', lastUpdated: "2025-04-09T12:00:00.000Z" },
   { id: 'card-28', primary: '#FFCCBC', accent: '#E65100', author: 'Design Co', lastUpdated: "2025-04-09T13:00:00.000Z" },

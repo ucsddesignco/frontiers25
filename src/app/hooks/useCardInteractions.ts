@@ -48,21 +48,20 @@ export function useCardInteractions() {
       setExpandedCard(card);
 
       clickedCard.style.zIndex = '3';
-      const hoverScale = 1.1;
-      // Maintain hover scale while transitioning
-      clickedCard.style.transform = `scale(${hoverScale})`;
+
+      let parentScale =
+        parseFloat(window.getComputedStyle(clickedCard).transform.split(',')[3]) || 1;
+
+      clickedCard.style.transform = `scale(${parentScale})`;
       clickedCard.style.transformOrigin = 'center center';
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
       const cardRect = cardBg.getBoundingClientRect();
 
-      let parentScale =
-        parseFloat(window.getComputedStyle(clickedCard).transform.split(',')[3]) || 1;
-
       const initialScale = parentScale;
 
       if (zoomLevel !== 1) {
-        parentScale = zoomLevel * hoverScale;
+        parentScale = zoomLevel * parentScale;
       }
 
       // Calculate the scale needed to fill the screen while maintaining aspect ratio

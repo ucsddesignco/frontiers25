@@ -1,18 +1,47 @@
-import { useEffect, MouseEvent, WheelEvent, TouchEvent, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { CanvasState, useCanvasStore } from '../stores/canvasStore';
 import {
   GRID_COLUMNS,
   GRID_ROWS,
-  CARD_WIDTH,
-  CARD_HEIGHT,
-  CARD_GAP,
   MIN_ZOOM,
   MAX_ZOOM,
-  DRAG_THRESHOLD,
-  MIDDLE_CARD_INDEX
+  MIDDLE_CARD_INDEX,
+  MOBILE_BREAKPOINT
 } from '../components/constants';
 import { throttle } from '../util/throttle';
 import { useShallow } from 'zustand/shallow';
+import { useTouchHandlers } from './useTouchHandlers';
+import { useMouseHandlers } from './useMouseHandlers';
+
+// ---- UTILITY FUNCTIONS ----
+
+// Helper to calculate the new zoom level and position based on a zoom event
+const calculateZoomUpdate = (
+  currentZoom: number,
+  currentPosition: { x: number; y: number },
+  zoomDelta: number,
+  centerX: number,
+  centerY: number
+): { newZoomLevel: number; newPosition: { x: number; y: number } } | null => {
+  const newZoomLevel = Math.max(
+    MIN_ZOOM,
+    Math.min(MAX_ZOOM, currentZoom + zoomDelta * currentZoom)
+  );
+
+  if (currentZoom === newZoomLevel) return null; // No change
+
+  // Calculate the world coordinates under the zoom center point before zooming
+  const worldX = (centerX - currentPosition.x) / currentZoom;
+  const worldY = (centerY - currentPosition.y) / currentZoom;
+
+  // Calculate the new canvas position to keep the world point under the zoom center point
+  const newPosition = {
+    x: centerX - worldX * newZoomLevel,
+    y: centerY - worldY * newZoomLevel
+  };
+
+  return { newZoomLevel, newPosition };
+};
 
 // Hook for canvas navigation (panning & zooming)
 export function useCanvasActions() {
@@ -32,7 +61,9 @@ export function useCanvasActions() {
     setTransitionEnabled,
     cardIsExpanding,
     setSelectedCard,
-    selectedCard
+    selectedCard,
+    cardSize,
+    showMobileGallery
   } = useCanvasStore(
     useShallow((state: CanvasState) => ({
       containerRef: state.containerRef,
@@ -50,16 +81,16 @@ export function useCanvasActions() {
       setTransitionEnabled: state.setTransitionEnabled,
       cardIsExpanding: state.cardIsExpanding,
       setSelectedCard: state.setSelectedCard,
-      selectedCard: state.selectedCard
+      selectedCard: state.selectedCard,
+      cardSize: state.cardSize,
+      showMobileGallery: state.showMobileGallery
     }))
   );
-  const transitionTimerRef = useRef<NodeJS.Timeout>(null);
+  const transitionTimerRef = useRef<NodeJS.Timeout | null>(null);
   const movementAccumulator = useRef({ x: 0, y: 0 });
   const startPositionRef = useRef<{ x: number; y: number } | null>(null);
   const lastTouchRef = useRef<{ x: number; y: number } | null>(null);
   const lastPinchDistanceRef = useRef<number | null>(null);
-
-  // ---- UTILITY FUNCTIONS ----
 
   const throttledSetPosition = useCallback(
     (newPosition: { x: number; y: number }) => {
@@ -71,354 +102,164 @@ export function useCanvasActions() {
     [setPosition]
   );
 
-  // Helper to calculate the new zoom level and position based on a zoom event
-  const calculateZoomUpdate = useCallback(
-    (
-      currentZoom: number,
-      currentPosition: { x: number; y: number },
-      zoomDelta: number,
-      centerX: number,
-      centerY: number
-    ): { newZoomLevel: number; newPosition: { x: number; y: number } } | null => {
-      const newZoomLevel = Math.max(
-        MIN_ZOOM,
-        Math.min(MAX_ZOOM, currentZoom + zoomDelta * currentZoom)
-      );
-
-      if (currentZoom === newZoomLevel) return null; // No change
-
-      // Calculate the world coordinates under the zoom center point before zooming
-      const worldX = (centerX - currentPosition.x) / currentZoom;
-      const worldY = (centerY - currentPosition.y) / currentZoom;
-
-      // Calculate the new canvas position to keep the world point under the zoom center point
-      const newPosition = {
-        x: centerX - worldX * newZoomLevel,
-        y: centerY - worldY * newZoomLevel
-      };
-
-      return { newZoomLevel, newPosition };
-    },
-    [] // No dependencies needed for this pure calculation function
-  );
-
   // Function to center the view either on a specific card or the grid center
-  // Updated centerToCard function
+  // Accepts optional zoom and withTransition arguments
   const centerToCard = useCallback(
-    (cardX?: number, cardY?: number) => {
+    (cardX?: number, cardY?: number, zoom: number = 1, withTransition: boolean = true) => {
       const gridElement = gridRef.current;
       if (!gridElement || !containerRef.current || cardIsExpanding) return;
 
-      // Clear any pending transition timer
       if (transitionTimerRef.current) {
         clearTimeout(transitionTimerRef.current);
         transitionTimerRef.current = null;
       }
 
-      // Reset zoom level to 1
-      setZoomLevel(1);
+      setZoomLevel(zoom);
 
       const viewportWidth = containerRef.current.clientWidth;
-      const viewportHeight = containerRef.current.clientHeight;
+      let viewportHeight = containerRef.current.clientHeight;
+
+      if (window.innerWidth < MOBILE_BREAKPOINT) {
+        viewportHeight = window.innerHeight;
+      }
 
       let focusPointX: number;
       let focusPointY: number;
 
       if (cardX !== undefined && cardY !== undefined) {
-        focusPointX = cardX + CARD_WIDTH / 2;
-        focusPointY = cardY + CARD_HEIGHT / 2;
-        setTransitionEnabled(true);
+        focusPointX = cardX + cardSize.width / 2;
+        focusPointY = cardY + cardSize.height / 2;
+        if (withTransition) setTransitionEnabled(true);
       } else {
-        // Center on the middle of the entire grid
-        const totalWidth = GRID_COLUMNS * CARD_WIDTH + (GRID_COLUMNS - 1) * CARD_GAP;
-        const totalHeight = GRID_ROWS * CARD_HEIGHT + (GRID_ROWS - 1) * CARD_GAP;
+        const totalWidth = GRID_COLUMNS * cardSize.width + (GRID_COLUMNS - 1) * cardSize.gap;
+        const totalHeight = GRID_ROWS * cardSize.height + (GRID_ROWS - 1) * cardSize.gap;
         focusPointX = totalWidth / 2;
         focusPointY = totalHeight / 2;
       }
 
-      // Calculate target position using zoom level 1
-      const targetX = viewportWidth / 2 - focusPointX * 1;
-      const targetY = viewportHeight / 2 - focusPointY * 1;
+      let targetX = viewportWidth / 2 - focusPointX * zoom;
+      let targetY = viewportHeight / 2 - focusPointY * zoom;
+
+      if (window.innerWidth < MOBILE_BREAKPOINT && cardX === undefined && cardY === undefined) {
+        const cardHeight = cardSize.height + cardSize.gap;
+        const rowY = MIDDLE_CARD_INDEX * cardHeight;
+        targetX = (viewportWidth - cardSize.width) / 2;
+        targetY = viewportHeight / 2 - (rowY + cardSize.height / 2);
+      }
       setPosition({ x: targetX, y: targetY });
 
-      // Set a timer to disable the transition after it completes
-      if (cardX !== undefined && cardY !== undefined) {
+      if (cardX !== undefined && cardY !== undefined && withTransition) {
         transitionTimerRef.current = setTimeout(() => {
           setTransitionEnabled(false);
           transitionTimerRef.current = null;
         }, 350);
       }
     },
-    [gridRef, containerRef, cardIsExpanding, setZoomLevel, setPosition, setTransitionEnabled]
-  );
-
-  // ---- PANNING HANDLERS ----
-  const handleMouseDown = useCallback(
-    (e: MouseEvent<HTMLDivElement>): void => {
-      e.preventDefault(); // Prevent text selection and default drag behavior
-
-      // Exit if dragging disabled, not left click, card expanding, or click was on a card
-      if (e.button !== 0 || cardIsExpanding) return;
-
-      setDragging(true);
-      setDidDrag(false);
-      startPositionRef.current = { x: e.clientX, y: e.clientY };
-      movementAccumulator.current = { x: 0, y: 0 };
-    },
-    [cardIsExpanding, setDragging, setDidDrag]
-  );
-
-  const handleMouseMove = useCallback(
-    (e: MouseEvent<HTMLDivElement>): void => {
-      if (dragging && !isTransitionEnabled) {
-        movementAccumulator.current.x += e.movementX;
-        movementAccumulator.current.y += e.movementY;
-
-        if (!didDrag && startPositionRef.current) {
-          const dx = e.clientX - startPositionRef.current.x;
-          const dy = e.clientY - startPositionRef.current.y;
-          if (Math.sqrt(dx * dx + dy * dy) > DRAG_THRESHOLD) {
-            setDidDrag(true);
-          }
-        }
-
-        if (selectedCard !== null) {
-          setSelectedCard(null);
-        }
-
-        throttledSetPosition({
-          x: position.x + movementAccumulator.current.x,
-          y: position.y + movementAccumulator.current.y
-        });
-      }
-    },
     [
-      dragging,
-      isTransitionEnabled,
-      didDrag,
-      selectedCard,
-      throttledSetPosition,
-      position.x,
-      position.y,
-      setDidDrag,
-      setSelectedCard
+      gridRef,
+      containerRef,
+      cardIsExpanding,
+      setZoomLevel,
+      setPosition,
+      cardSize.width,
+      cardSize.height,
+      cardSize.gap,
+      setTransitionEnabled
     ]
   );
 
-  const handleMouseUpOrLeave = useCallback((): void => {
-    if (dragging) {
-      setPosition({
-        x: position.x + movementAccumulator.current.x,
-        y: position.y + movementAccumulator.current.y
-      });
-      movementAccumulator.current = { x: 0, y: 0 };
-      setDragging(false);
+  const centerViewOnScreen = useCallback(() => {
+    if (transitionTimerRef.current) {
+      clearTimeout(transitionTimerRef.current);
+      transitionTimerRef.current = null;
     }
-    startPositionRef.current = null;
-  }, [dragging, position, setPosition, setDragging]);
+
+    if (!containerRef.current || cardIsExpanding || isTransitionEnabled) return;
+
+    setTransitionEnabled(true);
+
+    const currentZoom = zoomLevel;
+    const currentPosition = position;
+    const newZoomLevel = 1;
+
+    setZoomLevel(1);
+
+    const viewportWidth = containerRef.current.clientWidth;
+    const viewportHeight = containerRef.current.clientHeight;
+
+    const viewportCenterX = viewportWidth / 2;
+    const viewportCenterY = viewportHeight / 2;
+
+    const worldX = (viewportCenterX - currentPosition.x) / currentZoom;
+    const worldY = (viewportCenterY - currentPosition.y) / currentZoom;
+
+    const newPositionX = viewportCenterX - worldX * newZoomLevel;
+    const newPositionY = viewportCenterY - worldY * newZoomLevel;
+
+    setPosition({ x: newPositionX, y: newPositionY });
+
+    transitionTimerRef.current = setTimeout(() => {
+      setTransitionEnabled(false);
+      transitionTimerRef.current = null;
+    }, 350);
+  }, [
+    containerRef,
+    cardIsExpanding,
+    isTransitionEnabled,
+    zoomLevel,
+    position,
+    setZoomLevel,
+    setPosition,
+    setTransitionEnabled
+  ]);
+
+  // ---- MOUSE HANDLERS ----
+  const { handleMouseDown, handleMouseMove, handleMouseUpOrLeave, handleWheel } = useMouseHandlers({
+    dragging,
+    isTransitionEnabled,
+    didDrag,
+    selectedCard,
+    position,
+    zoomLevel,
+    expandedCard,
+    cardIsExpanding,
+    startPositionRef,
+    movementAccumulator,
+    setDragging,
+    setDidDrag,
+    setSelectedCard,
+    setPosition,
+    setZoomLevel,
+    throttledSetPosition,
+    calculateZoomUpdate // Pass the utility function
+  });
 
   // ---- TOUCH HANDLERS ----
-
-  const handleTouchStart = useCallback(
-    (e: TouchEvent<HTMLDivElement>): void => {
-      e.preventDefault();
-      if (isTransitionEnabled) {
-        if (transitionTimerRef.current) {
-          clearTimeout(transitionTimerRef.current);
-          transitionTimerRef.current = null;
-        }
-        setTransitionEnabled(false);
-        return;
-      }
-
-      if (cardIsExpanding || isTransitionEnabled) return;
-
-      setDidDrag(false);
-
-      if (e.touches.length === 2) {
-        // Pinch start
-        const touch1 = e.touches[0];
-        const touch2 = e.touches[1];
-        const dx = touch1.clientX - touch2.clientX;
-        const dy = touch1.clientY - touch2.clientY;
-        lastPinchDistanceRef.current = Math.sqrt(dx * dx + dy * dy);
-        lastTouchRef.current = {
-          x: (touch1.clientX + touch2.clientX) / 2,
-          y: (touch1.clientY + touch2.clientY) / 2
-        };
-        setDragging(false);
-        startPositionRef.current = null;
-      } else if (e.touches.length === 1) {
-        // Pan start
-        const touch = e.touches[0];
-        lastTouchRef.current = { x: touch.clientX, y: touch.clientY };
-        startPositionRef.current = { x: touch.clientX, y: touch.clientY };
-        setDragging(true);
-        movementAccumulator.current = { x: 0, y: 0 };
-      }
-    },
-    [isTransitionEnabled, cardIsExpanding, setDidDrag, setTransitionEnabled, setDragging]
-  );
-
-  const handleTouchMove = useCallback(
-    (e: TouchEvent<HTMLDivElement>): void => {
-      e.preventDefault();
-      if (expandedCard !== null || isTransitionEnabled) return;
-
-      if (selectedCard !== null) {
-        setSelectedCard(null);
-      }
-
-      // Handle pinch-to-zoom
-      if (e.touches.length === 2 && lastTouchRef.current && lastPinchDistanceRef.current !== null) {
-        const touch1 = e.touches[0];
-        const touch2 = e.touches[1];
-        const dx = touch1.clientX - touch2.clientX;
-        const dy = touch1.clientY - touch2.clientY;
-        const currentDistance = Math.sqrt(dx * dx + dy * dy);
-        const pinchRatio = currentDistance / lastPinchDistanceRef.current;
-        lastPinchDistanceRef.current = currentDistance;
-
-        const midX = (touch1.clientX + touch2.clientX) / 2;
-        const midY = (touch1.clientY + touch2.clientY) / 2;
-
-        // Use a sensitivity factor for pinch zoom
-        const zoomDelta = (pinchRatio - 1) * 0.5;
-
-        const zoomUpdate = calculateZoomUpdate(zoomLevel, position, zoomDelta, midX, midY);
-
-        if (zoomUpdate) {
-          setPosition(zoomUpdate.newPosition);
-          setZoomLevel(zoomUpdate.newZoomLevel);
-          lastTouchRef.current = { x: midX, y: midY };
-        }
-        setDidDrag(true);
-        return;
-      }
-
-      // Handle panning with single finger
-      if (dragging && lastTouchRef.current && e.touches.length === 1) {
-        const touch = e.touches[0];
-        const movementX = touch.clientX - lastTouchRef.current.x;
-        const movementY = touch.clientY - lastTouchRef.current.y;
-        lastTouchRef.current = { x: touch.clientX, y: touch.clientY };
-
-        if (!didDrag && startPositionRef.current) {
-          const dx = touch.clientX - startPositionRef.current.x;
-          const dy = touch.clientY - startPositionRef.current.y;
-          if (Math.sqrt(dx * dx + dy * dy) > DRAG_THRESHOLD) {
-            setDidDrag(true);
-          }
-        }
-
-        movementAccumulator.current.x += movementX;
-        movementAccumulator.current.y += movementY;
-        throttledSetPosition({
-          x: position.x + movementAccumulator.current.x,
-          y: position.y + movementAccumulator.current.y
-        });
-      }
-    },
-    [
-      expandedCard,
-      isTransitionEnabled,
-      selectedCard,
+  const { handleTouchStart, handleTouchMove, handleTouchEnd, handleTouchCancel } = useTouchHandlers(
+    {
       dragging,
-      setSelectedCard,
-      calculateZoomUpdate,
-      zoomLevel,
-      position,
-      setDidDrag,
-      setPosition,
-      setZoomLevel,
-      didDrag,
-      throttledSetPosition
-    ]
-  );
-
-  const handleTouchEnd = useCallback(
-    (_e: TouchEvent<HTMLDivElement>): void => {
-      if (lastPinchDistanceRef.current !== null) {
-        lastPinchDistanceRef.current = null;
-      }
-
-      if (dragging) {
-        setPosition({
-          x: position.x + movementAccumulator.current.x,
-          y: position.y + movementAccumulator.current.y
-        });
-        movementAccumulator.current = { x: 0, y: 0 };
-        setDragging(false);
-      }
-      lastTouchRef.current = null;
-      startPositionRef.current = null;
-    },
-    [dragging, position, setPosition, setDragging]
-  );
-
-  const handleTouchCancel = useCallback(
-    (_e: TouchEvent<HTMLDivElement>): void => {
-      lastTouchRef.current = null;
-      lastPinchDistanceRef.current = null;
-      startPositionRef.current = null;
-      movementAccumulator.current = { x: 0, y: 0 };
-      setDragging(false);
-      setDidDrag(false);
-    },
-    [setDragging, setDidDrag]
-  );
-
-  // ---- ZOOMING HANDLERS (MOUSE WHEEL) ----
-
-  const handleWheel = useCallback(
-    (e: WheelEvent): void => {
-      e.preventDefault(); // Prevent default browser scroll/zoom
-
-      if (expandedCard !== null || isTransitionEnabled) return;
-
-      // Handle Ctrl + Wheel for zooming
-      if (e.ctrlKey) {
-        const mouseX = e.clientX;
-        const mouseY = e.clientY;
-        const zoomFactor = 0.15;
-        const zoomDelta = e.deltaY < 0 ? zoomFactor : -zoomFactor;
-
-        const zoomUpdate = calculateZoomUpdate(zoomLevel, position, zoomDelta, mouseX, mouseY);
-
-        if (zoomUpdate) {
-          setPosition(zoomUpdate.newPosition);
-          setZoomLevel(zoomUpdate.newZoomLevel);
-          setDidDrag(true);
-        }
-      }
-      // Handle trackpad scroll/pan (no Ctrl key)
-      else {
-        const sensitivity = 1.0; // Pan sensitivity
-        movementAccumulator.current.x -= e.deltaX * sensitivity;
-        movementAccumulator.current.y -= e.deltaY * sensitivity;
-        setDidDrag(true);
-        if (selectedCard !== null) {
-          setSelectedCard(null);
-        }
-        throttledSetPosition({
-          x: position.x + movementAccumulator.current.x,
-          y: position.y + movementAccumulator.current.y
-        });
-      }
-    },
-    [
-      expandedCard,
       isTransitionEnabled,
-      calculateZoomUpdate,
-      zoomLevel,
+      didDrag,
+      selectedCard,
       position,
+      zoomLevel,
+      expandedCard,
+      cardIsExpanding,
+      lastTouchRef,
+      lastPinchDistanceRef,
+      startPositionRef,
+      movementAccumulator,
+      transitionTimerRef,
+      setDragging,
+      setDidDrag,
+      setSelectedCard,
       setPosition,
       setZoomLevel,
-      setDidDrag,
-      selectedCard,
+      setTransitionEnabled,
       throttledSetPosition,
-      setSelectedCard
-    ]
+      calculateZoomUpdate,
+      showMobileGallery
+    }
   );
 
   // ---- EFFECTS & INITIALIZATION ----
@@ -426,14 +267,16 @@ export function useCanvasActions() {
   useEffect(() => {
     const container = containerRef.current;
     if (container) {
+      // Mouse Listeners
       container.addEventListener('mousedown', handleMouseDown as unknown as EventListener);
       window.addEventListener('mousemove', handleMouseMove as unknown as EventListener);
       window.addEventListener('mouseup', handleMouseUpOrLeave as unknown as EventListener);
       container.addEventListener('mouseleave', handleMouseUpOrLeave as unknown as EventListener);
-
       container.addEventListener('wheel', handleWheel as unknown as EventListener, {
         passive: false
       });
+
+      // Touch Listeners
       container.addEventListener('touchstart', handleTouchStart as unknown as EventListener, {
         passive: false
       });
@@ -448,6 +291,7 @@ export function useCanvasActions() {
       });
 
       return () => {
+        // Mouse Cleanup
         container.removeEventListener('mousedown', handleMouseDown as unknown as EventListener);
         window.removeEventListener('mousemove', handleMouseMove as unknown as EventListener);
         window.removeEventListener('mouseup', handleMouseUpOrLeave as unknown as EventListener);
@@ -455,8 +299,9 @@ export function useCanvasActions() {
           'mouseleave',
           handleMouseUpOrLeave as unknown as EventListener
         );
-
         container.removeEventListener('wheel', handleWheel as unknown as EventListener);
+
+        // Touch Cleanup
         container.removeEventListener('touchstart', handleTouchStart as unknown as EventListener);
         container.removeEventListener('touchmove', handleTouchMove as unknown as EventListener);
         container.removeEventListener('touchend', handleTouchEnd as unknown as EventListener);
@@ -477,11 +322,16 @@ export function useCanvasActions() {
 
   // Center the canvas initially
   useEffect(() => {
+    if (cardSize.width === 0) return;
+    if (window.innerWidth < 768) {
+      const mobileGap = window.innerWidth - cardSize.width;
+      setPosition({ x: mobileGap / 2, y: 0 });
+    }
+
     centerToCard();
-    // set selected card to the middle card initially by finding the key of the middle card
-    setSelectedCard(MIDDLE_CARD_INDEX);
+    setSelectedCard(MIDDLE_CARD_INDEX.toString());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Run only once on mount
+  }, [cardSize]);
 
   // Recenter the canvas on window resize
   useEffect(() => {
@@ -494,6 +344,7 @@ export function useCanvasActions() {
   }, [centerToCard]);
 
   return {
-    centerToCard
+    centerToCard,
+    centerViewOnScreen
   };
 }

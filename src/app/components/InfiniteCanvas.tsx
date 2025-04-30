@@ -1,35 +1,44 @@
 'use client';
 
 import { CanvasState, useCanvasStore } from '../stores/canvasStore';
-import { CSSProperties, useRef } from 'react';
-import { CARD_WIDTH, CARD_HEIGHT, DOT_BACKGROUND_SIZE, MIDDLE_CARD_INDEX } from './constants';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useCanvasActions } from '../hooks/useCanvasActions';
-import Card from './Card';
 import { useCardInteractions } from '../hooks/useCardInteractions';
 import { useInitializeCards } from '../hooks/useInitializeCards';
 import ExpandedCard from './ExpandedCard/ExpandedCard';
-import { GalleryIcon } from '../assets/GalleryIcon';
 import { useVisibleCards } from '@/app/hooks/useVisibleCards';
 import { useBackgroundDots } from '@/app/hooks/useBackgroundDots';
 import { useViewportSize } from '@/app/hooks/useViewportSize';
 import { useShallow } from 'zustand/shallow';
 import LightFog from './LightFog';
-import ThickFog from './ThickFog';
 import SelectedIsland from './SelectedIsland/SelectedIsland';
+import ResetButton from './ResetButton';
+import BackgroundDots from './BackgroundDots';
+import CardGrid from './CardGrid';
+import { usePreviousCards } from '../hooks/usePreviousCards';
+import { MOBILE_BREAKPOINT } from './constants';
+import GalleryButton from './GalleryButton';
+import MobileGalleryFog from './MobileGalleryFog';
+import { DatabaseCard } from '../fake-data/data';
 
-const InfiniteCanvas = () => {
+type InfiniteCanvasProps = {
+  data: DatabaseCard[];
+};
+
+const InfiniteCanvas = ({ data }: InfiniteCanvasProps) => {
   const {
     containerRef,
     showExpanded,
     basePattern,
     position,
     zoomLevel,
-    cardIsExpanding,
-    gridRef,
-    isTransitionEnabled,
-    didDrag,
     selectedCard,
-    setSelectedCard
+    cardSize,
+    showMobileGallery,
+    setShowMobileGallery,
+    showMobileGalleryFog,
+    setShowMobileGalleryFog,
+    setCardSize
   } = useCanvasStore(
     useShallow((state: CanvasState) => ({
       containerRef: state.containerRef,
@@ -37,35 +46,98 @@ const InfiniteCanvas = () => {
       basePattern: state.basePattern,
       position: state.position,
       zoomLevel: state.zoomLevel,
-      cardIsExpanding: state.cardIsExpanding,
-      gridRef: state.gridRef,
       isTransitionEnabled: state.isTransitionEnabled,
-      didDrag: state.didDrag,
       selectedCard: state.selectedCard,
-      setSelectedCard: state.setSelectedCard
+      cardSize: state.cardSize,
+      showMobileGallery: state.showMobileGallery,
+      setShowMobileGallery: state.setShowMobileGallery,
+      showMobileGalleryFog: state.showMobileGalleryFog,
+      setShowMobileGalleryFog: state.setShowMobileGalleryFog,
+      setCardSize: state.setCardSize
     }))
   );
 
-  const previousSelectedCards = useRef<Array<number | null>>([MIDDLE_CARD_INDEX]); // Length of 2 [old, current]
+  const [wasZoomed, setWasZoomed] = useState(false);
   const backgroundRef = useRef<HTMLDivElement>(null);
   const isInitialLoad = useRef(true);
+  const centeredCardIndex = useCanvasStore(state => state.centeredCardIndex);
 
-  useInitializeCards();
+  useInitializeCards({ data });
 
-  const { centerToCard } = useCanvasActions();
+  const { centerToCard, centerViewOnScreen } = useCanvasActions();
 
   const { handleLearnMore, handleGalleryClick } = useCardInteractions();
 
   const viewportSize = useViewportSize();
 
   const visibleCards = useVisibleCards({
+    cardSize,
     basePattern,
     position,
     zoomLevel,
-    viewportSize
+    viewportSize,
+    showMobileGallery
   });
 
   useBackgroundDots({ backgroundRef, position, zoomLevel });
+
+  const handleResetZoom = useCallback(() => {
+    if (zoomLevel !== 1) {
+      centerViewOnScreen();
+      setWasZoomed(true);
+    }
+  }, [setWasZoomed, centerViewOnScreen, zoomLevel]);
+
+  const { checkPrevious } = usePreviousCards(selectedCard);
+
+  // Sync scroll/center position when switching modes
+  useEffect(() => {
+    if (window.innerWidth > MOBILE_BREAKPOINT || centeredCardIndex == null || cardSize.width === 0)
+      return;
+    if (showMobileGallery) {
+      // Gallery mode: zoom out, no transition
+      const col =
+        centeredCardIndex % (basePattern.length > 0 ? Math.min(basePattern.length, 7) : 1);
+      const row = Math.floor(
+        centeredCardIndex / (basePattern.length > 0 ? Math.min(basePattern.length, 7) : 1)
+      );
+      const x = col * (cardSize.width + cardSize.gap);
+      const y = row * (cardSize.height + cardSize.gap);
+      centerToCard(x, y, 0.6, false);
+    } else {
+      // Single-column: zoom in, no transition
+      const y = centeredCardIndex * (cardSize.height + cardSize.gap);
+      centerToCard(0, y, 1, false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showMobileGallery]);
+
+  const handleMobileGalleryFog = (show: boolean) => {
+    setShowMobileGalleryFog(true);
+    setTimeout(() => {
+      setShowMobileGallery(show);
+      setTimeout(() => {
+        setShowMobileGalleryFog(false);
+      }, 250);
+    }, 250);
+  };
+
+  useEffect(() => {
+    const descriptionElement = document.querySelector('[data-expanded-description]') as HTMLElement;
+    const PADDING = 36;
+    if (!descriptionElement) return;
+    let width = 300;
+    let height = 400;
+    let gap = 100;
+
+    if (window.innerWidth < 768) {
+      width = Math.min(window.innerWidth * 0.8, 320);
+      height = width * (4 / 3);
+      gap = 65;
+    }
+    setCardSize({ width, height, gap });
+    descriptionElement.style.width = `${width - 2 * PADDING}px`;
+  }, [setCardSize]);
 
   return (
     <>
@@ -76,97 +148,39 @@ const InfiniteCanvas = () => {
         className="relative h-screen w-screen cursor-grab overflow-hidden active:cursor-grabbing"
       >
         <LightFog />
-        <div
-          ref={backgroundRef}
-          id="background-dots"
-          className="absolute inset-0"
-          style={{
-            backgroundSize: `${DOT_BACKGROUND_SIZE}px ${DOT_BACKGROUND_SIZE}px`
+
+        <MobileGalleryFog showFog={showMobileGalleryFog} />
+
+        <BackgroundDots position={position} zoomLevel={zoomLevel} />
+
+        {/* Desktop */}
+        <ResetButton handleGalleryClick={handleGalleryClick} handleResetZoom={handleResetZoom} />
+
+        {/* Mobile */}
+        <GalleryButton
+          handleShowGallery={() => {
+            handleMobileGalleryFog(true);
           }}
-        ></div>
-        <button
-          onClick={e => {
-            e.stopPropagation();
-            handleGalleryClick();
+          handleHideGallery={() => {
+            handleMobileGalleryFog(false);
           }}
-          onMouseDown={e => {
-            e.stopPropagation();
-          }}
-          className="fixed left-6 top-5 z-[10] flex cursor-pointer select-none items-center gap-1 rounded-full bg-[#2E2437] px-5 py-[0.625rem] text-lg text-white sm:left-12 sm:top-10"
-        >
-          <span>
-            <GalleryIcon />
-          </span>
-          Gallery
-        </button>
+          handleGoBack={handleGalleryClick}
+          showMobileGallery={showMobileGallery}
+          showExpanded={showExpanded}
+        />
+
         <SelectedIsland selectedCard={selectedCard} />
-        <div
-          ref={gridRef}
-          id="canvas-grid"
-          className={`${isTransitionEnabled ? 'transition-transform duration-[0.35s] ease-in-out' : ''} relative select-none will-change-transform`}
-          style={{
-            transform: `translate(${position.x}px, ${position.y}px) scale(${zoomLevel})`,
-            transformOrigin: 'top left' // Align with coordinate system
-          }}
-        >
-          {visibleCards.map(card => {
-            const isSelected = selectedCard === card.patternIndex;
-            const isPrevious = previousSelectedCards.current.includes(card.patternIndex);
-            const selectedClass = isSelected ? 'scale-[1.1] z-[2] selected' : '';
 
-            const previousClass = isPrevious && !isSelected ? 'z-[1]' : '';
-
-            const handleCardClick = card.isFading
-              ? (e: React.MouseEvent<HTMLDivElement>) => {
-                  e.preventDefault();
-                }
-              : () => {
-                  if (!didDrag && selectedCard !== card.patternIndex) {
-                    // We keep track of current too in case user pans canvas and selectCard is null
-                    previousSelectedCards.current = [selectedCard, card.patternIndex];
-                    centerToCard(card.x, card.y);
-                    setSelectedCard(card.patternIndex);
-                  }
-                };
-
-            return (
-              <div
-                key={card.key}
-                style={
-                  {
-                    position: 'absolute',
-                    left: `${card.x}px`,
-                    top: `${card.y}px`,
-                    width: `${CARD_WIDTH}px`,
-                    height: `${CARD_HEIGHT}px`,
-                    zIndex: card.isFading ? -1 : ''
-                  } as CSSProperties
-                }
-              >
-                {(isSelected || isPrevious) && zoomLevel >= 1 && (
-                  <ThickFog
-                    status={isSelected ? 'selected' : 'previous'}
-                    isInitialLoad={isInitialLoad}
-                  />
-                )}
-                <Card
-                  card={card}
-                  onClick={handleCardClick}
-                  onLearnMore={(e: React.MouseEvent<HTMLButtonElement>) => {
-                    e.stopPropagation();
-                    if (!didDrag) {
-                      handleLearnMore(card);
-                      if (selectedCard !== card.patternIndex) {
-                        setSelectedCard(null);
-                      }
-                    }
-                  }}
-                  className={`${selectedClass} ${previousClass} ${cardIsExpanding ? '' : 'hover:scale-[1.1]'}`}
-                />
-              </div>
-            );
-          })}
-        </div>
+        <CardGrid
+          cardSize={cardSize}
+          centerToCard={centerToCard}
+          checkPrevious={checkPrevious}
+          handleLearnMore={handleLearnMore}
+          isInitialLoad={isInitialLoad}
+          setWasZoomed={setWasZoomed}
+          visibleCards={visibleCards}
+          wasZoomed={wasZoomed}
+        />
       </div>
     </>
   );

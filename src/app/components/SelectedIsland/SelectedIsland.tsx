@@ -1,14 +1,21 @@
+import { CanvasState, useCanvasStore } from '@/app/stores/canvasStore';
 import GlassButton from '../GlassButton/GlassButton';
 import './SelectedIsland.scss';
+import { memo } from 'react';
 
-const SelectedIsland = ({ selectedCard }: { selectedCard: number | null }) => {
+type SelectedIslandProps = {
+  selectedCard: CanvasState['selectedCard'];
+};
+
+const SelectedIsland = ({ selectedCard }: SelectedIslandProps) => {
+  const showLightFog = useCanvasStore(state => state.showLightFog);
   return (
     <div
       id="selected-island"
-      className={`${selectedCard ? 'translate-y-0' : 'translate-y-[200%]'} fixed bottom-8 left-0 right-0 z-[2] mx-auto flex w-fit items-center justify-center gap-6 rounded-[32px] bg-red-500 py-2 pl-8 pr-[12px] transition-transform duration-300`}
+      className={`${selectedCard && showLightFog ? 'translate-y-0' : 'translate-y-[200%]'} fixed bottom-8 left-0 right-0 z-[2] mx-auto flex w-fit items-center justify-center gap-6 rounded-[32px] py-2 pl-8 pr-[12px] transition-transform duration-300`}
     >
       <p>Selected</p>
-      <GlassButton text="Duplicate as New">
+      <GlassButton text="Duplicate as New" size="skinny" color="dark">
         <svg
           width="20"
           height="18"
@@ -32,4 +39,4 @@ const SelectedIsland = ({ selectedCard }: { selectedCard: number | null }) => {
   );
 };
 
-export default SelectedIsland;
+export default memo(SelectedIsland);

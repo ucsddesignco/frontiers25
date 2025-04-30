@@ -24,7 +24,7 @@ function ThickFog({
     }
   }, [isInitialLoad, status]);
 
-  const opacityClass = status === 'previous' ? 'opacity-100 z-[1]' : 'opacity-0  z-[2]';
+  const opacityClass = status === 'previous' ? 'opacity-100 z-[1]' : 'opacity-0 z-[2]';
 
   const transitionClass = isInitialLoad.current
     ? ''
