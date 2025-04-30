@@ -16,10 +16,11 @@ import ResetButton from './ResetButton';
 import BackgroundDots from './BackgroundDots';
 import CardGrid from './CardGrid';
 import { usePreviousCards } from '../hooks/usePreviousCards';
-import { MOBILE_BREAKPOINT } from './constants';
+import { CardType, MOBILE_BREAKPOINT } from './constants';
 import GalleryButton from './GalleryButton';
 import MobileGalleryFog from './MobileGalleryFog';
-import { DatabaseCard } from '../fake-data/data';
+
+type DatabaseCard = Omit<CardType, 'borderColor' | 'buttonColor' | 'scrollbarColor'>;
 
 type InfiniteCanvasProps = {
   data: DatabaseCard[];

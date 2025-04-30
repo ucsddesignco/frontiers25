@@ -15,7 +15,7 @@
 
 ### Sahil / Victor
 
-- [ ] Connect to MongoDB
+- [x] Connect to MongoDB
 - [ ] Test out 150 cards in fake data
 - [ ] Use Better-Auth and add Google OAuth. Limit to @ucsd.edu
 - [ ] Add server actions / API routes for database card updates
