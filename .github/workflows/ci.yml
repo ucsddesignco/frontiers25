@@ -22,6 +22,17 @@ jobs:
           node-version: '20'
           cache: 'pnpm'
 
+      - name: Check environment variables
+        run: |
+          if [ -z "$MONGO_USER" ]; then
+            echo "MONGO_USER is not set or empty"
+            exit 1
+          fi
+          if [ -z "$MONGO_PASS" ]; then
+            echo "MONGO_PASS is not set or empty"
+            exit 1
+          fi
+          echo "Both environment variables are set"
       - name: Install Dependencies
         run: pnpm install
 
