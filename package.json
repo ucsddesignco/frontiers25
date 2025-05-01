@@ -20,7 +20,7 @@
     "clsx": "^2.1.1",
     "lint-staged": "^15.5.0",
     "lucide-react": "^0.503.0",
-    "mongodb": "^6.16.0",
+    "mongodb": "6.15.0",
     "mongoose": "^8.13.2",
     "next": "15.3.0",
     "prettier": "^3.5.3",
@@ -50,7 +50,8 @@
       "eslint --fix",
       "prettier --write"
     ],
-    "*.{html,scss,css,yml}": "prettier --write"
+    "*.{html,scss,css,yml}": "prettier --write",
+    "*.{ts,tsx}": "tsc --noEmit"
   },
   "packageManager": "pnpm@10.5.2+sha512.da9dc28cd3ff40d0592188235ab25d3202add8a207afbedc682220e4a0029ffbff4562102b9e6e46b4e3f9e8bd53e6d05de48544b0c57d4b0179e22c76d1199b"
 }

@@ -21,7 +21,7 @@ body {
   -webkit-font-smoothing: antialiased;
   overflow: hidden;
   cursor:
-    url('/default-cursor.svg') 6 6,
+    url('/default-cursor.svg') auto 6 6,
     auto;
 }
 img,

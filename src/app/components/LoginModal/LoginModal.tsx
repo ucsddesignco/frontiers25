@@ -1,4 +1,3 @@
-import './LoginModal.scss';
 import {
   Dialog,
   DialogClose,
@@ -20,8 +19,8 @@ interface LoginModalProps {
 }
 
 export default function LoginModal({ open, onOpenChange }: LoginModalProps) {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [_loading, setLoading] = useState(false);
+  const [_error, setError] = useState('');
   const router = useRouter();
 
   const handleGoogleSignIn = async () => {
@@ -53,22 +52,19 @@ export default function LoginModal({ open, onOpenChange }: LoginModalProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="login-dialog sm:max-w-[450px]">
+      <DialogContent className="max-w-[320px] sm:max-w-[450px]">
         <DialogHeader>
-          <DialogTitle className="dialog-title text-center text-4xl">
-            Want to save your creation?
-          </DialogTitle>
+          <DialogTitle>Want to Save Your Creation?</DialogTitle>
         </DialogHeader>
-        <DialogFooter className="modal-footer">
-          <DialogDescription className="dialog-description text-center text-lg">
-            You need to log in
-          </DialogDescription>
+        <DialogFooter>
+          <DialogDescription>You’ll have to log in.</DialogDescription>
           <DialogClose asChild>
             <GlassButton
               onClick={() => {}}
               onMouseDown={e => e.stopPropagation()}
               text="No Thanks"
               className="modal-button justify-center"
+              width="full"
             />
           </DialogClose>
           <GlassButton
@@ -77,6 +73,7 @@ export default function LoginModal({ open, onOpenChange }: LoginModalProps) {
             text="Log In Via UCSD"
             className="modal-button justify-center"
             color="dark"
+            width="full"
           >
             <svg
               width={14}

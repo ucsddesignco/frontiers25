@@ -12,6 +12,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem
 } from '@/components/ui/dropdown-menu';
+import ProfileIcon from '../assets/ProfileIcon';
 
 function SignInButton() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -43,15 +44,18 @@ function SignInButton() {
   }
 
   return (
-    <div className="fixed right-9 top-5 z-[4]">
+    <div className="fixed right-9 top-5 z-[4] border-none outline-none">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="flex items-center gap-2">
-            <ResetZoomIcon />
-            Profile
-          </Button>
+          <GlassButton
+            text="Profile"
+            onClick={e => e.stopPropagation()}
+            onMouseDown={e => e.stopPropagation()}
+          >
+            <ProfileIcon />
+          </GlassButton>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
+        <DropdownMenuContent align="center">
           <DropdownMenuItem>My Cards</DropdownMenuItem> {/* Placeholder for now */}
           <DropdownMenuItem onClick={handleSignOut}>Sign Out</DropdownMenuItem>
         </DropdownMenuContent>

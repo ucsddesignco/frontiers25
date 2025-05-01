@@ -1,18 +1,8 @@
 import mongoose from 'mongoose';
 
-//const mongoPass = process.env.MONGO_PASS
-//const mongoUser = process.env. MONGO_USER
-//const DB_url = mongodb+srv://${mongoUser}:${mongoPass}@dco-internal-tool.zyu6n.mongodb.net/DCo-Frontiers-2025?retryWrites=true&w=majority&appName=DCo-Internal-Tool
-const DB_url = process.env.DATABASE_URL;
-/*if(!mongoPass){
-    throw new Error(
-        'mongoose password is undefined'
-    );
-} else if (!mongoUser){
-    throw new Error(
-        'mongoose username is undefined'
-    );
-}*/
+const mongoPass = process.env.MONGO_PASS;
+const mongoUser = process.env.MONGO_USER;
+const DB_url = `mongodb+srv://${mongoUser}:${mongoPass}@dco-internal-tool.zyu6n.mongodb.net/DCo-Frontiers-2025?retryWrites=true&w=majority&appName=DCo-Internal-Tool`;
 
 type Cached = {
   conn: mongoose.Connection | null;
@@ -49,3 +39,5 @@ async function connectDB(): Promise<mongoose.Connection> {
 }
 
 export default connectDB;
+
+//Adaptation of https://medium.com/@nithishreddy0627/connecting-your-next-js-project-to-mongodb-atlas-using-mongoose-a-step-by-step-guide-2d2552b5d7ca
