@@ -38,7 +38,7 @@ export function ColorTab() {
       const accentContrast = contrastRatio(accentHex, '#000');
       setPrimaryText(primaryContrast <= 7 ? 'white' : 'black');
       setAccentText(accentContrast <= 7 ? 'white' : 'black');
-    }, 200); // 200ms debounce
+    }, 100); // 200ms debounce
 
     return () => clearTimeout(handler); // cleanup on new effect call
   }, [primary, accent]);

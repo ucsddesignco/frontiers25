@@ -10,10 +10,15 @@ import { useShallow } from 'zustand/shallow';
 import { useEffect } from 'react';
 import { CustomizationPanel } from '../components/customization/CustomizationPanel';
 import { CustomizationDrawer } from '../components/customization/CustomizationDrawer';
+import GlassButton from '../components/GlassButton/GlassButton';
+import { CheckIcon } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export default function Page() {
   const params = useParams();
   const cardId = params.cardId as string;
+
+  const router = useRouter();
 
   const { basePattern } = useCanvasStore(
     useShallow((state: CanvasState) => ({
@@ -49,7 +54,21 @@ export default function Page() {
   setBorderStyle(card.borderStyle);
 
   return (
-    <div className="flex h-screen w-screen flex-col items-center justify-center gap-16 bg-[#eaeaea] px-5 md:flex-row">
+    <div className="relative flex h-screen w-screen flex-col items-center justify-center gap-16 bg-[#eaeaea] px-5 md:flex-row">
+      <GlassButton
+        text="<-- Back"
+        className="absolute left-4 top-4 md:left-8 md:top-8"
+        onClick={() => router.push('/')}
+      ></GlassButton>
+
+      <GlassButton
+        text="Done"
+        color="dark"
+        className="absolute right-4 top-4 md:right-8 md:top-8"
+        onClick={() => alert('done')}
+      >
+        <CheckIcon className="mr-2 h-5 w-5" />
+      </GlassButton>
       <div style={{ width: 300, height: 400 }}>
         <SimplifiedCard id={card._id} />
       </div>
