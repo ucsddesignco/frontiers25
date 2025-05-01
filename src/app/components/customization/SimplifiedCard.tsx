@@ -150,8 +150,11 @@ const SimplifiedCard: React.FC<SimplifiedCardProps> = ({ id }) => {
               </p>
               <div className="relative flex w-full justify-center">
                 <button
-                  style={{ backgroundColor: primaryColorLightAccent }}
-                  className="learn-more duration-[300ms,200ms] w-full cursor-pointer rounded-full p-2 transition-[transform,opacity] ease-in-out"
+                  style={{
+                    backgroundColor: primaryColorLightAccent,
+                    transitionDuration: '300ms,200ms'
+                  }}
+                  className="learn-more w-full cursor-pointer rounded-full p-2 transition-[transform,opacity] ease-in-out"
                 >
                   Learn More
                 </button>
