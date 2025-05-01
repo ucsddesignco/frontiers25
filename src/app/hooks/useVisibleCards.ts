@@ -82,7 +82,7 @@ export const useVisibleCards = ({
         const cardData = basePattern[wrappedIndex];
         const cardX = 0;
         const cardY = i * effectiveCardHeight;
-        const cardKey = `${cardData.id}-0-${i}`;
+        const cardKey = `${cardData._id}-0-${i}`;
         cardsToRender.push({
           ...cardData,
           x: cardX,
@@ -118,7 +118,7 @@ export const useVisibleCards = ({
             const cardData = basePattern[patternIndex];
             const cardX = col * effectiveCardWidth;
             const cardY = row * effectiveCardHeight;
-            const cardKey = `${cardData.id}-${col}-${row}`;
+            const cardKey = `${cardData._id}-${col}-${row}`;
 
             cardsToRender.push({
               ...cardData,

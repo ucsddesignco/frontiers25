@@ -34,7 +34,8 @@ function CardGrid({
     didDrag,
     cardIsExpanding,
     isTransitionEnabled,
-    gridRef
+    gridRef,
+    basePattern
   } = useCanvasStore(
     useShallow(state => ({
       position: state.position,
@@ -44,7 +45,8 @@ function CardGrid({
       didDrag: state.didDrag,
       cardIsExpanding: state.cardIsExpanding,
       isTransitionEnabled: state.isTransitionEnabled,
-      gridRef: state.gridRef
+      gridRef: state.gridRef,
+      basePattern: state.basePattern
     }))
   );
 
@@ -52,7 +54,7 @@ function CardGrid({
     <div
       ref={gridRef}
       id="canvas-grid"
-      className={`${isTransitionEnabled ? 'transition-transform duration-[0.35s] ease-in-out' : ''} relative select-none will-change-transform`}
+      className={`${isTransitionEnabled ? 'duration-[0.35s] transition-transform ease-in-out' : ''} relative select-none will-change-transform`}
       style={{
         transform: `translate(${position.x}px, ${position.y}px) scale(${zoomLevel})`,
         transformOrigin: 'top left' // Align with coordinate system

@@ -97,7 +97,7 @@ export async function getCardByID(id: string) {
   try {
     await connectDB();
     const found = await card.find({ _id: id });
-    return JSON.stringify(found);
+    return found;
   } catch (error) {
     console.error('Error fetching card by user:', error);
     throw new Error('Failed to fetch card by user');
