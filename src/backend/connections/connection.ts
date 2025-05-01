@@ -1,8 +1,6 @@
 import mongoose from 'mongoose';
 
-const mongoPass = process.env.MONGO_PASS;
-const mongoUser = process.env.MONGO_USER;
-const DB_url = `mongodb+srv://${mongoUser}:${mongoPass}@dco-internal-tool.zyu6n.mongodb.net/DCo-Frontiers-2025?retryWrites=true&w=majority&appName=DCo-Internal-Tool`;
+const DATABASE_URL = process.env.DATABASE_URL;
 
 type Cached = {
   conn: mongoose.Connection | null;
@@ -29,7 +27,7 @@ async function connectDB(): Promise<mongoose.Connection> {
   if (!cached.promise) {
     const opts = { bufferCommands: false };
 
-    cached.promise = mongoose.connect(DB_url!, opts).then(mongoose => {
+    cached.promise = mongoose.connect(DATABASE_URL!, opts).then(mongoose => {
       return mongoose.connection;
     });
   }
