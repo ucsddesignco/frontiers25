@@ -1,11 +1,9 @@
 import { memo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { authClient } from '@/lib/auth-client';
-import ResetZoomIcon from '../assets/ResetZoomIcon';
 import LoginIcon from '../assets/LoginIcon';
 import GlassButton from './GlassButton/GlassButton';
 import LoginModal from './LoginModal/LoginModal';
-import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
