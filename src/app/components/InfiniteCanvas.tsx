@@ -20,7 +20,7 @@ import { CardType, MOBILE_BREAKPOINT } from './constants';
 import GalleryButton from './GalleryButton';
 import MobileGalleryFog from './MobileGalleryFog';
 
-type DatabaseCard = Omit<CardType, 'borderColor' | 'buttonColor' | 'scrollbarColor'>;
+export type DatabaseCard = Omit<CardType, 'borderColor' | 'buttonColor' | 'scrollbarColor'>;
 
 type InfiniteCanvasProps = {
   data: DatabaseCard[];

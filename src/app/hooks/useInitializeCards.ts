@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { useCanvasStore } from '../stores/canvasStore';
-import { DatabaseCard } from '../fake-data/data';
 import { CardType } from '../components/constants';
 import { generateColorVariations } from '../utils/colorUtils';
+import { DatabaseCard } from '../components/InfiniteCanvas';
 
 // Function to convert ISO timestamp string to relative time string (e.g., "18h", "3d")
 function formatRelativeTime(isoString: string): string {
