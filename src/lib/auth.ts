@@ -14,3 +14,5 @@ export const auth = betterAuth({
   },
   database: mongodbAdapter(db)
 });
+
+export type Session = typeof auth.$Infer.Session;

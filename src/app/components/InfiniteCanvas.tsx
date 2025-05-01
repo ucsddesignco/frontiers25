@@ -20,14 +20,16 @@ import SignInButton from './SignInButton';
 import { CardType, MOBILE_BREAKPOINT } from './constants';
 import GalleryButton from './GalleryButton';
 import MobileGalleryFog from './MobileGalleryFog';
+import { Session } from '@/lib/auth';
 
 export type DatabaseCard = Omit<CardType, 'borderColor' | 'buttonColor' | 'scrollbarColor'>;
 
 type InfiniteCanvasProps = {
   data: DatabaseCard[];
+  session: Session | null;
 };
 
-const InfiniteCanvas = ({ data }: InfiniteCanvasProps) => {
+const InfiniteCanvas = ({ data, session }: InfiniteCanvasProps) => {
   const {
     containerRef,
     showExpanded,
@@ -158,7 +160,7 @@ const InfiniteCanvas = ({ data }: InfiniteCanvasProps) => {
         {/* Desktop */}
         <ResetButton handleGalleryClick={handleGalleryClick} handleResetZoom={handleResetZoom} />
 
-        <SignInButton />
+        <SignInButton session={session} />
 
         {/* Mobile */}
         <GalleryButton

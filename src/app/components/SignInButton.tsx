@@ -11,18 +11,16 @@ import {
   DropdownMenuItem
 } from '@/components/ui/dropdown-menu';
 import ProfileIcon from '../assets/ProfileIcon';
+import { Session } from '@/lib/auth';
 
-function SignInButton() {
+function SignInButton({ session }: { session: Session | null }) {
   const [modalOpen, setModalOpen] = useState(false);
-  const { data: session, isPending } = authClient.useSession();
   const router = useRouter();
 
   const handleSignOut = async () => {
     await authClient.signOut();
     router.refresh();
   };
-
-  if (isPending) return null;
 
   if (!session) {
     return (
