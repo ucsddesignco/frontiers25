@@ -1,10 +1,13 @@
+import { getAllCards } from './api/cardFunctions';
 import InfiniteCanvas from './components/InfiniteCanvas';
-import { fakeCardData } from './fake-data/data';
 
-export default function Home() {
+export default async function Home() {
+  const cardData = await getAllCards();
+  const data = JSON.parse(cardData);
+
   return (
     <main className="font-[family-name:var(--font-geist-sans)]">
-      <InfiniteCanvas data={fakeCardData} />
+      <InfiniteCanvas data={data} />
     </main>
   );
 }
