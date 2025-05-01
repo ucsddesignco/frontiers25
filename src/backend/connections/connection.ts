@@ -5,9 +5,9 @@ const mongoUser = process.env.MONGO_USER;
 const DB_url = `mongodb+srv://${mongoUser}:${mongoPass}@dco-internal-tool.zyu6n.mongodb.net/DCo-Frontiers-2025?retryWrites=true&w=majority&appName=DCo-Internal-Tool`;
 
 if (!mongoPass) {
-  throw new Error('mongoose password is undefined');
+  throw new Error('Mongo password is undefined');
 } else if (!mongoUser) {
-  throw new Error('mongoose username is undefined');
+  throw new Error('Mongo username is undefined');
 }
 
 type Cached = {
@@ -16,7 +16,8 @@ type Cached = {
 };
 
 declare global {
-  let mongoose: Cached;
+  // eslint-disable-next-line no-var
+  var mongoose: Cached;
 }
 
 let cached = global.mongoose;

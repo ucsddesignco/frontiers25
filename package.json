@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "lint-fix": "next lint --fix && prettier --write .",
-    "lint-check": "next lint && prettier --check .",
+    "lint-check": "next lint && prettier --check . && tsc --noEmit",
     "prepare": "husky"
   },
   "dependencies": {
@@ -38,7 +38,8 @@
       "eslint --fix",
       "prettier --write"
     ],
-    "*.{html,scss,css,yml}": "prettier --write"
+    "*.{html,scss,css,yml}": "prettier --write",
+    "*.{ts,tsx}": "tsc --noEmit"
   },
   "packageManager": "pnpm@10.5.2+sha512.da9dc28cd3ff40d0592188235ab25d3202add8a207afbedc682220e4a0029ffbff4562102b9e6e46b4e3f9e8bd53e6d05de48544b0c57d4b0179e22c76d1199b"
 }
