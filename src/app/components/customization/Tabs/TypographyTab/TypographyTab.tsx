@@ -29,7 +29,7 @@ import {
   NicoMoji
 } from '@/app/assets/DF25Logos';
 import { CustomizationContext } from '@/app/contexts/CustomizationContext';
-import { useContext } from 'react';
+import { CSSProperties, useContext } from 'react';
 import { useStore } from 'zustand';
 
 export function TypographyTab() {
@@ -67,24 +67,36 @@ export function TypographyTab() {
   };
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col px-4">
       {/* Selected font stays fixed */}
-      <div className="cursor-pointer items-center rounded-md border-t-2 py-2 hover:bg-muted">
-        <div className="flex flex-1 cursor-pointer justify-between rounded-md p-2">
+      <div
+        style={
+          {
+            '--border-radius': '12px',
+            '--gradient-color': '#D8D7D9',
+            '--text-shadow-color': '#FFF'
+          } as CSSProperties
+        }
+        className="glass-button z-0 mb-2 cursor-pointer items-center px-4 py-2"
+      >
+        <div className="color-overlay pointer-events-none"></div>
+        <div className={`blur-background pointer-events-none bg-[rgba(255,255,255,0.80)]`}></div>
+        <div className="top-highlight pointer-events-none"></div>
+        <div className="0 flex flex-1 cursor-pointer justify-between rounded-md p-2">
           <span className="text-lg">{fontFamily}</span>
           <span className="block h-8">{AllCardLogos[fontFamily]}</span>
         </div>
       </div>
 
       {/* Scrollable container for all other fonts */}
-      <div className="flex-1 space-y-6 overflow-y-auto">
+      <div className="no-scrollbar flex-1 space-y-6 overflow-y-auto">
         <RadioGroup value={fontFamily} onValueChange={value => setFontFamily(value as FontFamily)}>
           {Object.entries(AllCardLogos)
             .filter(([fontName]) => fontName !== fontFamily)
             .map(([fontName, logo]) => (
               <div
                 key={fontName}
-                className="flex cursor-pointer items-center rounded-md py-2 hover:bg-muted"
+                className="flex cursor-pointer items-center rounded-md px-4 py-2 hover:bg-muted"
               >
                 <RadioGroupItem value={fontName} id={`font-${fontName}`} className="hidden" />
                 <Label

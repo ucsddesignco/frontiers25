@@ -57,6 +57,7 @@ export default {
         'card-half': 'calc(var(--card-duration) / 2)'
       },
       cursor: {
+        default: "url('/default-cursor.svg') 6 6, default",
         auto: "url('/default-cursor.svg') 6 6, auto",
         pointer: "url('/pointer-cursor.svg') 6 6, pointer",
         grab: "url('/grab-cursor.svg') 6 6, grab",

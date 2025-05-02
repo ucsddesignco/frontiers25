@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "lint-fix": "next lint --fix && prettier --write .",
+    "lint-fix": "next lint --fix && prettier --write . && tsc --noEmit",
     "lint-check": "next lint && prettier --check .",
     "prepare": "husky"
   },

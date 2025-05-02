@@ -38,7 +38,7 @@ export default function CustomizationContainer({ card }: { card: CardType | null
               <SimplifiedCard id={card._id} />
             </div>
 
-            <div className="hidden h-[380px] w-[500px] items-center justify-center rounded-[45px] bg-[#f5f5f5] p-8 md:flex">
+            <div className="gradient-border relative hidden h-[380px] w-[500px] items-center justify-center rounded-[45px] bg-[#f5f5f5] p-8 md:flex">
               <CustomizationPanel />
             </div>
 

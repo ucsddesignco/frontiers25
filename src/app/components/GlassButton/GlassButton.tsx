@@ -7,7 +7,7 @@ type GlassButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   size?: 'skinny' | 'thick';
   color?: 'light' | 'dark';
   width?: 'auto' | 'full';
-  href?: string;
+  href?: string | undefined;
 };
 
 const GlassButton = forwardRef<HTMLButtonElement, GlassButtonProps>(
@@ -18,7 +18,7 @@ const GlassButton = forwardRef<HTMLButtonElement, GlassButtonProps>(
       size = 'thick',
       color = 'light',
       width = 'auto',
-      href = '',
+      href = undefined,
       children,
       ...props
     },
@@ -47,29 +47,37 @@ const GlassButton = forwardRef<HTMLButtonElement, GlassButtonProps>(
     if (href) {
       return (
         <Link
+          style={
+            {
+              '--gradient-color': gradientColor,
+              '--text-shadow-color': textShadowColor,
+              '--border-radius': '35px'
+            } as CSSProperties
+          }
           href={href}
           className={`${className} ${widthClass} isolate cursor-pointer select-none focus:outline-none`}
         >
           <ButtonContent />
         </Link>
       );
+    } else {
+      return (
+        <button
+          ref={ref}
+          style={
+            {
+              '--gradient-color': gradientColor,
+              '--text-shadow-color': textShadowColor,
+              '--border-radius': '35px'
+            } as CSSProperties
+          }
+          className={`${className} ${widthClass} isolate cursor-pointer select-none focus:outline-none`}
+          {...props}
+        >
+          <ButtonContent />
+        </button>
+      );
     }
-
-    return (
-      <button
-        ref={ref}
-        style={
-          {
-            '--gradient-color': gradientColor,
-            '--text-shadow-color': textShadowColor
-          } as CSSProperties
-        }
-        className={`${className} ${widthClass} isolate cursor-pointer select-none focus:outline-none`}
-        {...props}
-      >
-        <ButtonContent />
-      </button>
-    );
   }
 );
 

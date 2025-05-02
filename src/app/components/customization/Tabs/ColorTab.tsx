@@ -1,12 +1,11 @@
 'use client';
-import { MyColorSlider } from '../MyColorSlider';
+import { MyColorSlider } from './MyColorSlider/MyColorSlider';
 import { parseColor } from 'react-stately';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { Check, X } from 'lucide-react';
 import { contrastRatio } from 'wcag-contrast-utils';
 
 type selectedColor = 'primary' | 'accent';
-type textColor = 'black' | 'white';
 
 import { useShallow } from 'zustand/shallow';
 import { CustomizationContext } from '@/app/contexts/CustomizationContext';
@@ -15,9 +14,6 @@ import { useStore } from 'zustand';
 export function ColorTab() {
   const [selectedColor, setSelectedColor] = useState<selectedColor>('primary');
 
-  const [contrastIsGood, setContrastIsGood] = useState<boolean>();
-  const [primaryText, setPrimaryText] = useState<textColor>();
-  const [accentText, setAccentText] = useState<textColor>();
   const store = useContext(CustomizationContext);
   if (!store) throw new Error('Missing CustomizationContext');
   const { primary, accent, setPrimary, setAccent } = useStore(
@@ -30,22 +26,16 @@ export function ColorTab() {
     }))
   );
 
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      const primaryHex = parseColor(primary).toString('hex');
-      const accentHex = parseColor(accent).toString('hex');
-      const contrast = contrastRatio(primaryHex, accentHex);
-      setContrastIsGood(contrast >= 4.5);
+  const primaryHex = parseColor(primary).toString('hex');
+  const accentHex = parseColor(accent).toString('hex');
+  const contrast = contrastRatio(primaryHex, accentHex);
 
-      const primaryContrast = contrastRatio(primaryHex, '#000');
-      const accentContrast = contrastRatio(accentHex, '#000');
-      setPrimaryText(primaryContrast <= 7 ? 'white' : 'black');
-      setAccentText(accentContrast <= 7 ? 'white' : 'black');
-    }, 200); // 200ms debounce
+  const contrastIsGood = contrast >= 4.5;
+  const primaryContrast = contrastRatio(primaryHex, '#000');
+  const accentContrast = contrastRatio(accentHex, '#000');
 
-    return () => clearTimeout(handler); // cleanup on new effect call
-  }, [primary, accent]);
-
+  const primaryText = primaryContrast <= 7 ? 'white' : 'black';
+  const accentText = accentContrast <= 7 ? 'white' : 'black';
   return (
     <div className="flex flex-col items-center space-y-8">
       <span className="flex w-full justify-between gap-3">
