@@ -12,10 +12,12 @@ import {
 } from '@/components/ui/dropdown-menu';
 import ProfileIcon from '../assets/ProfileIcon';
 import { Session } from '@/lib/auth';
+import { useCanvasStore } from '../stores/canvasStore';
 
 function SignInButton({ session }: { session: Session | null }) {
   const [modalOpen, setModalOpen] = useState(false);
   const router = useRouter();
+  const showLightFog = useCanvasStore(state => state.showLightFog);
 
   const handleSignOut = async () => {
     await authClient.signOut();
@@ -40,7 +42,9 @@ function SignInButton({ session }: { session: Session | null }) {
   }
 
   return (
-    <div className="fixed right-9 top-5 z-[4] border-none outline-none">
+    <div
+      className={`${!showLightFog ? 'invisible' : ''} fixed right-9 top-5 z-[3] border-none outline-none`}
+    >
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <GlassButton

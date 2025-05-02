@@ -34,17 +34,18 @@ export const calculateTransitionValues = (
     'judges-text'
   ];
 
-  let timeElementName = 'time';
+  let timeElementNames = ['time-1', 'time-2'];
   if (window.innerWidth < MOBILE_BREAKPOINT) {
-    timeElementName = 'mobile-time';
+    timeElementNames = ['mobile-time-1', 'mobile-time-2'];
   }
 
   const elementNames = [
     'svg',
     'date',
     'location',
-    timeElementName,
-    'description',
+    ...timeElementNames,
+    'description-1',
+    'description-2',
     'learn-more',
     'apply-bg',
     'apply-text',

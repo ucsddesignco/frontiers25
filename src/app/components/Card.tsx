@@ -55,24 +55,39 @@ const Card: React.FC<CardProps> = ({ card, onClick, onMouseDown, onLearnMore, cl
               <div className="flex w-full justify-between pt-3">
                 <div>
                   <p className="date w-fit transition-transform duration-card ease-in-out">
-                    Wed May 8
+                    May 9-10
                   </p>
                   <p className="location w-fit transition-transform duration-card ease-in-out">
-                    DIB Room 208
+                    DIB 208
                   </p>
                 </div>
-                <p className="time hidden h-fit w-fit transition-transform duration-card ease-in-out lg:block">
-                  9am-5pm
+                <p className="time hidden flex-col items-end lg:flex">
+                  <span className="time-1 block w-fit transition-transform duration-card ease-in-out">
+                    by UCSD
+                  </span>
+                  <span className="time-2 block w-fit transition-transform duration-card ease-in-out">
+                    Design Co
+                  </span>
                 </p>
-                <p className="mobile-time h-fit w-fit transition-transform duration-card ease-in-out lg:hidden">
-                  9am-5pm
+                <p className="mobile-time flex h-fit w-fit flex-col items-end lg:hidden">
+                  <span className="mobile-time-1 block w-fit transition-transform duration-card ease-in-out lg:flex">
+                    by UCSD
+                  </span>
+                  <span className="mobile-time-2 block w-fit transition-transform duration-card ease-in-out lg:flex">
+                    Design Co
+                  </span>
                 </p>
               </div>
             </div>
 
             <div className="flex flex-col gap-3">
-              <p className="description transition-transform duration-card ease-in-out">
-                A 2-day sprint where UCSD designers ideate and iterate.
+              <p className="flex flex-col text-center">
+                <span className="description-1 block transition-transform duration-card ease-in-out">
+                  Create, test, & iterate on ideas
+                </span>
+                <span className="description-2 block transition-transform duration-card ease-in-out">
+                  at our annual design-a-thon.
+                </span>
               </p>
               <div className="relative flex w-full justify-center">
                 <button

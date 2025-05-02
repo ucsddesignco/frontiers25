@@ -127,9 +127,6 @@ const InfiniteCanvas = ({ data, session }: InfiniteCanvasProps) => {
   };
 
   useEffect(() => {
-    const descriptionElement = document.querySelector('[data-expanded-description]') as HTMLElement;
-    const PADDING = 36;
-    if (!descriptionElement) return;
     let width = 300;
     let height = 400;
     let gap = 100;
@@ -140,12 +137,12 @@ const InfiniteCanvas = ({ data, session }: InfiniteCanvasProps) => {
       gap = 65;
     }
     setCardSize({ width, height, gap });
-    descriptionElement.style.width = `${width - 2 * PADDING}px`;
   }, [setCardSize]);
 
   return (
     <>
       <ExpandedCard showExpanded={showExpanded} />
+
       <div
         ref={containerRef}
         id="canvas-container"

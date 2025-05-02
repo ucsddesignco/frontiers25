@@ -15,7 +15,7 @@ const NAV_BUTTONS = [
 export default function HeroPage({ scrollToSection, showExpanded }: HeroPageProps) {
   return (
     <section
-      className={`${showExpanded ? 'opacity-100' : 'opacity-0'} hero-page mx-auto flex h-[100dvh] w-full max-w-[80%] flex-col items-center transition-none lg:max-w-[40rem] lg:justify-center lg:pb-24`}
+      className={`${showExpanded ? 'opacity-100' : 'opacity-0'} hero-page mx-auto flex h-[100dvh] min-h-[100dvh] w-full max-w-[80%] flex-col items-center transition-none lg:max-w-[40rem] lg:justify-center lg:pb-24`}
     >
       <div className="w-full pt-32 lg:pt-0">
         <svg
@@ -32,26 +32,29 @@ export default function HeroPage({ scrollToSection, showExpanded }: HeroPageProp
         <div className="flex w-full flex-col justify-between gap-[2.4rem] pt-6 lg:flex-row">
           <div className="flex justify-between">
             <div>
-              <p className="date w-fit transition-transform duration-card ease-in-out">Wed May 8</p>
+              <p className="date w-fit transition-transform duration-card ease-in-out">May 9-10</p>
               <p className="location w-fit transition-transform duration-card ease-in-out">
-                DIB Room 208
+                DIB 208
               </p>
             </div>
             {/* Mobile time */}
-            <div className="lg:hidden">
-              <p className="mobile-time h-fit w-fit transition-transform duration-card ease-in-out">
-                9am-5pm
-              </p>
-            </div>
+            <p className="mobile-time flex h-fit w-fit flex-col transition-transform duration-card ease-in-out lg:hidden">
+              <span className="mobile-time-1 w-fit">by UCSD</span>
+              <span className="mobile-time-2 w-fit">Design Co</span>
+            </p>
           </div>
-          <p className="time hidden h-fit w-fit transition-transform duration-card ease-in-out lg:block">
-            9am-5pm
+          <p className="time hidden flex-col transition-transform duration-card ease-in-out lg:flex">
+            <span className="time-1 w-fit">by UCSD</span>
+            <span className="time-2 w-fit">Design Co</span>
           </p>
-          <p
-            data-expanded-description
-            className="description transition-transform duration-card ease-in-out"
-          >
-            A 2-day sprint where UCSD designers ideate and iterate.
+          <p className="flex flex-col text-center">
+            <span className="description-1 transition-transform duration-card ease-in-out">
+              Create, test, & iterate on ideas
+            </span>
+            <span className="description-2 transition-transform duration-card ease-in-out">
+              {' '}
+              at our annual design-a-thon.
+            </span>
           </p>
         </div>
 
