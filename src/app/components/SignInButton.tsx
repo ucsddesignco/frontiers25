@@ -31,7 +31,6 @@ function SignInButton({ session }: { session: Session | null }) {
           onClick={() => setModalOpen(true)}
           onMouseDown={e => e.stopPropagation()}
           text="Sign In"
-          className="fixed right-9 top-5 z-[4]"
         >
           <LoginIcon />
         </GlassButton>
@@ -42,9 +41,7 @@ function SignInButton({ session }: { session: Session | null }) {
   }
 
   return (
-    <div
-      className={`${!showLightFog ? 'invisible' : ''} fixed right-9 top-5 z-[3] border-none outline-none`}
-    >
+    <div className={`${!showLightFog ? 'invisible' : ''}`}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <GlassButton

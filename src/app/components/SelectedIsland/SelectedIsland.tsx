@@ -34,7 +34,7 @@ const SelectedIsland = ({ selectedCard }: SelectedIslandProps) => {
           }
           const selectedCardIndex = parseInt(selectedCard);
           const cardId = basePattern[selectedCardIndex]._id;
-          router.push(`/${cardId}`);
+          router.push(`/card/${cardId}`);
         }}
       >
         <svg

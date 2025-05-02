@@ -1,7 +1,6 @@
 'use client';
 
 import { CustomizationContext } from '@/app/contexts/CustomizationContext';
-import { CardType } from '../constants';
 import SimplifiedCard from './SimplifiedCard';
 import { createCustomizationStore } from '@/app/stores/customizationStore';
 import { useRef } from 'react';
@@ -11,8 +10,14 @@ import { CustomizationDrawer } from './CustomizationDrawer';
 import GlassButton from '../GlassButton/GlassButton';
 import { BackIcon } from '@/app/assets/BackIcon';
 import { DoneIcon } from '@/app/assets/DoneIcon';
+import { DatabaseCard } from '../InfiniteCanvas';
 
-export default function CustomizationContainer({ card }: { card: CardType | null }) {
+interface CustomizationContainerProps {
+  card: DatabaseCard | null;
+  newCard?: boolean;
+}
+
+export default function CustomizationContainer({ card }: CustomizationContainerProps) {
   const store = useRef(
     createCustomizationStore({
       primary: card ? parseColor(card.primary).toString('hsl') : undefined,
