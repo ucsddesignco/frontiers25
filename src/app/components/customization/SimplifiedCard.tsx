@@ -1,8 +1,6 @@
-import type { borderStyle } from '@/app/stores/customizationStore';
 import { parseColor } from 'react-stately';
-import { useCustomizationStore } from '@/app/stores/customizationStore';
 import { useShallow } from 'zustand/shallow';
-import type { fontFamily } from '@/app/stores/customizationStore';
+import type { FontFamily, BorderStyle } from '@/app/stores/customizationStore';
 import { Rectangular, Rounded, Beveled, Squircle } from '@/app/assets/CardSvgs';
 import {
   Jaro,
@@ -26,13 +24,16 @@ import {
   Workbench,
   NicoMoji
 } from '@/app/assets/DF25Logos';
+import { useContext } from 'react';
+import { useStore } from 'zustand';
+import { CustomizationContext } from '@/app/contexts/CustomizationContext';
 
 export interface SimplifiedCard {
   id: string;
   primary: string;
   accent: string;
-  fontFamily: fontFamily;
-  borderStyle: borderStyle;
+  fontFamily: FontFamily;
+  borderStyle: BorderStyle;
 }
 
 export interface CardSvgProps {
@@ -49,7 +50,11 @@ interface SimplifiedCardProps {
 }
 
 const SimplifiedCard: React.FC<SimplifiedCardProps> = ({ id }) => {
-  const { primary, accent, fontFamily, borderStyle } = useCustomizationStore(
+  const store = useContext(CustomizationContext);
+  if (!store) throw new Error('Missing CustomizationContext');
+
+  const { primary, accent, fontFamily, borderStyle } = useStore(
+    store,
     useShallow(state => ({
       primary: state.primary,
       accent: state.accent,
@@ -110,7 +115,7 @@ const SimplifiedCard: React.FC<SimplifiedCardProps> = ({ id }) => {
             id={`card-bg-${id}`}
             className={`absolute transition-transform duration-card ease-in-out`}
           >
-            {CardSvgs[borderStyle as borderStyle]}
+            {CardSvgs[borderStyle as BorderStyle]}
           </div>
 
           <div
@@ -119,7 +124,7 @@ const SimplifiedCard: React.FC<SimplifiedCardProps> = ({ id }) => {
             className={`relative flex h-full flex-col items-center justify-between p-[36px] text-[#530B67] transition-transform duration-card ease-in-out`}
           >
             <div className="w-full">
-              <div className="h-[80px] w-[220px]">{CardLogos[fontFamily as fontFamily]}</div>
+              <div className="h-[80px] w-[220px]">{CardLogos[fontFamily as FontFamily]}</div>
               <p
                 style={{ color: primary }}
                 className="title relative z-[1] block w-fit transition-transform duration-card ease-in-out"

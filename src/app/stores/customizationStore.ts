@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 
-export type borderStyle = 'rectangular' | 'rounded' | 'beveled' | 'squircle';
+export type BorderStyle = 'rectangular' | 'rounded' | 'beveled' | 'squircle';
 
-export type fontFamily =
+export type FontFamily =
   | 'Jaro'
   | 'Bungee'
   | 'SF Pro'
@@ -24,30 +24,47 @@ export type fontFamily =
   | 'Workbench'
   | 'Nico Moji';
 
+interface CustomizationProps {
+  primary: string;
+  accent: string;
+  fontFamily: FontFamily;
+  borderStyle: BorderStyle;
+}
+
+export type CustomizationStore = ReturnType<typeof createCustomizationStore>;
+
 export interface CustomizationState {
   // Card state
   primary: string;
   accent: string;
-  fontFamily: fontFamily;
-  borderStyle: borderStyle;
+  fontFamily: FontFamily;
+  borderStyle: BorderStyle;
 
   // Card actions
   setPrimary: (primary: string) => void;
   setAccent: (accent: string) => void;
-  setFontFamily: (fontFamily: fontFamily) => void;
-  setBorderStyle: (borderStyle: borderStyle) => void;
+  setFontFamily: (fontFamily: FontFamily) => void;
+  setBorderStyle: (borderStyle: BorderStyle) => void;
+  initialize: (initialState: Partial<CustomizationProps>) => void;
 }
 
-export const useCustomizationStore = create<CustomizationState>((set, _get) => ({
-  // Initial state
-  primary: '',
-  accent: '',
-  fontFamily: 'Jaro',
-  borderStyle: 'rounded',
+export const createCustomizationStore = (initProps?: Partial<CustomizationProps>) => {
+  const DEFAULT_PROPS: CustomizationProps = {
+    primary: '',
+    accent: '',
+    fontFamily: 'Jaro',
+    borderStyle: 'rounded'
+  };
 
-  // Actions to update state
-  setPrimary: primary => set({ primary }),
-  setAccent: accent => set({ accent }),
-  setFontFamily: fontFamily => set({ fontFamily }),
-  setBorderStyle: borderStyle => set({ borderStyle })
-}));
+  return create<CustomizationState>((set, _get) => ({
+    ...DEFAULT_PROPS,
+    ...initProps,
+
+    // Actions to update state
+    setPrimary: primary => set({ primary }),
+    setAccent: accent => set({ accent }),
+    setFontFamily: fontFamily => set({ fontFamily }),
+    setBorderStyle: borderStyle => set({ borderStyle }),
+    initialize: initialState => set(initialState)
+  }));
+};

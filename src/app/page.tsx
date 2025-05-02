@@ -5,14 +5,13 @@ import { auth } from '@/lib/auth';
 
 export default async function Home() {
   const cardData = await getAllCards();
-  const data = JSON.parse(cardData);
   const session = await auth.api.getSession({
     headers: await headers()
   });
 
   return (
     <main className="font-[family-name:var(--font-geist-sans)]">
-      <InfiniteCanvas data={data} session={session} />
+      <InfiniteCanvas data={cardData} session={session} />
     </main>
   );
 }

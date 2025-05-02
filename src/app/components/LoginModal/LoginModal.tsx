@@ -52,12 +52,12 @@ export default function LoginModal({ open, onOpenChange }: LoginModalProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[320px] sm:max-w-[450px]">
+      <DialogContent className="max-w-[320px]">
         <DialogHeader>
-          <DialogTitle>Want to Save Your Creation?</DialogTitle>
+          <DialogTitle>UCSD Email Needed.</DialogTitle>
         </DialogHeader>
         <DialogFooter>
-          <DialogDescription>You’ll have to log in.</DialogDescription>
+          <DialogDescription>Keep your cards safe by signing in.</DialogDescription>
           <DialogClose asChild>
             <GlassButton
               onClick={() => {}}
@@ -70,7 +70,7 @@ export default function LoginModal({ open, onOpenChange }: LoginModalProps) {
           <GlassButton
             onClick={handleGoogleSignIn}
             onMouseDown={e => e.stopPropagation()}
-            text="Log In Via UCSD"
+            text="Sign In Via UCSD"
             className="modal-button justify-center"
             color="dark"
             width="full"

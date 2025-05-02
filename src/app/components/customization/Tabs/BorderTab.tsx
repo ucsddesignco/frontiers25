@@ -6,15 +6,21 @@ import {
   BorderBeveled,
   BorderSquircle
 } from '@/app/assets/BorderIcons';
-import { borderStyle, useCustomizationStore } from '@/app/stores/customizationStore';
+import { BorderStyle } from '@/app/stores/customizationStore';
 
 import { useShallow } from 'zustand/shallow';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import clsx from 'clsx';
+import { useContext } from 'react';
+import { CustomizationContext } from '@/app/contexts/CustomizationContext';
+import { useStore } from 'zustand';
 
 export function BorderTab() {
-  const { borderStyle, setBorderStyle } = useCustomizationStore(
+  const store = useContext(CustomizationContext);
+  if (!store) throw new Error('Missing CustomizationContext');
+  const { borderStyle, setBorderStyle } = useStore(
+    store,
     useShallow(state => ({
       borderStyle: state.borderStyle,
       setBorderStyle: state.setBorderStyle
@@ -34,7 +40,7 @@ export function BorderTab() {
     <div className="h-full w-full">
       <RadioGroup
         value={borderStyle}
-        onValueChange={value => setBorderStyle(value as borderStyle)}
+        onValueChange={value => setBorderStyle(value as BorderStyle)}
         className="grid h-full w-full grid-cols-2 grid-rows-2"
       >
         {borderStyles.map(style => (
@@ -50,7 +56,7 @@ export function BorderTab() {
               )}
             >
               <div className="flex h-3/4 w-3/4 items-center justify-center">
-                {icons[style as borderStyle]}
+                {icons[style as BorderStyle]}
               </div>
             </Label>
           </div>

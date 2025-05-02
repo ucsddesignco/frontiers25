@@ -1,15 +1,16 @@
 'use client';
 import { MyColorSlider } from '../MyColorSlider';
 import { parseColor } from 'react-stately';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Check, X } from 'lucide-react';
 import { contrastRatio } from 'wcag-contrast-utils';
 
 type selectedColor = 'primary' | 'accent';
 type textColor = 'black' | 'white';
 
-import { useCustomizationStore } from '@/app/stores/customizationStore';
 import { useShallow } from 'zustand/shallow';
+import { CustomizationContext } from '@/app/contexts/CustomizationContext';
+import { useStore } from 'zustand';
 
 export function ColorTab() {
   const [selectedColor, setSelectedColor] = useState<selectedColor>('primary');
@@ -17,8 +18,10 @@ export function ColorTab() {
   const [contrastIsGood, setContrastIsGood] = useState<boolean>();
   const [primaryText, setPrimaryText] = useState<textColor>();
   const [accentText, setAccentText] = useState<textColor>();
-
-  const { primary, accent, setPrimary, setAccent } = useCustomizationStore(
+  const store = useContext(CustomizationContext);
+  if (!store) throw new Error('Missing CustomizationContext');
+  const { primary, accent, setPrimary, setAccent } = useStore(
+    store,
     useShallow(state => ({
       primary: state.primary,
       accent: state.accent,

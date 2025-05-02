@@ -3,7 +3,6 @@ import './TypographyTab.scss';
 
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { useCustomizationStore } from '@/app/stores/customizationStore';
 import { useShallow } from 'zustand/shallow';
 import type { fontFamily } from '@/app/stores/customizationStore';
 
@@ -29,9 +28,15 @@ import {
   Workbench,
   NicoMoji
 } from '@/app/assets/DF25Logos';
+import { CustomizationContext } from '@/app/contexts/CustomizationContext';
+import { useContext } from 'react';
+import { useStore } from 'zustand';
 
 export function TypographyTab() {
-  const { fontFamily, setFontFamily } = useCustomizationStore(
+  const store = useContext(CustomizationContext);
+  if (!store) throw new Error('Missing CustomizationContext');
+  const { fontFamily, setFontFamily } = useStore(
+    store,
     useShallow(state => ({
       fontFamily: state.fontFamily,
       setFontFamily: state.setFontFamily
