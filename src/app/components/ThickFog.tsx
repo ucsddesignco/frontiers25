@@ -24,7 +24,7 @@ function ThickFog({
     }
   }, [isInitialLoad, status]);
 
-  const opacityClass = status === 'previous' ? 'opacity-100 z-[1]' : 'opacity-0  z-[2]';
+  const opacityClass = status === 'previous' ? 'opacity-100 z-[1]' : 'opacity-0 z-[2]';
 
   const transitionClass = isInitialLoad.current
     ? ''
@@ -37,7 +37,7 @@ function ThickFog({
         backgroundImage:
           'radial-gradient(circle, rgba(233, 233, 233, 0.5) 0%, rgba(232, 232, 232, 1) 50%)'
       }}
-      className={`${opacityClass} ${transitionClass} pointer-events-none absolute left-1/2 top-1/2 hidden h-[200vh] w-[200vw] -translate-x-1/2 -translate-y-1/2 lg:block`}
+      className={`${opacityClass} ${transitionClass} pointer-events-none absolute left-1/2 top-1/2 h-[200vh] w-[200vw] -translate-x-1/2 -translate-y-1/2`}
     ></div>
   );
 }

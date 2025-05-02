@@ -19,27 +19,36 @@ export interface CanvasState {
   gridRef: RefObject<HTMLDivElement | null>;
   expandedCardRef: RefObject<HTMLDivElement | null>;
 
-  selectedCard: number | null; // pattern index of the selected card
+  selectedCard: string | null; // pattern index of the selected card
   expandedCard: VisibleCard | null;
   basePattern: CardType[];
   showExpanded: boolean;
+  showMobileGallery: boolean;
   cardIsExpanding: boolean;
-  showMiddleFog: boolean;
-  showLightFog: boolean;
   isTransitionEnabled: boolean;
+
+  showLightFog: boolean;
+  showMiddleFog: boolean;
+  showMobileGalleryFog: boolean;
+
+  centeredCardIndex: number | null;
+  setCenteredCardIndex: (index: number | null) => void;
 
   // Canvas actions
   setPosition: (position: { x: number; y: number }) => void;
   setZoomLevel: (level: number) => void;
   setDragging: (dragging: boolean) => void;
   setDidDrag: (didDrag: boolean) => void;
-  setShowMiddleFog: (show: boolean) => void;
-  setShowLightFog: (show: boolean) => void;
   setTransitionEnabled: (enabled: boolean) => void;
 
+  setShowLightFog: (show: boolean) => void;
+  setShowMiddleFog: (show: boolean) => void;
+  setShowMobileGalleryFog: (show: boolean) => void;
+
   // Card actions
+  setShowMobileGallery: (show: boolean) => void;
   setCardSize: (size: { width: number; height: number; gap: number }) => void;
-  setSelectedCard: (cardKey: number | null) => void;
+  setSelectedCard: (cardKey: string | null) => void;
   setExpandedCard: (card: VisibleCard | null) => void;
   setBasePattern: (pattern: CardType[]) => void;
   setShowExpanded: (show: boolean) => void;
@@ -53,9 +62,13 @@ export const useCanvasStore = create<CanvasState>((set, _get) => ({
   zoomLevel: 1,
   dragging: false,
   didDrag: false,
-  showMiddleFog: true,
-  showLightFog: true,
+  showMobileGallery: false,
   isTransitionEnabled: false,
+  centeredCardIndex: null,
+
+  showLightFog: true,
+  showMiddleFog: true,
+  showMobileGalleryFog: false,
 
   // Refs
   containerRef: createRef<HTMLDivElement>(),
@@ -69,14 +82,17 @@ export const useCanvasStore = create<CanvasState>((set, _get) => ({
   cardIsExpanding: false,
 
   // Actions to update state
+  setCenteredCardIndex: (index: number | null) => set({ centeredCardIndex: index }),
   setCardSize: cardSize => set({ cardSize }),
   setPosition: position => set({ position }),
-  setShowMiddleFog: showMiddleFog => set({ showMiddleFog }),
-  setShowLightFog: showLightFog => set({ showLightFog }),
   setZoomLevel: zoomLevel => set({ zoomLevel }),
   setDragging: dragging => set({ dragging }),
   setDidDrag: didDrag => set({ didDrag }),
+  setShowLightFog: showLightFog => set({ showLightFog }),
+  setShowMiddleFog: showMiddleFog => set({ showMiddleFog }),
+  setShowMobileGalleryFog: showMobileGalleryFog => set({ showMobileGalleryFog }),
 
+  setShowMobileGallery: showMobileGallery => set({ showMobileGallery }),
   setBasePattern: basePattern => set({ basePattern }),
   setSelectedCard: selectedCard => set({ selectedCard }),
   setExpandedCard: expandedCard => set({ expandedCard }),

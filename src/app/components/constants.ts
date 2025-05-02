@@ -1,3 +1,5 @@
+import type { fontFamily, borderStyle } from '../stores/customizationStore';
+
 export const GRID_COLUMNS = 7;
 export const GRID_ROWS = 7;
 export const CARD_WIDTH = 300; // px
@@ -12,13 +14,16 @@ export const MIDDLE_CARD_INDEX = Math.floor((GRID_COLUMNS * GRID_ROWS) / 2);
 export const MOBILE_BREAKPOINT = 768; // px
 
 export type CardType = {
-  id: string;
+  _id: string;
+  user: string;
   primary: string;
   accent: string;
   author: string;
   lastUpdated: string;
   borderColor: string;
   buttonColor: string;
+  fontFamily: fontFamily;
+  borderStyle: borderStyle;
   scrollbarColor: string;
 };
 

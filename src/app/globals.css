@@ -21,7 +21,7 @@ body {
   -webkit-font-smoothing: antialiased;
   overflow: hidden;
   cursor:
-    url('/default-cursor.svg') 6 6,
+    url('/default-cursor.svg') auto 6 6,
     auto;
 }
 img,
@@ -58,7 +58,6 @@ h5,
 h6 {
   text-wrap: balance;
 }
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -114,7 +113,6 @@ h6 {
     --chart-5: 340 75% 55%;
   }
 }
-
 @layer base {
   * {
     @apply border-border;

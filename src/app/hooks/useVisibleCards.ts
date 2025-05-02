@@ -1,6 +1,7 @@
-import { useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { CardType } from '../components/constants';
 import { GRID_COLUMNS, GRID_ROWS } from '../components/constants';
+import { useCanvasStore } from '../stores/canvasStore';
 import { CanvasState } from '../stores/canvasStore';
 
 type Position = {
@@ -19,6 +20,7 @@ type UseVisibleCardsProps = {
   position: Position;
   zoomLevel: number;
   viewportSize: ViewportSize;
+  showMobileGallery: boolean;
 };
 
 // Define the return type for better type inference in the component
@@ -41,7 +43,8 @@ export const useVisibleCards = ({
   basePattern,
   position,
   zoomLevel,
-  viewportSize
+  viewportSize,
+  showMobileGallery
 }: UseVisibleCardsProps): VisibleCard[] => {
   const prevVisibleCardsRef = useRef<Record<string, VisibleCard>>({});
   // Ref to track the current timestamp for cleanup calculations
@@ -50,9 +53,11 @@ export const useVisibleCards = ({
   const isMobile =
     typeof window !== 'undefined' ? window.innerWidth < 768 : viewportSize.width < 768;
 
-  return useMemo(() => {
+  const setCenteredCardIndex = useCanvasStore(s => s.setCenteredCardIndex);
+
+  const { cardsToRender, centeredIndex } = useMemo(() => {
     if (!basePattern.length || !viewportSize.width || !viewportSize.height || zoomLevel <= 0)
-      return [];
+      return { cardsToRender: [], centeredIndex: null };
 
     nowRef.current = Date.now();
 
@@ -64,7 +69,7 @@ export const useVisibleCards = ({
     const cardsToRender: VisibleCard[] = [];
     const currentlyVisibleKeys = new Set<string>();
 
-    if (isMobile) {
+    if (isMobile && !showMobileGallery) {
       const viewTop = -position.y / zoomLevel;
       const viewBottom = (-position.y + viewportSize.height) / zoomLevel;
       const renderBuffer = zoomLevel <= 1 ? 0 : 1;
@@ -77,7 +82,7 @@ export const useVisibleCards = ({
         const cardData = basePattern[wrappedIndex];
         const cardX = 0;
         const cardY = i * effectiveCardHeight;
-        const cardKey = `${cardData.id}-0-${i}`;
+        const cardKey = `${cardData._id}-0-${i}`;
         cardsToRender.push({
           ...cardData,
           x: cardX,
@@ -113,7 +118,7 @@ export const useVisibleCards = ({
             const cardData = basePattern[patternIndex];
             const cardX = col * effectiveCardWidth;
             const cardY = row * effectiveCardHeight;
-            const cardKey = `${cardData.id}-${col}-${row}`;
+            const cardKey = `${cardData._id}-${col}-${row}`;
 
             cardsToRender.push({
               ...cardData,
@@ -159,7 +164,39 @@ export const useVisibleCards = ({
 
     prevVisibleCardsRef.current = newPrevVisibleCards;
 
-    return cardsToRender;
+    // --- Determine centered card index (do NOT set state here) ---
+    let centeredIndex: number | null = null;
+    if (cardsToRender.length > 0) {
+      if (isMobile && !showMobileGallery) {
+        const centerY = (-position.y + viewportSize.height / 2) / zoomLevel;
+        let minDist = Infinity;
+        cardsToRender.forEach(card => {
+          const cardCenter = card.y + cardSize.height / 2;
+          const dist = Math.abs(cardCenter - centerY);
+          if (dist < minDist) {
+            minDist = dist;
+            centeredIndex = card.patternIndex;
+          }
+        });
+      } else {
+        const centerX = (-position.x + viewportSize.width / 2) / zoomLevel;
+        const centerY = (-position.y + viewportSize.height / 2) / zoomLevel;
+        let minDist = Infinity;
+        cardsToRender.forEach(card => {
+          const cardCenterX = card.x + cardSize.width / 2;
+          const cardCenterY = card.y + cardSize.height / 2;
+          const dist = Math.hypot(cardCenterX - centerX, cardCenterY - centerY);
+          if (dist < minDist) {
+            minDist = dist;
+            centeredIndex = card.patternIndex;
+          }
+        });
+      }
+    }
+    // ---
+
+    // Return both cardsToRender and centeredIndex
+    return { cardsToRender, centeredIndex };
   }, [
     basePattern,
     viewportSize.width,
@@ -169,7 +206,15 @@ export const useVisibleCards = ({
     cardSize.gap,
     cardSize.height,
     isMobile,
+    showMobileGallery,
     position.y,
     position.x
   ]);
+
+  // Set centeredCardIndex as a side effect
+  useEffect(() => {
+    setCenteredCardIndex(centeredIndex);
+  }, [centeredIndex, setCenteredCardIndex]);
+
+  return cardsToRender;
 };

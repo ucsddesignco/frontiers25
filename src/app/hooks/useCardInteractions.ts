@@ -4,7 +4,6 @@ import { handleCardElementTransition } from '../util/handleCardElementTransition
 import { CanvasState } from '../stores/canvasStore';
 import { useShallow } from 'zustand/shallow';
 import { VisibleCard } from './useVisibleCards';
-import { MOBILE_BREAKPOINT } from '../components/constants';
 
 // Hook for card interactions
 export function useCardInteractions() {
@@ -49,24 +48,20 @@ export function useCardInteractions() {
       setExpandedCard(card);
 
       clickedCard.style.zIndex = '3';
-      let hoverScale = 1.1;
-      if (window.innerWidth < MOBILE_BREAKPOINT) {
-        hoverScale = 1;
-      }
-      // Maintain hover scale while transitioning
-      clickedCard.style.transform = `scale(${hoverScale})`;
+
+      let parentScale =
+        parseFloat(window.getComputedStyle(clickedCard).transform.split(',')[3]) || 1;
+
+      clickedCard.style.transform = `scale(${parentScale})`;
       clickedCard.style.transformOrigin = 'center center';
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
       const cardRect = cardBg.getBoundingClientRect();
 
-      let parentScale =
-        parseFloat(window.getComputedStyle(clickedCard).transform.split(',')[3]) || 1;
-
       const initialScale = parentScale;
 
       if (zoomLevel !== 1) {
-        parentScale = zoomLevel * hoverScale;
+        parentScale = zoomLevel * parentScale;
       }
 
       // Calculate the scale needed to fill the screen while maintaining aspect ratio

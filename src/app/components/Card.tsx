@@ -28,7 +28,7 @@ const Card: React.FC<CardProps> = ({ card, onClick, onMouseDown, onLearnMore, cl
         id={`card-container-${card.key}`}
         onClick={onClick}
         onMouseDown={onMouseDown}
-        className={`${className} relative z-[0] h-full cursor-pointer transition-[transform,opacity] duration-[0.2s] ease-out`}
+        className={`${className} duration-[0.2s] relative z-[0] h-full cursor-pointer transition-[transform,opacity] ease-out`}
         style={{ opacity }}
       >
         <div className="relative h-full">
@@ -40,7 +40,7 @@ const Card: React.FC<CardProps> = ({ card, onClick, onMouseDown, onLearnMore, cl
           <div
             id={`card-content-${card.key}`}
             style={{ color: card.accent }}
-            className={`relative flex h-full flex-col items-center justify-between p-[36px] text-[#530B67] transition-transform duration-card ease-in-out`}
+            className={`relative flex h-full flex-col items-center justify-between p-[36px] transition-transform duration-card ease-in-out`}
           >
             <div className="w-full">
               <svg
@@ -77,8 +77,8 @@ const Card: React.FC<CardProps> = ({ card, onClick, onMouseDown, onLearnMore, cl
               <div className="relative flex w-full justify-center">
                 <button
                   onClick={onLearnMore}
-                  style={{ backgroundColor: card.buttonColor }}
-                  className="learn-more w-full cursor-pointer rounded-full p-2 transition-[transform,opacity] duration-[300ms,200ms] ease-in-out"
+                  style={{ backgroundColor: card.buttonColor, transitionDuration: '300ms,200ms' }}
+                  className="learn-more w-full cursor-pointer rounded-full p-2 transition-[transform,opacity] ease-in-out"
                 >
                   Learn More
                 </button>
@@ -124,7 +124,7 @@ const Card: React.FC<CardProps> = ({ card, onClick, onMouseDown, onLearnMore, cl
         </div>
         <p className="pt-2 text-center text-sm text-[#666666]">
           Made By {card.author}
-          <span className="ml-3 text-xs">{card.lastUpdated}</span>
+          <span className="ml-3">{card.lastUpdated}</span>
         </p>
       </div>
     </>

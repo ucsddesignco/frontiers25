@@ -26,7 +26,7 @@ function ResetButton({ handleGalleryClick, handleResetZoom }: ResetButtonProps) 
         e.stopPropagation();
       }}
       text={showReset ? 'Reset Zoom' : 'Go Back'}
-      className="fixed left-6 top-5 z-[4]"
+      className="fixed left-6 top-5 z-[4] hidden lg:block"
     >
       {showReset ? <ResetZoomIcon /> : <BackIcon />}
     </GlassButton>

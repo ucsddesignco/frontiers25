@@ -9,7 +9,7 @@ interface UseMouseHandlersProps {
   dragging: boolean;
   isTransitionEnabled: boolean;
   didDrag: boolean;
-  selectedCard: number | null;
+  selectedCard: CanvasState['selectedCard'];
   position: Position;
   zoomLevel: number;
   expandedCard: VisibleCard | null;
