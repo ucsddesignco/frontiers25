@@ -51,16 +51,21 @@ const requireAuth = async () => {
   if (!session) {
     throw new Error('Unauthorized');
   }
+
+  return session;
 };
 
-export default async function createCard(
-  user: string,
-  author: string,
-  fontFamily: string,
-  borderStyle: string,
-  primary: string,
-  accent: string
-) {
+export default async function createCard({
+  fontFamily,
+  borderStyle,
+  primary,
+  accent
+}: {
+  fontFamily: string;
+  borderStyle: string;
+  primary: string;
+  accent: string;
+}) {
   try {
     if (!validFonts.includes(fontFamily)) {
       throw new Error('Invalid font family');
@@ -68,22 +73,28 @@ export default async function createCard(
       throw new Error('Invalid border style');
     }
 
-    await requireAuth();
+    const session = await requireAuth();
 
-    const new_card = await card.create({
-      user: user,
-      author: author,
-      fontFamily: fontFamily,
-      borderStyle: borderStyle,
-      primary: primary,
-      accent: accent,
-      lastUpdated: new Date()
-    });
+    const user_cards = await card.find({ user: session.user.id });
+    if (user_cards.length >= 3) {
+      throw new Error('User has reached the maximum number of cards');
+    } else {
+      const new_card = await card.create({
+        user: session.user.id,
+        author: session.user.name,
+        fontFamily: fontFamily,
+        borderStyle: borderStyle,
+        primary: primary,
+        accent: accent,
+        lastUpdated: new Date()
+      });
 
-    return JSON.stringify(new_card);
+      return new_card.toObject({ flattenObjectIds: true });
+    }
   } catch (error) {
     console.error('Error creating card:', error);
-    throw new Error('Failed to create card');
+    // TODO: Handle error appropriately
+    return null;
   }
 }
 

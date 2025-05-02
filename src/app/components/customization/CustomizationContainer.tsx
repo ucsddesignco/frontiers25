@@ -11,6 +11,10 @@ import GlassButton from '../GlassButton/GlassButton';
 import { BackIcon } from '@/app/assets/BackIcon';
 import { DoneIcon } from '@/app/assets/DoneIcon';
 import { DatabaseCard } from '../InfiniteCanvas';
+import { customToast } from '@/app/util/CustomToast/CustomToast';
+import createCard from '@/app/api/cardFunctions';
+import { useStore } from 'zustand';
+import { useShallow } from 'zustand/shallow';
 
 interface CustomizationContainerProps {
   card: DatabaseCard | null;
@@ -27,6 +31,41 @@ export default function CustomizationContainer({ card }: CustomizationContainerP
     })
   ).current;
 
+  if (!store) throw new Error('Missing CustomizationContext');
+
+  const { primary, accent, fontFamily, borderStyle } = useStore(
+    store,
+    useShallow(state => ({
+      primary: state.primary,
+      accent: state.accent,
+      fontFamily: state.fontFamily,
+      borderStyle: state.borderStyle
+    }))
+  );
+
+  const handleCreateCard = async () => {
+    const hexPrimary = parseColor(primary).toString('hex');
+    const hexAccent = parseColor(accent).toString('hex');
+    const newCard = await createCard({
+      fontFamily,
+      primary: hexPrimary,
+      accent: hexAccent,
+      borderStyle
+    });
+
+    if (newCard) {
+      customToast({
+        description: 'Card Created Successfully.',
+        type: 'success'
+      });
+    } else {
+      customToast({
+        description: 'Failed to create card.',
+        type: 'error'
+      });
+    }
+  };
+
   return (
     <CustomizationContext.Provider value={store}>
       <GlassButton href="/" text="Back" className="fixed left-5 top-5">
@@ -35,7 +74,12 @@ export default function CustomizationContainer({ card }: CustomizationContainerP
 
       {card ? (
         <>
-          <GlassButton href="/" text="Done" className="fixed right-5 top-5" color="dark">
+          <GlassButton
+            onClick={handleCreateCard}
+            text="Done"
+            className="fixed right-5 top-5"
+            color="dark"
+          >
             <DoneIcon />
           </GlassButton>
           <div className="flex h-screen w-screen flex-col items-center justify-center gap-16 bg-[#eaeaea] px-5 md:flex-row">
