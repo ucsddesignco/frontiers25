@@ -4,7 +4,7 @@ import './TypographyTab.scss';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useShallow } from 'zustand/shallow';
-import type { fontFamily } from '@/app/stores/customizationStore';
+import type { FontFamily } from '@/app/stores/customizationStore';
 
 import {
   Jaro,
@@ -78,7 +78,7 @@ export function TypographyTab() {
 
       {/* Scrollable container for all other fonts */}
       <div className="flex-1 space-y-6 overflow-y-auto">
-        <RadioGroup value={fontFamily} onValueChange={value => setFontFamily(value as fontFamily)}>
+        <RadioGroup value={fontFamily} onValueChange={value => setFontFamily(value as FontFamily)}>
           {Object.entries(AllCardLogos)
             .filter(([fontName]) => fontName !== fontFamily)
             .map(([fontName, logo]) => (
