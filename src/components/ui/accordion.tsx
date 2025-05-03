@@ -54,7 +54,7 @@ const AccordionContent = React.forwardRef<
     ref={ref}
     className={cn(
       getBorderRadiusClass(borderStyle),
-      'agp-4 text-md data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden border-x-[3px] border-b-[3px] border-[var(--card-accent-color)] bg-[var(--card-button-color)] transition-all',
+      'agp-4 text-md data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden border-x-[3px] border-b-[3px] border-[var(--card-accent-color)] bg-[var(--card-primary-color)] transition-all',
       className
     )}
     {...props}

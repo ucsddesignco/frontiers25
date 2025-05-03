@@ -25,15 +25,23 @@ export default function AgendaPage({ ref, showExpanded, borderStyle }: AgendaPag
           className={`z-10 flex h-[80%] w-[85%] flex-col items-center justify-between gap-10 ${varBorderRadius}`}
         >
           {/* Item 1*/}
-          <div
-            className={`border-[4px] border-[var(--card-accent-color)] bg-[var(--card-primary-color)] p-5 text-center ${varBorderRadius}`}
-          >
-            <p>7:00 PM</p>
-            <h1>Evenet Kickoff</h1>
-            <p>
-              Designers will begin with registration and sign-in, an introduction to the event, and
-              energizing lighting talks.
-            </p>
+          <div className={`relative bg-[var(--card-primary-color)]`}>
+            {/* Triangles in corners */}
+            <div className="triangle absolute left-0 top-0"></div>
+            <div className="triangle absolute right-0 top-0 rotate-90"></div>
+            <div className="triangle absolute bottom-0 left-0 rotate-[270deg]"></div>
+            <div className="triangle absolute bottom-0 right-0 rotate-180"></div>
+            {/* Content wrapper with padding */}
+            <div
+              className={`border-[4px] border-[var(--card-accent-color)] p-5 text-center ${varBorderRadius}`}
+            >
+              <p>7:00 PM</p>
+              <h1>Event Kickoff</h1>
+              <p>
+                Designers will begin with registration and sign-in, an introduction to the event,
+                and energizing lighting talks.
+              </p>
+            </div>
           </div>
           {/* Item 2 */}
           <div

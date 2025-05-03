@@ -70,9 +70,6 @@ export default function FAQPage({ ref, showExpanded, borderStyle }: FAQPageProps
         {faqItems.map((item, index) => (
           <Accordion type="single" collapsible className="w-full max-w-[90%] gap-4" key={index}>
             <AccordionItem value={`item-${index}`}>
-              {/* <div className='triangle'></div>
-              <div className='triangle'></div>
-              <div className='triangle rotate-90 right-[5%]'></div> */}
               <AccordionTrigger className={varBorderRadius}>
                 <p className="text-start text-lg md:max-w-[66%]">{item.question}</p>
               </AccordionTrigger>
