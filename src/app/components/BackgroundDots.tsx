@@ -15,7 +15,7 @@ function BackgroundDots({ position, zoomLevel }: BackgroundDotsProps) {
 
   return (
     <div
-      className="absolute inset-0"
+      className="pointer-events-none absolute inset-0"
       style={{
         backgroundSize: `${effectiveSize}px ${effectiveSize}px`,
         backgroundPosition: `${offsetX}px ${offsetY}px`,

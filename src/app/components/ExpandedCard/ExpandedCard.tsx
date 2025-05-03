@@ -8,6 +8,15 @@ import JudgesPage from '../Pages/JudgesPage';
 import { useCanvasStore } from '../../stores/canvasStore';
 import './ExpandedCard.scss';
 import { useShallow } from 'zustand/shallow';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
+import GlassButton from '../GlassButton/GlassButton';
+import SectionsIcon from '@/app/assets/SectionsIcon';
+import { getCardLogo } from '@/app/util/getCardLogo';
 
 export type SectionId = 'faq' | 'agenda' | 'judges';
 
@@ -16,10 +25,11 @@ type ExpandedCardProps = {
 };
 
 const ExpandedCardComponent = ({ showExpanded }: ExpandedCardProps) => {
-  const { expandedCard, expandedCardRef } = useCanvasStore(
+  const { expandedCard, expandedCardRef, showLightFog } = useCanvasStore(
     useShallow(state => ({
       expandedCard: state.expandedCard,
-      expandedCardRef: state.expandedCardRef
+      expandedCardRef: state.expandedCardRef,
+      showLightFog: state.showLightFog
     }))
   );
 
@@ -77,6 +87,11 @@ const ExpandedCardComponent = ({ showExpanded }: ExpandedCardProps) => {
     }
   }, [showExpanded, expandedCardRef]);
 
+  const CardLogo = getCardLogo({
+    fontFamily: expandedCard?.fontFamily,
+    accent: expandedCard?.accent
+  });
+
   return (
     <>
       <div
@@ -93,9 +108,13 @@ const ExpandedCardComponent = ({ showExpanded }: ExpandedCardProps) => {
             backgroundColor: !showExpanded ? 'transparent' : expandedCard?.primary
           } as React.CSSProperties
         }
-        className={`${showExpanded ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'} duration-[0.2s] absolute z-[3] mx-auto h-full w-full overflow-y-scroll transition-opacity ease-in-out`}
+        className={`${showExpanded ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'} duration-[0.2s] absolute z-[4] mx-auto flex h-full w-full flex-col items-center gap-[200px] overflow-y-scroll transition-opacity ease-in-out`}
       >
-        <HeroPage scrollToSection={scrollToSection} showExpanded={showExpanded} />
+        <HeroPage
+          scrollToSection={scrollToSection}
+          showExpanded={showExpanded}
+          CardLogo={CardLogo}
+        />
         {/* It is necessary for these pages to have showExpanded so that they continue to fade even when scrolling */}
         <FAQPage ref={faqRef} showExpanded={showExpanded} borderStyle={expandedCard?.borderStyle} />
         <AgendaPage
@@ -108,6 +127,27 @@ const ExpandedCardComponent = ({ showExpanded }: ExpandedCardProps) => {
           showExpanded={showExpanded}
           borderStyle={expandedCard?.borderStyle}
         />
+      </div>
+      <div
+        className={`${!showLightFog ? '' : 'invisible'} fixed right-9 top-5 z-[4] border-none outline-none`}
+      >
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <GlassButton
+              text="Sections"
+              color="dark"
+              onClick={e => e.stopPropagation()}
+              onMouseDown={e => e.stopPropagation()}
+            >
+              <SectionsIcon />
+            </GlassButton>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="center">
+            <DropdownMenuItem onClick={() => scrollToSection('faq')}>FAQ</DropdownMenuItem>{' '}
+            <DropdownMenuItem onClick={() => scrollToSection('agenda')}>Agenda</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => scrollToSection('judges')}>Judges</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </>
   );

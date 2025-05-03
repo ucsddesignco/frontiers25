@@ -29,7 +29,6 @@ function SignInButton({ session }: { session: Session | null }) {
           onClick={() => setModalOpen(true)}
           onMouseDown={e => e.stopPropagation()}
           text="Sign In"
-          className="fixed right-9 top-5 z-[4]"
         >
           <LoginIcon />
         </GlassButton>
@@ -40,23 +39,21 @@ function SignInButton({ session }: { session: Session | null }) {
   }
 
   return (
-    <div className="fixed right-9 top-5 z-[4] border-none outline-none">
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <GlassButton
-            text="Profile"
-            onClick={e => e.stopPropagation()}
-            onMouseDown={e => e.stopPropagation()}
-          >
-            <ProfileIcon />
-          </GlassButton>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="center">
-          <DropdownMenuItem>My Cards</DropdownMenuItem> {/* Placeholder for now */}
-          <DropdownMenuItem onClick={handleSignOut}>Sign Out</DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <GlassButton
+          text="Profile"
+          onClick={e => e.stopPropagation()}
+          onMouseDown={e => e.stopPropagation()}
+        >
+          <ProfileIcon />
+        </GlassButton>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="center">
+        <DropdownMenuItem>My Cards</DropdownMenuItem> {/* Placeholder for now */}
+        <DropdownMenuItem onClick={handleSignOut}>Sign Out</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 

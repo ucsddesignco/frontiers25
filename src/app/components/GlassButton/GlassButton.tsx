@@ -1,16 +1,28 @@
 import { CSSProperties, memo, forwardRef } from 'react';
 import './GlassButton.scss';
+import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 type GlassButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   text: string;
   size?: 'skinny' | 'thick';
   color?: 'light' | 'dark';
   width?: 'auto' | 'full';
+  href?: string | undefined;
 };
 
 const GlassButton = forwardRef<HTMLButtonElement, GlassButtonProps>(
   (
-    { text, className = '', size = 'thick', color = 'light', width = 'auto', children, ...props },
+    {
+      text,
+      className = '',
+      size = 'thick',
+      color = 'light',
+      width = 'auto',
+      href = undefined,
+      children,
+      ...props
+    },
     ref
   ) => {
     const sizeClass = size === 'skinny' ? 'px-5 h-10' : 'px-6 h-[52px]';
@@ -21,29 +33,56 @@ const GlassButton = forwardRef<HTMLButtonElement, GlassButtonProps>(
     const textColor = color === 'light' ? 'text-[#1A1622]' : 'text-white';
     const widthClass = width === 'full' ? 'w-full' : 'w-auto';
 
-    return (
-      <button
-        ref={ref}
-        style={
-          {
-            '--gradient-color': gradientColor,
-            '--text-shadow-color': textShadowColor
-          } as CSSProperties
-        }
-        className={`${className} ${widthClass} isolate cursor-pointer select-none focus:outline-none`}
-        {...props}
+    const ButtonContent = () => (
+      <div
+        className={`${sizeClass} ${textColor} ${widthClass} glass-button pointer-events-none justify-center`}
       >
-        <div
-          className={`${sizeClass} ${textColor} ${widthClass} glass-button pointer-events-none justify-center`}
-        >
-          <div className="color-overlay pointer-events-none"></div>
-          <div className={`${blurColorClass} blur-background pointer-events-none`}></div>
-          <div className="top-highlight pointer-events-none"></div>
-          {children}
-          <p>{text}</p>
-        </div>
-      </button>
+        <div className="color-overlay pointer-events-none"></div>
+        <div className={`${blurColorClass} blur-background pointer-events-none`}></div>
+        <div className="top-highlight pointer-events-none"></div>
+        {children}
+        <p>{text}</p>
+      </div>
     );
+
+    if (href) {
+      return (
+        <Link
+          style={
+            {
+              '--gradient-color': gradientColor,
+              '--text-shadow-color': textShadowColor,
+              '--border-radius': '35px'
+            } as CSSProperties
+          }
+          href={href}
+          className={`${className} ${widthClass} isolate cursor-pointer select-none focus:outline-none`}
+        >
+          <ButtonContent />
+        </Link>
+      );
+    } else {
+      return (
+        <button
+          ref={ref}
+          style={
+            {
+              '--gradient-color': gradientColor,
+              '--text-shadow-color': textShadowColor,
+              '--border-radius': '35px'
+            } as CSSProperties
+          }
+          className={cn(
+            'isolate cursor-pointer select-none focus:outline-none',
+            widthClass,
+            className
+          )}
+          {...props}
+        >
+          <ButtonContent />
+        </button>
+      );
+    }
   }
 );
 

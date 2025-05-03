@@ -1,48 +1,43 @@
 'use client';
-import { MyColorSlider } from '../MyColorSlider';
-import { parseColor } from 'react-stately';
-import { useEffect, useState } from 'react';
+import { MyColorSlider } from './MyColorSlider/MyColorSlider';
+import { parseColor } from '@react-stately/color';
+import { useContext, useState } from 'react';
 import { Check, X } from 'lucide-react';
 import { contrastRatio } from 'wcag-contrast-utils';
 
 type selectedColor = 'primary' | 'accent';
-type textColor = 'black' | 'white';
 
-import { useCustomizationStore } from '@/app/stores/customizationStore';
 import { useShallow } from 'zustand/shallow';
+import { CustomizationContext } from '@/app/contexts/CustomizationContext';
+import { useStore } from 'zustand';
 
 export function ColorTab() {
   const [selectedColor, setSelectedColor] = useState<selectedColor>('primary');
 
-  const [contrastIsGood, setContrastIsGood] = useState<boolean>();
-  const [primaryText, setPrimaryText] = useState<textColor>();
-  const [accentText, setAccentText] = useState<textColor>();
-
-  const { primary, accent, setPrimary, setAccent } = useCustomizationStore(
+  const store = useContext(CustomizationContext);
+  if (!store) throw new Error('Missing CustomizationContext');
+  const { primary, accent, validContrast, setPrimary, setAccent, setValidContrast } = useStore(
+    store,
     useShallow(state => ({
       primary: state.primary,
       accent: state.accent,
+      validContrast: state.validContrast,
       setPrimary: state.setPrimary,
-      setAccent: state.setAccent
+      setAccent: state.setAccent,
+      setValidContrast: state.setValidContrast
     }))
   );
 
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      const primaryHex = parseColor(primary).toString('hex');
-      const accentHex = parseColor(accent).toString('hex');
-      const contrast = contrastRatio(primaryHex, accentHex);
-      setContrastIsGood(contrast >= 4.5);
+  const primaryHex = parseColor(primary).toString('hex');
+  const accentHex = parseColor(accent).toString('hex');
+  const contrast = contrastRatio(primaryHex, accentHex);
 
-      const primaryContrast = contrastRatio(primaryHex, '#000');
-      const accentContrast = contrastRatio(accentHex, '#000');
-      setPrimaryText(primaryContrast <= 7 ? 'white' : 'black');
-      setAccentText(accentContrast <= 7 ? 'white' : 'black');
-    }, 200); // 200ms debounce
+  setValidContrast(contrast >= 4.5);
+  const primaryContrast = contrastRatio(primaryHex, '#000');
+  const accentContrast = contrastRatio(accentHex, '#000');
 
-    return () => clearTimeout(handler); // cleanup on new effect call
-  }, [primary, accent]);
-
+  const primaryText = primaryContrast <= 7 ? 'white' : 'black';
+  const accentText = accentContrast <= 7 ? 'white' : 'black';
   return (
     <div className="flex flex-col items-center space-y-8">
       <span className="flex w-full justify-between gap-3">
@@ -146,12 +141,12 @@ export function ColorTab() {
         <span
           className="flex items-center gap-1 rounded-full px-2 py-0.5 uppercase"
           style={{
-            backgroundColor: contrastIsGood ? '#BEFCB6' : '#FFB6B6',
-            color: contrastIsGood ? '#078D00' : '#CF1414',
+            backgroundColor: validContrast ? '#BEFCB6' : '#FFB6B6',
+            color: validContrast ? '#078D00' : '#CF1414',
             boxShadow: '0px -1px 1px 0px rgba(0, 0, 0, 0.12), 0px 1px 1px 0px #FFF'
           }}
         >
-          {contrastIsGood ? (
+          {validContrast ? (
             <>
               <Check className="h-5 w-5 stroke-[2px]" />
               PASS

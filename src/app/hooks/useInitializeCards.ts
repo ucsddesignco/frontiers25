@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useCanvasStore } from '../stores/canvasStore';
 import { CardType } from '../components/constants';
-import { generateColorVariations } from '../utils/colorUtils';
+import { generateColorVariations } from '../util/colorUtils';
 import { DatabaseCard } from '../components/InfiniteCanvas';
 
 // Function to convert ISO timestamp string to relative time string (e.g., "18h", "3d")

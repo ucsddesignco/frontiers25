@@ -6,15 +6,21 @@ import {
   BorderBeveled,
   BorderSquircle
 } from '@/app/assets/BorderIcons';
-import { borderStyle, useCustomizationStore } from '@/app/stores/customizationStore';
+import { BorderStyle } from '@/app/stores/customizationStore';
 
 import { useShallow } from 'zustand/shallow';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import clsx from 'clsx';
+import { CSSProperties, useContext } from 'react';
+import { CustomizationContext } from '@/app/contexts/CustomizationContext';
+import { useStore } from 'zustand';
 
 export function BorderTab() {
-  const { borderStyle, setBorderStyle } = useCustomizationStore(
+  const store = useContext(CustomizationContext);
+  if (!store) throw new Error('Missing CustomizationContext');
+  const { borderStyle, setBorderStyle } = useStore(
+    store,
     useShallow(state => ({
       borderStyle: state.borderStyle,
       setBorderStyle: state.setBorderStyle
@@ -34,7 +40,7 @@ export function BorderTab() {
     <div className="h-full w-full">
       <RadioGroup
         value={borderStyle}
-        onValueChange={value => setBorderStyle(value as borderStyle)}
+        onValueChange={value => setBorderStyle(value as BorderStyle)}
         className="grid h-full w-full grid-cols-2 grid-rows-2"
       >
         {borderStyles.map(style => (
@@ -45,12 +51,29 @@ export function BorderTab() {
               className={clsx(
                 'flex h-full w-full cursor-pointer items-center justify-center rounded-xl transition-colors',
                 {
-                  'bg-[#FFFFFFCC] bg-blend-hard-light backdrop-blur-sm': borderStyle === style
+                  'glass-button bg-[#1A1622]/3 z-0': borderStyle === style
                 }
               )}
+              style={
+                borderStyle === style
+                  ? ({
+                      '--border-radius': '12px',
+                      '--gradient-color': '#D8D7D9'
+                    } as CSSProperties)
+                  : {}
+              }
             >
+              {borderStyle === style && (
+                <>
+                  <div className="color-overlay pointer-events-none"></div>
+                  <div
+                    className={`blur-background pointer-events-none bg-[rgba(255,255,255,0.80)]`}
+                  ></div>
+                  <div className="top-highlight pointer-events-none"></div>
+                </>
+              )}
               <div className="flex h-3/4 w-3/4 items-center justify-center">
-                {icons[style as borderStyle]}
+                {icons[style as BorderStyle]}
               </div>
             </Label>
           </div>

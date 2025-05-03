@@ -21,6 +21,7 @@ import { CardType, MOBILE_BREAKPOINT } from './constants';
 import GalleryButton from './GalleryButton';
 import MobileGalleryFog from './MobileGalleryFog';
 import { Session } from '@/lib/auth';
+import CreateCard from './CreateCard';
 
 export type DatabaseCard = Omit<CardType, 'borderColor' | 'buttonColor' | 'scrollbarColor'>;
 
@@ -42,7 +43,8 @@ const InfiniteCanvas = ({ data, session }: InfiniteCanvasProps) => {
     setShowMobileGallery,
     showMobileGalleryFog,
     setShowMobileGalleryFog,
-    setCardSize
+    setCardSize,
+    showLightFog
   } = useCanvasStore(
     useShallow((state: CanvasState) => ({
       containerRef: state.containerRef,
@@ -57,7 +59,8 @@ const InfiniteCanvas = ({ data, session }: InfiniteCanvasProps) => {
       setShowMobileGallery: state.setShowMobileGallery,
       showMobileGalleryFog: state.showMobileGalleryFog,
       setShowMobileGalleryFog: state.setShowMobileGalleryFog,
-      setCardSize: state.setCardSize
+      setCardSize: state.setCardSize,
+      showLightFog: state.showLightFog
     }))
   );
 
@@ -94,6 +97,19 @@ const InfiniteCanvas = ({ data, session }: InfiniteCanvasProps) => {
 
   const { checkPrevious } = usePreviousCards(selectedCard);
 
+  const handleMobileGalleryFog = useCallback(
+    (show: boolean) => {
+      setShowMobileGalleryFog(true);
+      setTimeout(() => {
+        setShowMobileGallery(show);
+        setTimeout(() => {
+          setShowMobileGalleryFog(false);
+        }, 250);
+      }, 250);
+    },
+    [setShowMobileGallery, setShowMobileGalleryFog]
+  );
+
   // Sync scroll/center position when switching modes
   useEffect(() => {
     if (window.innerWidth > MOBILE_BREAKPOINT || centeredCardIndex == null || cardSize.width === 0)
@@ -116,36 +132,23 @@ const InfiniteCanvas = ({ data, session }: InfiniteCanvasProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showMobileGallery]);
 
-  const handleMobileGalleryFog = (show: boolean) => {
-    setShowMobileGalleryFog(true);
-    setTimeout(() => {
-      setShowMobileGallery(show);
-      setTimeout(() => {
-        setShowMobileGalleryFog(false);
-      }, 250);
-    }, 250);
-  };
-
   useEffect(() => {
-    const descriptionElement = document.querySelector('[data-expanded-description]') as HTMLElement;
-    const PADDING = 36;
-    if (!descriptionElement) return;
     let width = 300;
     let height = 400;
     let gap = 100;
 
     if (window.innerWidth < 768) {
-      width = Math.min(window.innerWidth * 0.8, 320);
+      width = Math.min(Math.max(window.innerWidth * 0.8, 292), 300);
       height = width * (4 / 3);
       gap = 65;
     }
     setCardSize({ width, height, gap });
-    descriptionElement.style.width = `${width - 2 * PADDING}px`;
   }, [setCardSize]);
 
   return (
     <>
       <ExpandedCard showExpanded={showExpanded} />
+
       <div
         ref={containerRef}
         id="canvas-container"
@@ -160,22 +163,29 @@ const InfiniteCanvas = ({ data, session }: InfiniteCanvasProps) => {
         {/* Desktop */}
         <ResetButton handleGalleryClick={handleGalleryClick} handleResetZoom={handleResetZoom} />
 
-        <SignInButton session={session} />
+        <div className={`${showLightFog ? '' : 'invisible'} fixed right-6 top-5 z-[4] flex gap-4`}>
+          <SignInButton session={session} />
+
+          <CreateCard className="hidden md:block" />
+        </div>
 
         {/* Mobile */}
         <GalleryButton
-          handleShowGallery={() => {
-            handleMobileGalleryFog(true);
-          }}
-          handleHideGallery={() => {
-            handleMobileGalleryFog(false);
-          }}
+          handleMobileGalleryFog={handleMobileGalleryFog}
           handleGoBack={handleGalleryClick}
           showMobileGallery={showMobileGallery}
           showExpanded={showExpanded}
         />
 
-        <SelectedIsland selectedCard={selectedCard} />
+        <div
+          className={`${selectedCard && showLightFog ? 'pointer-events-none' : ''} fixed bottom-6 z-[3] flex w-full justify-center md:hidden`}
+        >
+          <CreateCard
+            className={`${selectedCard && showLightFog ? 'translate-y-[200%]' : 'translate-y-0'} ${showLightFog ? '' : 'invisible'} transition-transform duration-300`}
+          />
+        </div>
+
+        <SelectedIsland selectedCard={selectedCard} session={session} />
 
         <CardGrid
           cardSize={cardSize}

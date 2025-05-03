@@ -3,9 +3,8 @@ import './TypographyTab.scss';
 
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { useCustomizationStore } from '@/app/stores/customizationStore';
 import { useShallow } from 'zustand/shallow';
-import type { fontFamily } from '@/app/stores/customizationStore';
+import type { FontFamily } from '@/app/stores/customizationStore';
 
 import {
   Jaro,
@@ -29,9 +28,15 @@ import {
   Workbench,
   NicoMoji
 } from '@/app/assets/DF25Logos';
+import { CustomizationContext } from '@/app/contexts/CustomizationContext';
+import { CSSProperties, useContext } from 'react';
+import { useStore } from 'zustand';
 
 export function TypographyTab() {
-  const { fontFamily, setFontFamily } = useCustomizationStore(
+  const store = useContext(CustomizationContext);
+  if (!store) throw new Error('Missing CustomizationContext');
+  const { fontFamily, setFontFamily } = useStore(
+    store,
     useShallow(state => ({
       fontFamily: state.fontFamily,
       setFontFamily: state.setFontFamily
@@ -62,24 +67,36 @@ export function TypographyTab() {
   };
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col px-4">
       {/* Selected font stays fixed */}
-      <div className="cursor-pointer items-center rounded-md border-t-2 py-2 hover:bg-muted">
-        <div className="flex flex-1 cursor-pointer justify-between rounded-md p-2">
+      <div
+        style={
+          {
+            '--border-radius': '12px',
+            '--gradient-color': '#D8D7D9',
+            '--text-shadow-color': '#FFF'
+          } as CSSProperties
+        }
+        className="glass-button z-0 mb-2 cursor-pointer items-center px-4 py-2"
+      >
+        <div className="color-overlay pointer-events-none"></div>
+        <div className={`blur-background pointer-events-none bg-[rgba(255,255,255,0.80)]`}></div>
+        <div className="top-highlight pointer-events-none"></div>
+        <div className="0 flex flex-1 cursor-pointer justify-between rounded-md p-2">
           <span className="text-lg">{fontFamily}</span>
-          <span className="block h-8">{AllCardLogos[fontFamily]}</span>
+          <span className="block w-[88px]">{AllCardLogos[fontFamily]}</span>
         </div>
       </div>
 
       {/* Scrollable container for all other fonts */}
-      <div className="flex-1 space-y-6 overflow-y-auto">
-        <RadioGroup value={fontFamily} onValueChange={value => setFontFamily(value as fontFamily)}>
+      <div className="no-scrollbar flex-1 space-y-6 overflow-y-auto">
+        <RadioGroup value={fontFamily} onValueChange={value => setFontFamily(value as FontFamily)}>
           {Object.entries(AllCardLogos)
             .filter(([fontName]) => fontName !== fontFamily)
             .map(([fontName, logo]) => (
               <div
                 key={fontName}
-                className="flex cursor-pointer items-center rounded-md py-2 hover:bg-muted"
+                className="flex cursor-pointer items-center rounded-md px-4 py-2 hover:bg-muted"
               >
                 <RadioGroupItem value={fontName} id={`font-${fontName}`} className="hidden" />
                 <Label
@@ -87,7 +104,7 @@ export function TypographyTab() {
                   className="flex flex-1 cursor-pointer justify-between rounded-md p-2"
                 >
                   <span className="text-lg">{fontName}</span>
-                  <span className="block h-8">{logo}</span>
+                  <span className="block w-[88px]">{logo}</span>
                 </Label>
               </div>
             ))}

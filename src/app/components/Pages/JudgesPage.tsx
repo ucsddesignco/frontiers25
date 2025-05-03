@@ -1,5 +1,6 @@
 import { Ref } from 'react';
 import PageTitle from '../PageTitle';
+import Image from 'next/image';
 
 type JudgesPageProps = {
   ref: Ref<HTMLDivElement>;
@@ -20,37 +21,37 @@ export default function JudgesPage({ ref, showExpanded, borderStyle }: JudgesPag
       fist: 'Judge 1',
       last: 'last 1',
       position: 'Position 1 @ UCSD',
-      image: 'JudgeImage.jpg'
+      image: '/JudgeImage.jpg'
     },
     {
       first: 'Judge 2',
       last: 'last 2',
       position: 'Position 2 @ UCSD',
-      image: 'JudgeImage.jpg'
+      image: '/JudgeImage.jpg'
     },
     {
       first: 'Judge 3',
       last: 'last 3',
       position: 'Position 3 @ UCSD',
-      image: 'JudgeImage.jpg'
+      image: '/JudgeImage.jpg'
     },
     {
       first: 'Judge 4',
       last: 'last 4',
       position: 'Position 4 @ UCSD',
-      image: 'JudgeImage.jpg'
+      image: '/JudgeImage.jpg'
     },
     {
       first: 'Judge 5',
       last: 'last 5',
       position: 'Position 5 @ UCSD',
-      image: 'JudgeImage.jpg'
+      image: '/JudgeImage.jpg'
     },
     {
       first: 'Judge 6',
       last: 'last 6',
       position: 'Position 6 @ UCSD',
-      image: 'JudgeImage.jpg'
+      image: '/JudgeImage.jpg'
     }
   ];
 
@@ -59,7 +60,9 @@ export default function JudgesPage({ ref, showExpanded, borderStyle }: JudgesPag
       <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {judges.map((judge, index) => (
           <div key={index} className={`flex flex-col items-center ${varBorderRadius}`}>
-            <img
+            <Image
+              width={200}
+              height={250}
               src={judge.image}
               alt={`${judge.first} ${judge.last}`}
               className={`h-[250px] w-[200px] pb-2 ${varBorderRadius}`}

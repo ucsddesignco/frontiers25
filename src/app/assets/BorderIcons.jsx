@@ -69,17 +69,19 @@ export const BorderSquircle = () => (
 );
 
 export const BorderIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="33" height="32" viewBox="0 0 33 32" fill="none">
+  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <path d="M5.5 29.5H2.5V26.5H5.5V29.5Z" fill="#4D4857" />
+    <path d="M11.5 29.5H8.5V26.5H11.5V29.5Z" fill="#4D4857" />
+    <path d="M17.5 29.5H14.5V26.5H17.5V29.5Z" fill="#4D4857" />
+    <path d="M23.5 29.5H20.5V26.5H23.5V29.5Z" fill="#4D4857" />
+    <path d="M29.5 29.5H26.5V26.5H29.5V29.5Z" fill="#4D4857" />
+    <path d="M5.5 23.5H2.5V20.5H5.5V23.5Z" fill="#4D4857" />
     <path
-      d="M11.6641 4H18.6641C24.1869 4 28.6641 8.47715 28.6641 14V21"
-      stroke="#4D4857"
-      strokeWidth="3"
+      d="M18 2.5C24.3513 2.5 29.5 7.64873 29.5 14V23.5H26.5V14C26.5 9.30558 22.6944 5.5 18 5.5H8.5V2.5H18Z"
+      fill="#4D4857"
     />
-    <path
-      d="M16.6641 4H4.66406V28H28.6641V16"
-      stroke="#4D4857"
-      strokeWidth="3"
-      strokeDasharray="3 3"
-    />
+    <path d="M5.5 17.5H2.5V14.5H5.5V17.5Z" fill="#4D4857" />
+    <path d="M5.5 11.5H2.5V8.5H5.5V11.5Z" fill="#4D4857" />
+    <path d="M5.5 5.5H2.5V2.5H5.5V5.5Z" fill="#4D4857" />
   </svg>
 );
