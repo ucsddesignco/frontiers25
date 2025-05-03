@@ -14,8 +14,8 @@ export default async function NewCardPage() {
     accent: '#530B67',
     fontFamily: 'Jaro' as FontFamily,
     borderStyle: 'rectangular' as BorderStyle,
-    user: 'temporary',
-    author: 'temporary',
+    user: session?.user.id || 'Guest',
+    author: session?.user.name || 'Guest',
     lastUpdated: new Date().toISOString()
   };
 

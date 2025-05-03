@@ -96,33 +96,42 @@ export default function CustomizationContainer({ card, session }: CustomizationC
         buttonText="Sign In Via UCSD"
         Icon={LoginIcon}
         title="Keep Your Cards Safe."
-        description="You’re not signed in — your cards might disappear later."
+        description="You're not signed in — your cards might disappear later."
       />
 
       {card ? (
-        <>
-          <GlassButton
-            onClick={handleCreateCard}
-            text="Done"
-            className="fixed right-5 top-5"
-            color="dark"
-          >
-            <DoneIcon />
-          </GlassButton>
+        card.user === session?.user.id ? (
+          <>
+            <GlassButton
+              onClick={handleCreateCard}
+              text="Done"
+              className="fixed right-5 top-5"
+              color="dark"
+            >
+              <DoneIcon />
+            </GlassButton>
+
+            <div className="flex h-screen w-screen flex-col items-center justify-center gap-16 bg-[#eaeaea] px-5 md:flex-row">
+              <div style={{ width: 300, height: 400 }}>
+                <SimplifiedCard id={card._id} />
+              </div>
+
+              <div className="gradient-border relative hidden h-[380px] w-[500px] items-center justify-center rounded-[45px] bg-[#f5f5f5] p-8 md:flex">
+                <CustomizationPanel />
+              </div>
+
+              <div className="md:hidden">
+                <CustomizationDrawer />
+              </div>
+            </div>
+          </>
+        ) : (
           <div className="flex h-screen w-screen flex-col items-center justify-center gap-16 bg-[#eaeaea] px-5 md:flex-row">
             <div style={{ width: 300, height: 400 }}>
               <SimplifiedCard id={card._id} />
             </div>
-
-            <div className="gradient-border relative hidden h-[380px] w-[500px] items-center justify-center rounded-[45px] bg-[#f5f5f5] p-8 md:flex">
-              <CustomizationPanel />
-            </div>
-
-            <div className="md:hidden">
-              <CustomizationDrawer />
-            </div>
           </div>
-        </>
+        )
       ) : (
         <div className="flex h-screen w-screen items-center justify-center bg-[#eaeaea]">
           <h1 className="text-xl font-bold">Card Not Found.</h1>
