@@ -13,10 +13,10 @@ export default function JudgesPage({ ref, showExpanded, borderStyle }: JudgesPag
     if (borderStyle !== 'beveled') return null;
     return (
       <>
-        <div className="primary-triangle absolute left-[-1px] top-[-1px]"></div>
-        <div className="primary-triangle absolute right-[-1px] top-[-1px] rotate-90"></div>
-        <div className="primary-triangle absolute bottom-[-1px] left-[-1px] rotate-[270deg]"></div>
-        <div className="primary-triangle absolute bottom-[-1px] right-[-1px] rotate-180"></div>
+        <div className="primary-triangle absolute left-[-1px] top-[-1px] z-10"></div>
+        <div className="primary-triangle absolute right-[-1px] top-[-1px] z-10 rotate-90"></div>
+        <div className="primary-triangle absolute bottom-[-1px] left-[-1px] z-10 rotate-[270deg]"></div>
+        <div className="primary-triangle absolute bottom-[-1px] right-[-1px] z-10 rotate-180"></div>
       </>
     );
   }
@@ -30,40 +30,34 @@ export default function JudgesPage({ ref, showExpanded, borderStyle }: JudgesPag
 
   const judges = [
     {
-      fist: 'Judge 1',
-      last: 'last 1',
+      first: 'Adam',
+      last: 'Karnas',
       position: 'Position 1 @ UCSD',
-      image: '/JudgeImage.jpg'
+      image: '/AdamKarnas.png'
     },
     {
-      first: 'Judge 2',
-      last: 'last 2',
+      first: 'Andrew',
+      last: 'Baballero',
       position: 'Position 2 @ UCSD',
-      image: '/JudgeImage.jpg'
+      image: '/AndrewCaballero.png'
     },
     {
-      first: 'Judge 3',
-      last: 'last 3',
+      first: 'Anindya',
+      last: 'Basu',
       position: 'Position 3 @ UCSD',
-      image: '/JudgeImage.jpg'
+      image: '/AnindyaBasu.png'
     },
     {
-      first: 'Judge 4',
-      last: 'last 4',
+      first: 'Daxter',
+      last: 'Zavalza',
       position: 'Position 4 @ UCSD',
-      image: '/JudgeImage.jpg'
+      image: '/DexterZavalza.png'
     },
     {
-      first: 'Judge 5',
-      last: 'last 5',
+      first: 'Key',
+      last: 'Monette',
       position: 'Position 5 @ UCSD',
-      image: '/JudgeImage.jpg'
-    },
-    {
-      first: 'Judge 6',
-      last: 'last 6',
-      position: 'Position 6 @ UCSD',
-      image: '/JudgeImage.jpg'
+      image: '/KayMonette.png'
     }
   ];
 
@@ -72,14 +66,15 @@ export default function JudgesPage({ ref, showExpanded, borderStyle }: JudgesPag
       <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {judges.map((judge, index) => (
           <div key={index} className={`flex flex-col items-center`}>
-            <div className={`relative bg-[var(--card-accent-color)] ${varBorderRadius}`}>
+            <div
+              className={`relative h-[250px] w-[200px] bg-[var(--card-accent-color)] ${varBorderRadius}`}
+            >
               {renderPrimaryTriangles()}
               <Image
-                width={200}
-                height={250}
+                fill
                 src={judge.image}
                 alt={`${judge.first} ${judge.last}`}
-                className={`h-[250px] w-[200px] pb-2 ${varBorderRadius}`}
+                className={`object-cover ${varBorderRadius}`}
               />
             </div>
             <p className="text-sm">{judge.position}</p>
