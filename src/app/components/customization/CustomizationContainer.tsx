@@ -19,6 +19,7 @@ import { Session } from '@/lib/auth';
 import Modal from '../Modal';
 import LoginIcon from '@/app/assets/LoginIcon';
 import { handleGoogleSignIn } from '@/app/util/handleGoogleSignin';
+import { useRouter } from 'next/navigation';
 
 interface CustomizationContainerProps {
   card: DatabaseCard | null;
@@ -28,6 +29,7 @@ interface CustomizationContainerProps {
 export default function CustomizationContainer({ card, session }: CustomizationContainerProps) {
   const [openAuthModal, setOpenAuthModal] = useState(false);
   const [openContrastErrorModal, setOpenContrastErrorModal] = useState(false);
+  const [openExitPageModal, setOpenExitPageModal] = useState(false);
   const store = useRef(
     createCustomizationStore({
       primary: card ? parseColor(card.primary).toString('hsl') : undefined,
@@ -36,6 +38,8 @@ export default function CustomizationContainer({ card, session }: CustomizationC
       borderStyle: card?.borderStyle
     })
   ).current;
+
+  const router = useRouter();
 
   if (!store) throw new Error('Missing CustomizationContext');
 
@@ -87,7 +91,11 @@ export default function CustomizationContainer({ card, session }: CustomizationC
 
   return (
     <CustomizationContext.Provider value={store}>
-      <GlassButton href="/" text="Back" className="fixed left-5 top-5">
+      <GlassButton
+        text="Back"
+        className="fixed left-5 top-5"
+        onClick={() => setOpenExitPageModal(true)}
+      >
         <BackIcon />
       </GlassButton>
 
@@ -97,8 +105,9 @@ export default function CustomizationContainer({ card, session }: CustomizationC
         buttonOnClick={() => {
           handleGoogleSignIn({ onSuccess: () => setOpenAuthModal(false) });
         }}
-        buttonText="Sign In Via UCSD"
-        Icon={LoginIcon}
+        button1Text="No Thanks"
+        button2Text="Sign In Via UCSD"
+        Icon={<LoginIcon />}
         title="Keep Your Cards Safe."
         description="You're not signed in — your cards might disappear later."
       />
@@ -107,11 +116,24 @@ export default function CustomizationContainer({ card, session }: CustomizationC
         open={openContrastErrorModal}
         onOpenChange={setOpenContrastErrorModal}
         buttonOnClick={() => setOpenContrastErrorModal(false)}
-        buttonText="Okay"
+        button2Text="Okay"
         Icon={null}
-        noThanks={false}
+        button1={false}
         title="Oops, No Contrast!"
         description="To save your card, it must pass the contrast checker."
+      />
+
+      <Modal
+        open={openExitPageModal}
+        onOpenChange={setOpenExitPageModal}
+        buttonOnClick={() => {
+          router.push('/');
+        }}
+        button1Text="Nevermind"
+        button2Text="Back To Gallery"
+        Icon={<BackIcon color="#fff" />}
+        title="Unsaved Changes"
+        description="Are you sure you want to leave? Your changes will be lost."
       />
 
       {card ? (

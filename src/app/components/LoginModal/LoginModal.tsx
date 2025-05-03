@@ -13,11 +13,11 @@ export default function LoginModal({ open, onOpenChange }: LoginModalProps) {
     <Modal
       open={open}
       onOpenChange={onOpenChange}
-      Icon={LoginIcon}
+      Icon={<LoginIcon />}
       buttonOnClick={() => {
         handleGoogleSignIn({});
       }}
-      buttonText="Sign In Via UCSD"
+      button2Text="Sign In Via UCSD"
       title="UCSD Email Needed."
       description="Keep your cards safe by signing in."
     />

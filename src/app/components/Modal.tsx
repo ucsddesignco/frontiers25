@@ -14,10 +14,11 @@ interface ModalProps {
   onOpenChange: (open: boolean) => void;
   title: string;
   description: string;
-  buttonText: string;
+  button1Text?: string;
+  button2Text: string;
   buttonOnClick?: () => void;
-  Icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>> | null;
-  noThanks?: boolean;
+  Icon: React.ReactNode | null;
+  button1?: boolean;
 }
 
 export default function Modal({
@@ -25,10 +26,11 @@ export default function Modal({
   onOpenChange,
   title,
   description,
-  buttonText,
+  button1Text,
+  button2Text,
   buttonOnClick,
   Icon,
-  noThanks = true
+  button1 = true
 }: ModalProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -38,12 +40,12 @@ export default function Modal({
         </DialogHeader>
         <DialogFooter>
           <DialogDescription>{description}</DialogDescription>
-          {noThanks && (
+          {button1 && (
             <DialogClose asChild>
               <GlassButton
                 onClick={() => {}}
                 onMouseDown={e => e.stopPropagation()}
-                text="No Thanks"
+                text={button1Text ?? 'No Thanks'}
                 className="modal-button justify-center"
                 width="full"
               />
@@ -54,12 +56,12 @@ export default function Modal({
               buttonOnClick?.();
             }}
             onMouseDown={e => e.stopPropagation()}
-            text={buttonText}
+            text={button2Text}
             className="modal-button justify-center"
             color="dark"
             width="full"
           >
-            {Icon && <Icon />}
+            {Icon}
           </GlassButton>
         </DialogFooter>
       </DialogContent>
