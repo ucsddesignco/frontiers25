@@ -32,31 +32,31 @@ export default function JudgesPage({ ref, showExpanded, borderStyle }: JudgesPag
     {
       first: 'Adam',
       last: 'Karnas',
-      position: 'Position 1 @ UCSD',
+      position: 'Staff Designer & Manager @ Google',
       image: '/AdamKarnas.png'
     },
     {
       first: 'Andrew',
-      last: 'Baballero',
-      position: 'Position 2 @ UCSD',
+      last: 'Caballero',
+      position: 'Product Designer @ Microsoft',
       image: '/AndrewCaballero.png'
     },
     {
       first: 'Anindya',
       last: 'Basu',
-      position: 'Position 3 @ UCSD',
+      position: 'Senior UX Researcher @ Google',
       image: '/AnindyaBasu.png'
     },
     {
       first: 'Daxter',
       last: 'Zavalza',
-      position: 'Position 4 @ UCSD',
+      position: 'Gen AI UX Design Lead @ Deloitte',
       image: '/DexterZavalza.png'
     },
     {
       first: 'Key',
       last: 'Monette',
-      position: 'Position 5 @ UCSD',
+      position: 'Senior Product Designer @ Epic',
       image: '/KayMonette.png'
     }
   ];
@@ -65,7 +65,10 @@ export default function JudgesPage({ ref, showExpanded, borderStyle }: JudgesPag
     return (
       <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {judges.map((judge, index) => (
-          <div key={index} className={`flex flex-col items-center`}>
+          <div
+            key={index}
+            className={`flex flex-col items-center ${index >= 3 ? 'lg:col-span-1' : ''}`}
+          >
             <div
               className={`relative h-[250px] w-[200px] bg-[var(--card-accent-color)] ${varBorderRadius}`}
             >
@@ -77,8 +80,8 @@ export default function JudgesPage({ ref, showExpanded, borderStyle }: JudgesPag
                 className={`object-cover ${varBorderRadius}`}
               />
             </div>
-            <p className="text-sm">{judge.position}</p>
             <h3 className="text-lg font-bold">{`${judge.first} ${judge.last}`}</h3>
+            <p className="w-1/2 text-center text-sm">{judge.position}</p>
           </div>
         ))}
       </div>

@@ -21,10 +21,10 @@ export default function AgendaPage({ ref, showExpanded, borderStyle }: AgendaPag
     if (borderStyle !== 'beveled') return null;
     return (
       <>
-        <div className="accent-triangle absolute left-[-0.5px] top-[-0.5px]"></div>
-        <div className="accent-triangle absolute right-[-0.5px] top-[-0.5px] rotate-90"></div>
-        <div className="accent-triangle absolute bottom-[-0.5px] left-[-0.5px] rotate-[270deg]"></div>
-        <div className="accent-triangle absolute bottom-[-0.5px] right-[-0.5px] rotate-180"></div>
+        <div className="accent-triangle absolute left-[-0.5px] top-[-0.5px] z-10"></div>
+        <div className="accent-triangle absolute right-[-0.5px] top-[-0.5px] z-10 rotate-90"></div>
+        <div className="accent-triangle absolute bottom-[-0.5px] left-[-0.5px] z-10 rotate-[270deg]"></div>
+        <div className="accent-triangle absolute bottom-[-0.5px] right-[-0.5px] z-10 rotate-180"></div>
       </>
     );
   }
@@ -55,8 +55,10 @@ export default function AgendaPage({ ref, showExpanded, borderStyle }: AgendaPag
               className={`overflow-clip border-[4px] border-[var(--card-accent-color)] p-5 text-center ${varBorderRadius}`}
             >
               <p>7:00 PM</p>
-              <h1>Event Kickoff</h1>
-              <p>
+              <h1 className="text-center text-[2rem] font-bold uppercase leading-[1.25] lg:text-[3rem]">
+                Event Kickoff
+              </h1>
+              <p className="text-center text-[1rem] font-bold uppercase">
                 Designers will begin with registration and sign-in, an introduction to the event,
                 and energizing lighting talks.
               </p>
@@ -69,8 +71,10 @@ export default function AgendaPage({ ref, showExpanded, borderStyle }: AgendaPag
               className={`overflow-clip border-[4px] border-[var(--card-accent-color)] p-5 text-center ${varBorderRadius}`}
             >
               <p>7:30 PM</p>
-              <h1>Lighting Talks</h1>
-              <p>
+              <h1 className="text-center text-[2rem] font-bold uppercase leading-[1.25] lg:text-[3rem]">
+                Lighting Talks
+              </h1>
+              <p className="text-center text-[1rem] font-bold uppercase">
                 Designers will begin with registration and sign-in, an introduction to the event,
                 and energizing lighting talks.
               </p>
@@ -82,8 +86,10 @@ export default function AgendaPage({ ref, showExpanded, borderStyle }: AgendaPag
             <div
               className={`overflow-clip border-[4px] border-[var(--card-accent-color)] p-5 text-center ${varBorderRadius}`}
             >
-              <p>8:00 PM</p>
-              <h1>Sprint Starts</h1>
+              <p className="text-center text-[1rem] font-bold uppercase">8:00 PM</p>
+              <h1 className="text-center text-[2rem] font-bold uppercase leading-[1.25] lg:text-[3rem]">
+                Sprint Starts
+              </h1>
               <p>
                 Designers will begin with registration and sign-in, an introduction to the event,
                 and energizing lighting talks.
@@ -96,8 +102,10 @@ export default function AgendaPage({ ref, showExpanded, borderStyle }: AgendaPag
             <div
               className={`overflow-clip border-[4px] border-[var(--card-accent-color)] p-5 text-center ${varBorderRadius}`}
             >
-              <p>11:00 PM</p>
-              <h1>Closing Remarks</h1>
+              <p className="text-center text-[1rem] font-bold uppercase">11:00 PM</p>
+              <h1 className="text-center text-[2rem] font-bold uppercase leading-[1.25] lg:text-[3rem]">
+                Closing Remarks
+              </h1>
               <p>
                 Designers will begin with registration and sign-in, an introduction to the event,
                 and energizing lighting talks.
@@ -122,8 +130,10 @@ export default function AgendaPage({ ref, showExpanded, borderStyle }: AgendaPag
             <div
               className={`overflow-clip border-[4px] border-[var(--card-accent-color)] p-5 text-center ${varBorderRadius}`}
             >
-              <p>7:00 PM</p>
-              <h1>Event Kickoff</h1>
+              <p className="text-center text-[1rem] font-bold uppercase">7:00 PM</p>
+              <h1 className="text-center text-[2rem] font-bold uppercase leading-[1.25] lg:text-[3rem]">
+                Event Kickoff
+              </h1>
               <p>
                 Designers will begin with registration and sign-in, an introduction to the event,
                 and energizing lighting talks.
@@ -136,8 +146,10 @@ export default function AgendaPage({ ref, showExpanded, borderStyle }: AgendaPag
             <div
               className={`overflow-clip border-[4px] border-[var(--card-accent-color)] p-5 text-center ${varBorderRadius}`}
             >
-              <p>7:30 PM</p>
-              <h1>Lighting Talks</h1>
+              <p className="text-center text-[1rem] font-bold uppercase">7:30 PM</p>
+              <h1 className="text-center text-[2rem] font-bold uppercase leading-[1.25] lg:text-[3rem]">
+                Lighting Talks
+              </h1>
               <p>
                 Designers will begin with registration and sign-in, an introduction to the event,
                 and energizing lighting talks.
@@ -150,8 +162,10 @@ export default function AgendaPage({ ref, showExpanded, borderStyle }: AgendaPag
             <div
               className={`overflow-clip border-[4px] border-[var(--card-accent-color)] p-5 text-center ${varBorderRadius}`}
             >
-              <p>8:00 PM</p>
-              <h1>Sprint Starts</h1>
+              <p className="text-center text-[1rem] font-bold uppercase">8:00 PM</p>
+              <h1 className="text-center text-[2rem] font-bold uppercase leading-[1.25] lg:text-[3rem]">
+                Sprint Starts
+              </h1>
               <p>
                 Designers will begin with registration and sign-in, an introduction to the event,
                 and energizing lighting talks.
@@ -162,10 +176,12 @@ export default function AgendaPage({ ref, showExpanded, borderStyle }: AgendaPag
           <div className={`relative bg-[var(--card-primary-color)]`}>
             {renderAccentTriangles()}
             <div
-              className={`relative overflow-clip border-[4px] border-[var(--card-accent-color)] p-5 text-center ${varBorderRadius}`}
+              className={`relative border-[4px] border-[var(--card-accent-color)] p-5 text-center ${varBorderRadius}`}
             >
-              <p>11:00 PM</p>
-              <h1>Closing Remarks</h1>
+              <p className="text-center text-[1rem] font-bold uppercase">11:00 PM</p>
+              <h1 className="text-center text-[2rem] font-bold uppercase leading-[1.25] lg:text-[3rem]">
+                Closing Remarks
+              </h1>
               <p>
                 Designers will begin with registration and sign-in, an introduction to the event,
                 and energizing lighting talks.
@@ -183,7 +199,7 @@ export default function AgendaPage({ ref, showExpanded, borderStyle }: AgendaPag
       className={`${showExpanded ? 'opacity-100' : 'opacity-0'} duration-[0.2s] w-full pt-[200px] transition-opacity ease-in-out`}
     >
       <PageTitle title="Agenda" subtitle="What’s the timeline of our design sprint?" />
-      <div className="flex h-full w-full flex-col items-center pt-[5%]">
+      <div className="flex h-full w-full flex-col items-center pt-5">
         {/* Days */}
         <div className="h-[15%] w-full flex-row justify-center p-5 sm:max-w-[90%] md:max-w-[50%]">
           <button
