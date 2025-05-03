@@ -13,10 +13,10 @@ export default function JudgesPage({ ref, showExpanded, borderStyle }: JudgesPag
     if (borderStyle !== 'beveled') return null;
     return (
       <>
-        <div className="primary-triangle absolute left-0 top-0"></div>
-        <div className="primary-triangle absolute right-0 top-0 rotate-90"></div>
-        <div className="primary-triangle absolute bottom-0 left-0 rotate-[270deg]"></div>
-        <div className="primary-triangle absolute bottom-0 right-0 rotate-180"></div>
+        <div className="primary-triangle absolute left-[-1px] top-[-1px]"></div>
+        <div className="primary-triangle absolute right-[-1px] top-[-1px] rotate-90"></div>
+        <div className="primary-triangle absolute bottom-[-1px] left-[-1px] rotate-[270deg]"></div>
+        <div className="primary-triangle absolute bottom-[-1px] right-[-1px] rotate-180"></div>
       </>
     );
   }
