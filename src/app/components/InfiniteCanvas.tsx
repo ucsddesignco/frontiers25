@@ -177,7 +177,9 @@ const InfiniteCanvas = ({ data, session }: InfiniteCanvasProps) => {
           showExpanded={showExpanded}
         />
 
-        <div className="fixed bottom-5 z-[3] flex w-full justify-center md:hidden">
+        <div
+          className={`${selectedCard && showLightFog ? 'pointer-events-none' : ''} fixed bottom-6 z-[3] flex w-full justify-center md:hidden`}
+        >
           <CreateCard
             className={`${selectedCard && showLightFog ? 'translate-y-[200%]' : 'translate-y-0'} ${showLightFog ? '' : 'invisible'} transition-transform duration-300`}
           />
