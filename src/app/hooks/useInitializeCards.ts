@@ -1,46 +1,47 @@
+import { MIDDLE_CARD_INDEX } from './../components/constants';
 import { useEffect } from 'react';
 import { useCanvasStore } from '../stores/canvasStore';
-import { CardType } from '../components/constants';
-import { generateColorVariations } from '../util/colorUtils';
 import { DatabaseCard } from '../components/InfiniteCanvas';
+import { processCardData } from '../util/processCardData';
+import { Session } from '@/lib/auth';
+import { getCardByUser } from '../api/cardFunctions';
 
-// Function to convert ISO timestamp string to relative time string (e.g., "18h", "3d")
-function formatRelativeTime(isoString: string): string {
-  const date = new Date(isoString);
-  const now = new Date(); // Reference "today"
-  const diffSeconds = Math.round((now.getTime() - date.getTime()) / 1000);
-
-  const diffMinutes = Math.round(diffSeconds / 60);
-  if (diffMinutes < 60) {
-    return `${diffMinutes}m`;
-  }
-  const diffHours = Math.round(diffMinutes / 60);
-  if (diffHours < 24) {
-    return `${diffHours}h`;
-  }
-  const diffDays = Math.round(diffHours / 24);
-  return `${diffDays}d`;
+interface InitializeCardsProps {
+  data: DatabaseCard[];
+  session: Session | null;
 }
 
-export function useInitializeCards({ data }: { data: DatabaseCard[] }) {
+export function useInitializeCards({ data, session }: InitializeCardsProps) {
   const { setBasePattern } = useCanvasStore();
 
   useEffect(() => {
-    // Process the fake data to format timestamps and generate colors before setting state
-    const processedData: CardType[] = data.map(card => {
-      const { borderColor, buttonColor, scrollbarColor } = generateColorVariations(
-        card.primary,
-        card.accent
-      );
-      return {
-        ...card,
-        lastUpdated: formatRelativeTime(card.lastUpdated),
-        borderColor,
-        buttonColor,
-        scrollbarColor
+    const processedData = processCardData(data);
+
+    // Set middle three cards to user cards
+    if (session) {
+      const fetchUserCards = async () => {
+        const userCards = await getCardByUser();
+        const processsedUserCards = processCardData(userCards);
+
+        if (processsedUserCards.length === 3) {
+          processedData[MIDDLE_CARD_INDEX - 1] = processsedUserCards[0];
+          processedData[MIDDLE_CARD_INDEX] = processsedUserCards[1];
+          processedData[MIDDLE_CARD_INDEX + 1] = processsedUserCards[2];
+        } else if (processsedUserCards.length === 2) {
+          processedData[MIDDLE_CARD_INDEX - 1] = processsedUserCards[0];
+          processedData[MIDDLE_CARD_INDEX] = processsedUserCards[1];
+        } else if (processsedUserCards.length === 1) {
+          processedData[MIDDLE_CARD_INDEX] = processsedUserCards[0];
+        } else {
+          return;
+        }
+        setBasePattern(processedData);
       };
-    });
-    setBasePattern(processedData);
+      fetchUserCards();
+    } else {
+      setBasePattern(processedData);
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 }

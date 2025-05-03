@@ -17,7 +17,7 @@ export default function LoginModal({ open, onOpenChange }: LoginModalProps) {
       buttonOnClick={() => {
         handleGoogleSignIn({});
       }}
-      button2Text="Sign In Via UCSD"
+      primaryText="Sign In Via UCSD"
       title="UCSD Email Needed."
       description="Keep your cards safe by signing in."
     />

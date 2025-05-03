@@ -1,6 +1,6 @@
 // Credit: https://stackoverflow.com/questions/51496204/border-gradient-with-border-radius/51496341#51496341
 // This doesn't support transparent background
-#selected-island {
+#glass-island {
   background-image: linear-gradient(#f5f5f5, #f5f5f5), linear-gradient(to top, #d8d7d9, white 75%);
   background-origin: border-box;
   background-clip: padding-box, border-box;

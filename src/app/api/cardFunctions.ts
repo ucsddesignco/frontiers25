@@ -5,6 +5,7 @@ import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import { DatabaseCard } from '../components/InfiniteCanvas';
 import mongoose from 'mongoose';
+import { revalidatePath } from 'next/cache';
 
 await connectDB();
 
@@ -78,7 +79,7 @@ export default async function createCard({
 
     const user_cards = await card.find({ user: session.user.id });
     if (user_cards.length >= 3) {
-      return { error: 'You can only have up to 3 cards.' };
+      return { error: 'You can only create up to 3 cards.' };
     } else {
       const new_card = await card.create({
         user: session.user.id,
@@ -114,6 +115,31 @@ export async function getAllCards() {
   }
 }
 
+export async function getRandomCards(limit = 50, excludeUserId?: string) {
+  try {
+    const randomCards = await card
+      .aggregate([
+        {
+          $match: {
+            user: { $ne: excludeUserId }
+          }
+        }, // Exclude cards from the specified user
+        { $sample: { size: limit } } // Then take a random sample
+      ])
+      .exec();
+
+    const serializedCards = randomCards.map(doc => ({
+      ...doc,
+      _id: doc._id.toString()
+    }));
+
+    return serializedCards as unknown as DatabaseCard[];
+  } catch (error) {
+    console.error('Error fetching random filtered cards:', error);
+    throw new Error('Failed to fetch random filtered cards');
+  }
+}
+
 export async function getCardByID(id: string) {
   try {
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -135,7 +161,7 @@ export async function getCardByID(id: string) {
 export async function getCardByUser() {
   try {
     const session = await requireAuth();
-    const cards = await card.find({ user: session.user.id });
+    const cards = await card.find({ user: session.user.id }).lean();
     const serializedCards = cards.map(doc => ({
       ...doc,
       _id: doc._id!.toString()
@@ -149,9 +175,21 @@ export async function getCardByUser() {
 
 export async function removeCardByID(id: string) {
   try {
-    await requireAuth();
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      console.warn('Invalid id');
+      return null;
+    }
+    const session = await requireAuth();
+    const foundCard = await card.findById(id);
+    if (!foundCard) {
+      throw new Error('Card not found');
+    }
+    if (foundCard.user !== session.user.id) {
+      throw new Error('Unauthorized');
+    }
     const removed = await card.deleteOne({ _id: id });
-    return JSON.stringify(removed);
+    revalidatePath('/my-cards');
+    return removed.deletedCount;
   } catch (error) {
     console.error('Error deleting card by id:', error);
     throw new Error('Failed to delete card by id');
@@ -167,19 +205,33 @@ export async function removeCardByID(id: string) {
  * @param s_color : hex for secondary color
  * @returns Update parameters
  */
-export async function updateCardByID(
-  id: string,
-  fontFamily?: string,
-  borderStyle?: string,
-  primary?: string,
-  accent?: string
-) {
+
+export async function updateCardByID({
+  id,
+  fontFamily,
+  borderStyle,
+  primary,
+  accent
+}: {
+  id: string;
+  fontFamily?: string;
+  borderStyle?: string;
+  primary?: string;
+  accent?: string;
+}) {
   try {
-    await requireAuth();
+    const session = await requireAuth();
     if (!id) {
       throw new Error('ID is required');
     }
 
+    const foundCard = await card.findById(id);
+    if (!foundCard) {
+      throw new Error('Card not found');
+    }
+    if (foundCard.user !== session.user.id) {
+      throw new Error('Unauthorized');
+    }
     const updateData: UpdateCard = { id: id };
 
     if (fontFamily !== undefined) {
@@ -200,12 +252,13 @@ export async function updateCardByID(
     if (accent !== undefined) updateData.accent = accent;
     updateData.lastUpdated = new Date();
 
-    const doc = await card.findByIdAndUpdate(id, { $set: updateData }, { new: true });
+    const cardData = await card.findByIdAndUpdate(id, { $set: updateData }, { new: true });
+    revalidatePath('/my-cards');
 
-    if (!doc) {
+    if (!cardData) {
       throw new Error('Card not found');
     }
-    return JSON.stringify(doc);
+    return cardData.toObject({ flattenObjectIds: true });
   } catch (error) {
     console.error('Error updating card by id:', error);
     throw new Error('Failed to update card by id');

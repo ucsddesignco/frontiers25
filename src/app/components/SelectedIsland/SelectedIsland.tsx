@@ -2,10 +2,10 @@ import { CanvasState, useCanvasStore } from '@/app/stores/canvasStore';
 import { useShallow } from 'zustand/shallow';
 import GlassButton from '../GlassButton/GlassButton';
 import { useRouter } from 'next/navigation';
-import './SelectedIsland.scss';
 import { memo } from 'react';
 import DuplicateCardIcon from '@/app/assets/DuplicateCardIcon';
 import { Session } from '@/lib/auth';
+import GlassIsland from '../GlassIsland/GlassIsland';
 
 type SelectedIslandProps = {
   selectedCard: CanvasState['selectedCard'];
@@ -21,20 +21,14 @@ const SelectedIsland = ({ selectedCard, session }: SelectedIslandProps) => {
     }))
   );
 
-  if (!selectedCard) {
-    return;
-  }
-  const selectedCardIndex = parseInt(selectedCard);
-  const cardId = basePattern[selectedCardIndex]._id;
+  const selectedCardIndex = selectedCard ? parseInt(selectedCard) : 0;
+  const cardId = selectedCard ? basePattern[selectedCardIndex]._id : '';
 
   return (
-    <div
-      id="selected-island"
-      className={`${selectedCard && showLightFog ? 'translate-y-0' : 'translate-y-[200%]'} fixed bottom-6 left-0 right-0 z-[2] mx-auto flex w-fit items-center justify-center gap-4 rounded-[32px] py-2 pl-8 pr-[12px] transition-transform duration-300`}
-    >
+    <GlassIsland className={selectedCard && showLightFog ? 'translate-y-0' : 'translate-y-[200%]'}>
       <p>Selected</p>
 
-      {session?.user.id === basePattern[selectedCardIndex].user && (
+      {selectedCard && session?.user.id === basePattern[selectedCardIndex].user && (
         <GlassButton
           text="Edit Card"
           size="skinny"
@@ -54,7 +48,7 @@ const SelectedIsland = ({ selectedCard, session }: SelectedIslandProps) => {
       >
         <DuplicateCardIcon />
       </GlassButton>
-    </div>
+    </GlassIsland>
   );
 };
 

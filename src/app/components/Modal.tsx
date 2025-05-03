@@ -14,11 +14,11 @@ interface ModalProps {
   onOpenChange: (open: boolean) => void;
   title: string;
   description: string;
-  button1Text?: string;
-  button2Text: string;
+  primaryText: string;
+  secondaryText?: string;
   buttonOnClick?: () => void;
   Icon: React.ReactNode | null;
-  button1?: boolean;
+  onlyPrimary?: boolean;
 }
 
 export default function Modal({
@@ -26,26 +26,26 @@ export default function Modal({
   onOpenChange,
   title,
   description,
-  button1Text,
-  button2Text,
+  primaryText,
+  secondaryText = 'No Thanks',
   buttonOnClick,
   Icon,
-  button1 = true
+  onlyPrimary = false
 }: ModalProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-[320px]">
         <DialogHeader>
-          <DialogTitle>{title}</DialogTitle> {/* Use title prop here */}
+          <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
         <DialogFooter>
           <DialogDescription>{description}</DialogDescription>
-          {button1 && (
+          {!onlyPrimary && (
             <DialogClose asChild>
               <GlassButton
                 onClick={() => {}}
                 onMouseDown={e => e.stopPropagation()}
-                text={button1Text ?? 'No Thanks'}
+                text={secondaryText}
                 className="modal-button justify-center"
                 width="full"
               />
@@ -56,7 +56,7 @@ export default function Modal({
               buttonOnClick?.();
             }}
             onMouseDown={e => e.stopPropagation()}
-            text={button2Text}
+            text={primaryText}
             className="modal-button justify-center"
             color="dark"
             width="full"

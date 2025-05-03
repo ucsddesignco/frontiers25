@@ -38,5 +38,5 @@ export default async function NewCardPage({ params }: { params: Promise<{ cardId
     lastUpdated: new Date().toISOString()
   };
 
-  return <CustomizationContainer card={newCard} session={session} />;
+  return <CustomizationContainer card={newCard} session={session} type="new" />;
 }

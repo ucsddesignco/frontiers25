@@ -63,7 +63,8 @@ export function useCanvasActions() {
     setSelectedCard,
     selectedCard,
     cardSize,
-    showMobileGallery
+    showMobileGallery,
+    basePattern
   } = useCanvasStore(
     useShallow((state: CanvasState) => ({
       containerRef: state.containerRef,
@@ -83,7 +84,8 @@ export function useCanvasActions() {
       setSelectedCard: state.setSelectedCard,
       selectedCard: state.selectedCard,
       cardSize: state.cardSize,
-      showMobileGallery: state.showMobileGallery
+      showMobileGallery: state.showMobileGallery,
+      basePattern: state.basePattern
     }))
   );
   const transitionTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -328,10 +330,12 @@ export function useCanvasActions() {
       setPosition({ x: mobileGap / 2, y: 0 });
     }
 
-    centerToCard();
-    setSelectedCard(MIDDLE_CARD_INDEX.toString());
+    if (basePattern.length > 0) {
+      centerToCard();
+      setSelectedCard(MIDDLE_CARD_INDEX.toString());
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cardSize]);
+  }, [cardSize, basePattern]);
 
   // Recenter the canvas on window resize
   useEffect(() => {

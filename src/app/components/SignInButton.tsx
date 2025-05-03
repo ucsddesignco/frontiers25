@@ -14,7 +14,12 @@ import ProfileIcon from '../assets/ProfileIcon';
 import { Session } from '@/lib/auth';
 import Modal from './Modal';
 
-function SignInButton({ session }: { session: Session | null }) {
+interface SignInButtonProps {
+  session: Session | null;
+  className?: string;
+}
+
+function SignInButton({ session, className }: SignInButtonProps) {
   const [openLoginModal, setOpenLoginModal] = useState(false);
   const [openSignOutModal, setOpenSignOutModal] = useState(false);
   const router = useRouter();
@@ -31,6 +36,7 @@ function SignInButton({ session }: { session: Session | null }) {
           onClick={() => setOpenLoginModal(true)}
           onMouseDown={e => e.stopPropagation()}
           text="Sign In"
+          className={className}
         >
           <LoginIcon />
         </GlassButton>
@@ -41,13 +47,13 @@ function SignInButton({ session }: { session: Session | null }) {
   }
 
   return (
-    <>
+    <div className={className}>
       <Modal
         open={openSignOutModal}
         onOpenChange={setOpenSignOutModal}
         buttonOnClick={handleSignOut}
-        button1Text="Nevermind"
-        button2Text="Sign Out"
+        primaryText="Sign Out"
+        secondaryText="Nevermind"
         Icon={<LoginIcon />}
         title="Leaving So Soon?"
         description="Any cards you make while signed out might disappear later."
@@ -63,11 +69,12 @@ function SignInButton({ session }: { session: Session | null }) {
           </GlassButton>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="center">
-          <DropdownMenuItem>My Cards</DropdownMenuItem> {/* Placeholder for now */}
+          <DropdownMenuItem onClick={() => router.push('/my-cards')}>My Cards</DropdownMenuItem>{' '}
+          {/* Placeholder for now */}
           <DropdownMenuItem onClick={() => setOpenSignOutModal(true)}>Sign Out</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-    </>
+    </div>
   );
 }
 

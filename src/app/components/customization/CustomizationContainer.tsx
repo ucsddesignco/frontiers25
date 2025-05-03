@@ -12,7 +12,7 @@ import { BackIcon } from '@/app/assets/BackIcon';
 import { DoneIcon } from '@/app/assets/DoneIcon';
 import { DatabaseCard } from '../InfiniteCanvas';
 import { customToast } from '@/app/util/CustomToast/CustomToast';
-import createCard from '@/app/api/cardFunctions';
+import createCard, { updateCardByID } from '@/app/api/cardFunctions';
 import { useStore } from 'zustand';
 import { useShallow } from 'zustand/shallow';
 import { Session } from '@/lib/auth';
@@ -24,12 +24,18 @@ import { useRouter } from 'next/navigation';
 interface CustomizationContainerProps {
   card: DatabaseCard | null;
   session: Session | null;
+  type: 'edit' | 'new';
 }
 
-export default function CustomizationContainer({ card, session }: CustomizationContainerProps) {
+export default function CustomizationContainer({
+  card,
+  session,
+  type
+}: CustomizationContainerProps) {
   const [openAuthModal, setOpenAuthModal] = useState(false);
   const [openContrastErrorModal, setOpenContrastErrorModal] = useState(false);
   const [openExitPageModal, setOpenExitPageModal] = useState(false);
+  const router = useRouter();
   const store = useRef(
     createCustomizationStore({
       primary: card ? parseColor(card.primary).toString('hsl') : undefined,
@@ -38,8 +44,6 @@ export default function CustomizationContainer({ card, session }: CustomizationC
       borderStyle: card?.borderStyle
     })
   ).current;
-
-  const router = useRouter();
 
   if (!store) throw new Error('Missing CustomizationContext');
 
@@ -60,9 +64,44 @@ export default function CustomizationContainer({ card, session }: CustomizationC
 
     if (!validContrast) {
       setOpenContrastErrorModal(true);
+      return;
     } else if (!session) {
       setOpenAuthModal(true);
-    } else {
+      return;
+    }
+
+    if (!card) {
+      return;
+    }
+
+    if (type === 'edit') {
+      const updatedCard = await updateCardByID({
+        id: card._id,
+        fontFamily,
+        primary: hexPrimary,
+        accent: hexAccent,
+        borderStyle
+      });
+
+      if (updatedCard?.error) {
+        customToast({
+          description: updatedCard.error,
+          type: 'error'
+        });
+      } else if (updatedCard) {
+        customToast({
+          description: 'Card Updated Successfully.',
+          type: 'success'
+        });
+      } else {
+        customToast({
+          description: 'Failed to update card.',
+          type: 'error'
+        });
+      }
+    }
+
+    if (type === 'new') {
       const newCard = await createCard({
         fontFamily,
         primary: hexPrimary,
@@ -105,8 +144,8 @@ export default function CustomizationContainer({ card, session }: CustomizationC
         buttonOnClick={() => {
           handleGoogleSignIn({ onSuccess: () => setOpenAuthModal(false) });
         }}
-        button1Text="No Thanks"
-        button2Text="Sign In Via UCSD"
+        primaryText="Sign In Via UCSD"
+        secondaryText="No Thanks"
         Icon={<LoginIcon />}
         title="Keep Your Cards Safe."
         description="You're not signed in — your cards might disappear later."
@@ -116,9 +155,9 @@ export default function CustomizationContainer({ card, session }: CustomizationC
         open={openContrastErrorModal}
         onOpenChange={setOpenContrastErrorModal}
         buttonOnClick={() => setOpenContrastErrorModal(false)}
-        button2Text="Okay"
+        primaryText="Okay"
         Icon={null}
-        button1={false}
+        onlyPrimary={true}
         title="Oops, No Contrast!"
         description="To save your card, it must pass the contrast checker."
       />
@@ -127,10 +166,10 @@ export default function CustomizationContainer({ card, session }: CustomizationC
         open={openExitPageModal}
         onOpenChange={setOpenExitPageModal}
         buttonOnClick={() => {
-          router.push('/');
+          router.back();
         }}
-        button1Text="Nevermind"
-        button2Text="Back To Gallery"
+        primaryText="Back To Gallery"
+        secondaryText="Nevermind"
         Icon={<BackIcon color="#fff" />}
         title="Unsaved Changes"
         description="Are you sure you want to leave? Your changes will be lost."

@@ -13,5 +13,5 @@ export default async function Page({ params }: { params: Promise<{ cardId: strin
 
   const card = await getCardByID(cardId);
 
-  return <CustomizationContainer card={card} session={session} />;
+  return <CustomizationContainer card={card} session={session} type="edit" />;
 }

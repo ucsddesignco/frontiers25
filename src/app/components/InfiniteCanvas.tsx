@@ -69,7 +69,7 @@ const InfiniteCanvas = ({ data, session }: InfiniteCanvasProps) => {
   const isInitialLoad = useRef(true);
   const centeredCardIndex = useCanvasStore(state => state.centeredCardIndex);
 
-  useInitializeCards({ data });
+  useInitializeCards({ data, session });
 
   const { centerToCard, centerViewOnScreen } = useCanvasActions();
 
