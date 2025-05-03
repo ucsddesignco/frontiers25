@@ -113,7 +113,7 @@ function CardGrid({
                   }
                 }
               }}
-              className={`${selectedClass} ${previousClass} ${cardIsExpanding ? '' : 'lg:hover:scale-[1.1]'}`}
+              className={`${selectedClass} ${previousClass} ${cardIsExpanding ? '' : 'md:hover:scale-[1.1]'}`}
             />
           </div>
         );

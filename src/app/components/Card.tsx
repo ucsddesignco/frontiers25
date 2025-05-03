@@ -61,7 +61,7 @@ const Card: React.FC<CardProps> = ({ card, onClick, onMouseDown, onLearnMore, cl
                     DIB 208
                   </p>
                 </div>
-                <p className="time hidden flex-col items-end lg:flex">
+                <p className="time hidden flex-col items-end md:flex">
                   <span className="time-1 block w-fit transition-transform duration-card ease-in-out">
                     by UCSD
                   </span>
@@ -69,11 +69,11 @@ const Card: React.FC<CardProps> = ({ card, onClick, onMouseDown, onLearnMore, cl
                     Design Co
                   </span>
                 </p>
-                <p className="mobile-time flex h-fit w-fit flex-col items-end lg:hidden">
-                  <span className="mobile-time-1 block w-fit transition-transform duration-card ease-in-out lg:flex">
+                <p className="mobile-time flex h-fit w-fit flex-col items-end md:hidden">
+                  <span className="mobile-time-1 block w-fit transition-transform duration-card ease-in-out md:flex">
                     by UCSD
                   </span>
-                  <span className="mobile-time-2 block w-fit transition-transform duration-card ease-in-out lg:flex">
+                  <span className="mobile-time-2 block w-fit transition-transform duration-card ease-in-out md:flex">
                     Design Co
                   </span>
                 </p>
@@ -81,11 +81,11 @@ const Card: React.FC<CardProps> = ({ card, onClick, onMouseDown, onLearnMore, cl
             </div>
 
             <div className="flex flex-col gap-3">
-              <p className="flex flex-col text-center">
-                <span className="description-1 block transition-transform duration-card ease-in-out">
+              <p className="flex flex-col items-center">
+                <span className="description-1 block w-fit transition-transform duration-card ease-in-out">
                   Create, test, & iterate on ideas
                 </span>
-                <span className="description-2 block transition-transform duration-card ease-in-out">
+                <span className="description-2 block w-fit transition-transform duration-card ease-in-out">
                   at our annual design-a-thon.
                 </span>
               </p>
@@ -101,7 +101,7 @@ const Card: React.FC<CardProps> = ({ card, onClick, onMouseDown, onLearnMore, cl
                 {NAV_BUTTONS.map(({ id, label }) => (
                   <button
                     key={'card-button-' + id}
-                    className="pointer-events-none absolute cursor-pointer rounded-full px-6 py-2 opacity-0 lg:opacity-100"
+                    className="pointer-events-none absolute cursor-pointer rounded-full px-6 py-2 opacity-0 md:opacity-100"
                   >
                     <span
                       style={{ backgroundColor: card.buttonColor, outlineColor: card.accent }}

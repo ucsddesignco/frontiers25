@@ -77,7 +77,7 @@ export default async function createCard({
 
     const user_cards = await card.find({ user: session.user.id });
     if (user_cards.length >= 3) {
-      return { error: 'You can only create up to 3 cards.' };
+      throw new Error('User has reached the maximum number of cards');
     } else {
       const new_card = await card.create({
         user: session.user.id,
@@ -102,7 +102,10 @@ export async function getAllCards() {
   try {
     const cards = await card.find().lean();
 
-    const serializedCards = cards.map(doc => ({ ...doc, _id: doc._id!.toString() }));
+    const serializedCards = cards.map(doc => ({
+      ...doc,
+      _id: doc._id!.toString()
+    }));
     return serializedCards as unknown as DatabaseCard[];
   } catch (error) {
     console.error('Error fetching cards:', error);
@@ -123,10 +126,15 @@ export async function getCardByID(id: string) {
   }
 }
 
-export async function getCardByUser(user: string) {
+export async function getCardByUser() {
   try {
-    const found = await card.find({ user: user });
-    return JSON.stringify(found);
+    const session = await requireAuth();
+    const cards = await card.find({ user: session.user.id });
+    const serializedCards = cards.map(doc => ({
+      ...doc,
+      _id: doc._id!.toString()
+    }));
+    return serializedCards as unknown as DatabaseCard[];
   } catch (error) {
     console.error('Error fetching card by user:', error);
     throw new Error('Failed to fetch card by user');

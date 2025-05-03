@@ -49,7 +49,12 @@ export default function FAQPage({ ref, showExpanded }: FAQPageProps) {
     return (
       <>
         {faqItems.map((item, index) => (
-          <Accordion type="single" collapsible className="w-full max-w-[90%] gap-4" key={index}>
+          <Accordion
+            type="single"
+            collapsible
+            className="relative w-full max-w-[90%] gap-4"
+            key={index}
+          >
             <AccordionItem value={`item-${index}`}>
               <AccordionTrigger>
                 <p className="text-start text-lg md:max-w-[66%]">{item.question}</p>
@@ -73,7 +78,7 @@ export default function FAQPage({ ref, showExpanded }: FAQPageProps) {
         {/*Page title and Subtitle*/}
         <PageTitle title="ABOUT" subtitle="Frequently Asked Questions" />
         {/*Accordion*/}
-        <div className="md:w-max-[90%] flex h-full w-full flex-col items-center gap-5 pt-[5%] lg:max-w-[60%]">
+        <div className="md:w-max-[90%] flex h-full w-full flex-col items-center gap-5 pt-[5%] md:max-w-[60%]">
           {renderFAQ()}
         </div>
       </div>

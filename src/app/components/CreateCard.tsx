@@ -1,9 +1,11 @@
+import { memo } from 'react';
 import CreateCardIcon from '../assets/CreateCardIcon';
 import GlassButton from './GlassButton/GlassButton';
 
-export default function CreateCard() {
+function CreateCard({ className }: { className?: string }) {
   return (
     <GlassButton
+      className={className}
       onMouseDown={e => e.stopPropagation()}
       text="Create A Card"
       color="dark"
@@ -13,3 +15,5 @@ export default function CreateCard() {
     </GlassButton>
   );
 }
+
+export default memo(CreateCard);

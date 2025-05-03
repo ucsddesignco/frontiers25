@@ -49,7 +49,7 @@ export default function JudgesPage({ ref, showExpanded }: JudgesPageProps) {
 
   function renderJudges() {
     return (
-      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
         {judges.map((judge, index) => (
           <div key={index} className="flex flex-col items-center">
             <Image
@@ -77,7 +77,7 @@ export default function JudgesPage({ ref, showExpanded }: JudgesPageProps) {
     >
       <PageTitle title="Judges" subtitle="Meet our judges" />
       <div className="flex h-full w-full flex-col items-center pt-[5%]">
-        <div className="md:w-max-[90%] flex flex-col items-center gap-5 lg:max-w-[60%]">
+        <div className="md:w-max-[90%] flex flex-col items-center gap-5 md:max-w-[60%]">
           {renderJudges()}
         </div>
       </div>

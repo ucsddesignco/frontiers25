@@ -1,6 +1,7 @@
 import { CSSProperties, memo, forwardRef } from 'react';
 import './GlassButton.scss';
 import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 type GlassButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   text: string;
@@ -71,7 +72,11 @@ const GlassButton = forwardRef<HTMLButtonElement, GlassButtonProps>(
               '--border-radius': '35px'
             } as CSSProperties
           }
-          className={`${className} ${widthClass} isolate cursor-pointer select-none focus:outline-none`}
+          className={cn(
+            'isolate cursor-pointer select-none focus:outline-none',
+            widthClass,
+            className
+          )}
           {...props}
         >
           <ButtonContent />

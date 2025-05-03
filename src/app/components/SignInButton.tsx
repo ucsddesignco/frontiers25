@@ -12,12 +12,10 @@ import {
 } from '@/components/ui/dropdown-menu';
 import ProfileIcon from '../assets/ProfileIcon';
 import { Session } from '@/lib/auth';
-import { useCanvasStore } from '../stores/canvasStore';
 
 function SignInButton({ session }: { session: Session | null }) {
   const [modalOpen, setModalOpen] = useState(false);
   const router = useRouter();
-  const showLightFog = useCanvasStore(state => state.showLightFog);
 
   const handleSignOut = async () => {
     await authClient.signOut();
@@ -41,23 +39,21 @@ function SignInButton({ session }: { session: Session | null }) {
   }
 
   return (
-    <div className={`${!showLightFog ? 'invisible' : ''}`}>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <GlassButton
-            text="Profile"
-            onClick={e => e.stopPropagation()}
-            onMouseDown={e => e.stopPropagation()}
-          >
-            <ProfileIcon />
-          </GlassButton>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="center">
-          <DropdownMenuItem>My Cards</DropdownMenuItem> {/* Placeholder for now */}
-          <DropdownMenuItem onClick={handleSignOut}>Sign Out</DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <GlassButton
+          text="Profile"
+          onClick={e => e.stopPropagation()}
+          onMouseDown={e => e.stopPropagation()}
+        >
+          <ProfileIcon />
+        </GlassButton>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="center">
+        <DropdownMenuItem>My Cards</DropdownMenuItem> {/* Placeholder for now */}
+        <DropdownMenuItem onClick={handleSignOut}>Sign Out</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 

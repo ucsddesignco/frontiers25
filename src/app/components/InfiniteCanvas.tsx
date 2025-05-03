@@ -43,7 +43,8 @@ const InfiniteCanvas = ({ data, session }: InfiniteCanvasProps) => {
     setShowMobileGallery,
     showMobileGalleryFog,
     setShowMobileGalleryFog,
-    setCardSize
+    setCardSize,
+    showLightFog
   } = useCanvasStore(
     useShallow((state: CanvasState) => ({
       containerRef: state.containerRef,
@@ -58,7 +59,8 @@ const InfiniteCanvas = ({ data, session }: InfiniteCanvasProps) => {
       setShowMobileGallery: state.setShowMobileGallery,
       showMobileGalleryFog: state.showMobileGalleryFog,
       setShowMobileGalleryFog: state.setShowMobileGalleryFog,
-      setCardSize: state.setCardSize
+      setCardSize: state.setCardSize,
+      showLightFog: state.showLightFog
     }))
   );
 
@@ -95,6 +97,19 @@ const InfiniteCanvas = ({ data, session }: InfiniteCanvasProps) => {
 
   const { checkPrevious } = usePreviousCards(selectedCard);
 
+  const handleMobileGalleryFog = useCallback(
+    (show: boolean) => {
+      setShowMobileGalleryFog(true);
+      setTimeout(() => {
+        setShowMobileGallery(show);
+        setTimeout(() => {
+          setShowMobileGalleryFog(false);
+        }, 250);
+      }, 250);
+    },
+    [setShowMobileGallery, setShowMobileGalleryFog]
+  );
+
   // Sync scroll/center position when switching modes
   useEffect(() => {
     if (window.innerWidth > MOBILE_BREAKPOINT || centeredCardIndex == null || cardSize.width === 0)
@@ -117,23 +132,13 @@ const InfiniteCanvas = ({ data, session }: InfiniteCanvasProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showMobileGallery]);
 
-  const handleMobileGalleryFog = (show: boolean) => {
-    setShowMobileGalleryFog(true);
-    setTimeout(() => {
-      setShowMobileGallery(show);
-      setTimeout(() => {
-        setShowMobileGalleryFog(false);
-      }, 250);
-    }, 250);
-  };
-
   useEffect(() => {
     let width = 300;
     let height = 400;
     let gap = 100;
 
     if (window.innerWidth < 768) {
-      width = Math.min(window.innerWidth * 0.8, 320);
+      width = Math.min(Math.max(window.innerWidth * 0.8, 292), 300);
       height = width * (4 / 3);
       gap = 65;
     }
@@ -158,24 +163,25 @@ const InfiniteCanvas = ({ data, session }: InfiniteCanvasProps) => {
         {/* Desktop */}
         <ResetButton handleGalleryClick={handleGalleryClick} handleResetZoom={handleResetZoom} />
 
-        <div className="fixed right-9 top-5 z-[4] flex gap-4">
+        <div className={`${showLightFog ? '' : 'invisible'} fixed right-6 top-5 z-[4] flex gap-4`}>
           <SignInButton session={session} />
 
-          <CreateCard />
+          <CreateCard className="hidden md:block" />
         </div>
 
         {/* Mobile */}
         <GalleryButton
-          handleShowGallery={() => {
-            handleMobileGalleryFog(true);
-          }}
-          handleHideGallery={() => {
-            handleMobileGalleryFog(false);
-          }}
+          handleMobileGalleryFog={handleMobileGalleryFog}
           handleGoBack={handleGalleryClick}
           showMobileGallery={showMobileGallery}
           showExpanded={showExpanded}
         />
+
+        <div className="fixed bottom-5 z-[3] flex w-full justify-center md:hidden">
+          <CreateCard
+            className={`${selectedCard && showLightFog ? 'translate-y-[200%]' : 'translate-y-0'} ${showLightFog ? '' : 'invisible'} transition-transform duration-300`}
+          />
+        </div>
 
         <SelectedIsland selectedCard={selectedCard} />
 

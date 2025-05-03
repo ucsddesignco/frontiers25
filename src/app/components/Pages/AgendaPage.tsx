@@ -114,14 +114,14 @@ export default function AgendaPage({ ref, showExpanded }: AgendaPageProps) {
             className={`${activeDay === 1 ? 'bg-[var(--card-button-color)] duration-500 ease-in-out' : 'bg-transparent duration-500 ease-in-out'} h-full w-1/2`}
             onClick={() => setActiveDay(1)}
           >
-            <h1 className="text-center text-[2rem] font-bold uppercase lg:text-[3rem]">DAY 1</h1>
+            <h1 className="text-center text-[2rem] font-bold uppercase md:text-[3rem]">DAY 1</h1>
             <p>7:00pm - 11:00pm</p>
           </button>
           <button
             className={`${activeDay === 2 ? 'bg-[var(--card-button-color)] duration-500 ease-in-out' : 'bg-transparent duration-500 ease-in-out'} h-full w-1/2`}
             onClick={() => setActiveDay(2)}
           >
-            <h1 className="text-center text-[2rem] font-bold uppercase lg:text-[3rem]">DAY 2</h1>
+            <h1 className="text-center text-[2rem] font-bold uppercase md:text-[3rem]">DAY 2</h1>
             <p>7:00pm - 11:00pm</p>
           </button>
         </div>

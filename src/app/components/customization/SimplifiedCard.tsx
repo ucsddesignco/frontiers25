@@ -140,10 +140,10 @@ const SimplifiedCard: React.FC<SimplifiedCardProps> = ({ id }) => {
                     DIB Room 208
                   </p>
                 </div>
-                <p className="time hidden h-fit w-fit transition-transform duration-card ease-in-out lg:block">
+                <p className="time hidden h-fit w-fit transition-transform duration-card ease-in-out md:block">
                   9am-5pm
                 </p>
-                <p className="mobile-time h-fit w-fit transition-transform duration-card ease-in-out lg:hidden">
+                <p className="mobile-time h-fit w-fit transition-transform duration-card ease-in-out md:hidden">
                   9am-5pm
                 </p>
               </div>
