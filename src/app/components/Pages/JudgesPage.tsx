@@ -4,9 +4,17 @@ import PageTitle from '../PageTitle';
 type JudgesPageProps = {
   ref: Ref<HTMLDivElement>;
   showExpanded: boolean;
+  borderStyle?: string;
 };
 
-export default function JudgesPage({ ref, showExpanded }: JudgesPageProps) {
+export default function JudgesPage({ ref, showExpanded, borderStyle }: JudgesPageProps) {
+  const varBorderRadius =
+    borderStyle === 'rounded'
+      ? 'rounded-xl'
+      : borderStyle === 'squircle'
+        ? 'rounded-full'
+        : 'rounded-none';
+
   const judges = [
     {
       fist: 'Judge 1',
@@ -50,11 +58,11 @@ export default function JudgesPage({ ref, showExpanded }: JudgesPageProps) {
     return (
       <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {judges.map((judge, index) => (
-          <div key={index} className="flex flex-col items-center">
+          <div key={index} className={`flex flex-col items-center ${varBorderRadius}`}>
             <img
               src={judge.image}
               alt={`${judge.first} ${judge.last}`}
-              className="h-[250px] w-[200px] pb-2"
+              className={`h-[250px] w-[200px] pb-2 ${varBorderRadius}`}
             />
             <h3 className="text-lg font-bold">{`${judge.first} ${judge.last}`}</h3>
             <p className="text-sm">{judge.position}</p>

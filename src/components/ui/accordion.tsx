@@ -1,24 +1,30 @@
-"use client"
+'use client';
 
-import * as React from "react"
-import * as AccordionPrimitive from "@radix-ui/react-accordion"
-import { ChevronDown } from "lucide-react"
+import * as React from 'react';
+import * as AccordionPrimitive from '@radix-ui/react-accordion';
+import { ChevronDown } from 'lucide-react';
 
-import { cn } from "@/lib/utils"
+import { cn } from '@/lib/utils';
 
-const Accordion = AccordionPrimitive.Root
+type BorderStyle = 'rounded' | 'squircle' | 'none' | undefined;
+
+function getBorderRadiusClass(borderStyle: BorderStyle) {
+  return borderStyle === 'rounded'
+    ? 'rounded-b-xl'
+    : borderStyle === 'squircle'
+      ? 'rounded-b-[45px]'
+      : 'rounded-b-none';
+}
+
+const Accordion = AccordionPrimitive.Root;
 
 const AccordionItem = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Item>
 >(({ className, ...props }, ref) => (
-  <AccordionPrimitive.Item
-    ref={ref}
-    className={cn("b-none", className)}
-    {...props}
-  />
-))
-AccordionItem.displayName = "AccordionItem"
+  <AccordionPrimitive.Item ref={ref} className={cn('b-none', className)} {...props} />
+));
+AccordionItem.displayName = 'AccordionItem';
 
 const AccordionTrigger = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Trigger>,
@@ -28,31 +34,35 @@ const AccordionTrigger = React.forwardRef<
     <AccordionPrimitive.Trigger
       ref={ref}
       className={cn(
-        "bg-[var(--card-accent-color)] text-[var(--card-primary-color)] p-6 gap-auto flex flex-1 items-center justify-between py-4 font-medium transition-all [&[data-state=open]>svg]:rotate-180",
+        'gap-auto flex flex-1 items-center justify-between bg-[var(--card-accent-color)] p-6 py-4 font-medium text-[var(--card-primary-color)] transition-all data-[state=open]:rounded-b-none [&[data-state=open]>svg]:rotate-180',
         className
       )}
       {...props}
     >
       {children}
-      <ChevronDown className="h-8 w-8 shrink-0 transition-transform duration-200"/>
+      <ChevronDown className="h-8 w-8 shrink-0 transition-transform duration-200" />
     </AccordionPrimitive.Trigger>
   </AccordionPrimitive.Header>
-))
-AccordionTrigger.displayName = AccordionPrimitive.Trigger.displayName
+));
+AccordionTrigger.displayName = AccordionPrimitive.Trigger.displayName;
 
 const AccordionContent = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Content>
->(({ className, children, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Content> & { borderStyle?: BorderStyle }
+>(({ className, children, borderStyle, ...props }, ref) => (
   <AccordionPrimitive.Content
     ref={ref}
-    className="agp-4 border-x-[3px] border-b-[3px] border-[var(--card-accent-color)] bg-[var(--card-button-color)] overflow-hidden text-md transition-all data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down"
+    className={cn(
+      getBorderRadiusClass(borderStyle),
+      'agp-4 text-md data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden border-x-[3px] border-b-[3px] border-[var(--card-accent-color)] bg-[var(--card-button-color)] transition-all',
+      className
+    )}
     {...props}
   >
-    <div className={cn("p-4 pt-2", className)}>{children}</div>
+    <div className={cn('p-4 pt-2', className)}>{children}</div>
   </AccordionPrimitive.Content>
-))
+));
 
-AccordionContent.displayName = AccordionPrimitive.Content.displayName
+AccordionContent.displayName = AccordionPrimitive.Content.displayName;
 
-export { Accordion, AccordionItem, AccordionTrigger, AccordionContent }
+export { Accordion, AccordionItem, AccordionTrigger, AccordionContent };

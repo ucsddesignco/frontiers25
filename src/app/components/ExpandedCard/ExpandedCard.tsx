@@ -97,9 +97,17 @@ const ExpandedCardComponent = ({ showExpanded }: ExpandedCardProps) => {
       >
         <HeroPage scrollToSection={scrollToSection} showExpanded={showExpanded} />
         {/* It is necessary for these pages to have showExpanded so that they continue to fade even when scrolling */}
-        <FAQPage ref={faqRef} showExpanded={showExpanded} />
-        <AgendaPage ref={agendaRef} showExpanded={showExpanded} />
-        <JudgesPage ref={judgesRef} showExpanded={showExpanded} />
+        <FAQPage ref={faqRef} showExpanded={showExpanded} borderStyle={expandedCard?.borderStyle} />
+        <AgendaPage
+          ref={agendaRef}
+          showExpanded={showExpanded}
+          borderStyle={expandedCard?.borderStyle}
+        />
+        <JudgesPage
+          ref={judgesRef}
+          showExpanded={showExpanded}
+          borderStyle={expandedCard?.borderStyle}
+        />
       </div>
     </>
   );
