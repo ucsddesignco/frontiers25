@@ -16,7 +16,6 @@ export function customToast(toast: Omit<ToastProps, 'id'>) {
   return sonnerToast.custom(
     id => <Toast id={id} description={toast.description} type={toast.type} />,
     {
-      duration: 5000,
       className: 'custom-toast',
       style: {
         backgroundColor: 'transparent',
@@ -41,14 +40,16 @@ const getColor = (type: string) => {
 
 function Toast(props: ToastProps) {
   const { type = 'default', description } = props;
-  const color = `text-[${getColor(type)}]`;
+  const color = getColor(type);
 
   return (
-    <div className="flex w-full items-center gap-2 overflow-hidden rounded-[16px] border-none bg-[#F5F5F5] px-4 py-3 shadow-lg outline-none ring-1 ring-black/5">
+    <div
+      className={`${color} flex w-full items-center gap-2 overflow-hidden rounded-[16px] border-none bg-[#F5F5F5] px-4 py-3 shadow-lg outline-none ring-black/5`}
+    >
       {type === 'success' && <SuccessIcon />}
       {type === 'error' && <ErrorIcon />}
 
-      <p className={color}>{description}</p>
+      <p style={{ color }}>{description}</p>
     </div>
   );
 }

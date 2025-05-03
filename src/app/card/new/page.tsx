@@ -1,7 +1,13 @@
 import CustomizationContainer from '@/app/components/customization/CustomizationContainer';
 import { BorderStyle, FontFamily } from '@/app/stores/customizationStore';
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
 
-export default function NewCardPage() {
+export default async function NewCardPage() {
+  const session = await auth.api.getSession({
+    headers: await headers()
+  });
+
   const card = {
     _id: 'new',
     primary: '#FFCDD2',
@@ -13,5 +19,5 @@ export default function NewCardPage() {
     lastUpdated: new Date().toISOString()
   };
 
-  return <CustomizationContainer card={card} />;
+  return <CustomizationContainer card={card} session={session} />;
 }

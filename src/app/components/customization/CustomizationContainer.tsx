@@ -3,7 +3,7 @@
 import { CustomizationContext } from '@/app/contexts/CustomizationContext';
 import SimplifiedCard from './SimplifiedCard';
 import { createCustomizationStore } from '@/app/stores/customizationStore';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { parseColor } from 'react-stately';
 import { CustomizationPanel } from './CustomizationPanel';
 import { CustomizationDrawer } from './CustomizationDrawer';
@@ -15,13 +15,18 @@ import { customToast } from '@/app/util/CustomToast/CustomToast';
 import createCard from '@/app/api/cardFunctions';
 import { useStore } from 'zustand';
 import { useShallow } from 'zustand/shallow';
+import { Session } from '@/lib/auth';
+import Modal from '../Modal';
+import LoginIcon from '@/app/assets/LoginIcon';
+import { handleGoogleSignIn } from '@/app/util/handleGoogleSignin';
 
 interface CustomizationContainerProps {
   card: DatabaseCard | null;
-  newCard?: boolean;
+  session: Session | null;
 }
 
-export default function CustomizationContainer({ card }: CustomizationContainerProps) {
+export default function CustomizationContainer({ card, session }: CustomizationContainerProps) {
+  const [openModal, setOpenModal] = useState(false);
   const store = useRef(
     createCustomizationStore({
       primary: card ? parseColor(card.primary).toString('hsl') : undefined,
@@ -46,23 +51,35 @@ export default function CustomizationContainer({ card }: CustomizationContainerP
   const handleCreateCard = async () => {
     const hexPrimary = parseColor(primary).toString('hex');
     const hexAccent = parseColor(accent).toString('hex');
-    const newCard = await createCard({
-      fontFamily,
-      primary: hexPrimary,
-      accent: hexAccent,
-      borderStyle
-    });
 
-    if (newCard) {
-      customToast({
-        description: 'Card Created Successfully.',
-        type: 'success'
-      });
+    if (!session) {
+      setOpenModal(true);
     } else {
-      customToast({
-        description: 'Failed to create card.',
-        type: 'error'
+      const newCard = await createCard({
+        fontFamily,
+        primary: hexPrimary,
+        accent: hexAccent,
+        borderStyle
       });
+
+      const { error } = newCard;
+
+      if (error) {
+        customToast({
+          description: error,
+          type: 'error'
+        });
+      } else if (newCard) {
+        customToast({
+          description: 'Card Created Successfully.',
+          type: 'success'
+        });
+      } else {
+        customToast({
+          description: 'Failed to create card.',
+          type: 'error'
+        });
+      }
     }
   };
 
@@ -71,6 +88,18 @@ export default function CustomizationContainer({ card }: CustomizationContainerP
       <GlassButton href="/" text="Back" className="fixed left-5 top-5">
         <BackIcon />
       </GlassButton>
+
+      <Modal
+        open={openModal}
+        onOpenChange={setOpenModal}
+        buttonOnClick={() => {
+          handleGoogleSignIn({ onSuccess: () => setOpenModal(false) });
+        }}
+        buttonText="Sign In Via UCSD"
+        Icon={LoginIcon}
+        title="Keep Your Cards Safe."
+        description="You’re not signed in — your cards might disappear later."
+      />
 
       {card ? (
         <>

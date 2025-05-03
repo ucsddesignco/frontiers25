@@ -77,7 +77,7 @@ export default async function createCard({
 
     const user_cards = await card.find({ user: session.user.id });
     if (user_cards.length >= 3) {
-      throw new Error('User has reached the maximum number of cards');
+      return { error: 'You can only create up to 3 cards.' };
     } else {
       const new_card = await card.create({
         user: session.user.id,
