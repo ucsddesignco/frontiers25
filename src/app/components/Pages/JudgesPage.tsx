@@ -5,65 +5,83 @@ import Image from 'next/image';
 type JudgesPageProps = {
   ref: Ref<HTMLDivElement>;
   showExpanded: boolean;
+  borderStyle?: string;
 };
 
-export default function JudgesPage({ ref, showExpanded }: JudgesPageProps) {
+export default function JudgesPage({ ref, showExpanded, borderStyle }: JudgesPageProps) {
+  function renderPrimaryTriangles() {
+    if (borderStyle !== 'beveled') return null;
+    return (
+      <>
+        <div className="primary-triangle absolute left-[-1px] top-[-1px] z-10"></div>
+        <div className="primary-triangle absolute right-[-1px] top-[-1px] z-10 rotate-90"></div>
+        <div className="primary-triangle absolute bottom-[-1px] left-[-1px] z-10 rotate-[270deg]"></div>
+        <div className="primary-triangle absolute bottom-[-1px] right-[-1px] z-10 rotate-180"></div>
+      </>
+    );
+  }
+
+  const varBorderRadius =
+    borderStyle === 'rounded'
+      ? 'rounded-xl'
+      : borderStyle === 'squircle'
+        ? 'rounded-full'
+        : 'rounded-none';
+
   const judges = [
     {
-      first: 'Judge 1',
-      last: 'last 1',
-      position: 'Position 1 @ UCSD',
-      image: '/JudgeImage.jpg'
+      first: 'Adam',
+      last: 'Karnas',
+      position: 'Staff Designer & Manager @ Google',
+      image: '/AdamKarnas.png'
     },
     {
-      first: 'Judge 2',
-      last: 'last 2',
-      position: 'Position 2 @ UCSD',
-      image: '/JudgeImage.jpg'
+      first: 'Andrew',
+      last: 'Caballero',
+      position: 'Product Designer @ Microsoft',
+      image: '/AndrewCaballero.png'
     },
     {
-      first: 'Judge 3',
-      last: 'last 3',
-      position: 'Position 3 @ UCSD',
-      image: '/JudgeImage.jpg'
+      first: 'Anindya',
+      last: 'Basu',
+      position: 'Senior UX Researcher @ Google',
+      image: '/AnindyaBasu.png'
     },
     {
-      first: 'Judge 4',
-      last: 'last 4',
-      position: 'Position 4 @ UCSD',
-      image: '/JudgeImage.jpg'
+      first: 'Daxter',
+      last: 'Zavalza',
+      position: 'Gen AI UX Design Lead @ Deloitte',
+      image: '/DexterZavalza.png'
     },
     {
-      first: 'Judge 5',
-      last: 'last 5',
-      position: 'Position 5 @ UCSD',
-      image: '/JudgeImage.jpg'
-    },
-    {
-      first: 'Judge 6',
-      last: 'last 6',
-      position: 'Position 6 @ UCSD',
-      image: '/JudgeImage.jpg'
+      first: 'Key',
+      last: 'Monette',
+      position: 'Senior Product Designer @ Epic',
+      image: '/KayMonette.png'
     }
   ];
 
   function renderJudges() {
     return (
-      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {judges.map((judge, index) => (
-          <div key={index} className="flex flex-col items-center">
-            <Image
-              src={judge.image}
-              alt={`${judge.first} ${judge.last}`}
-              width="200"
-              height="250"
-              className="pb-2"
-            />
-            <h3 className="flex flex-col items-center text-lg font-bold">
-              <span>{judge.first}</span>
-              <span> {judge.last}</span>
-            </h3>
-            <p className="text-sm">{judge.position}</p>
+          <div
+            key={index}
+            className={`flex flex-col items-center ${index >= 3 ? 'lg:col-span-1' : ''}`}
+          >
+            <div
+              className={`relative h-[250px] w-[200px] bg-[var(--card-accent-color)] ${varBorderRadius}`}
+            >
+              {renderPrimaryTriangles()}
+              <Image
+                fill
+                src={judge.image}
+                alt={`${judge.first} ${judge.last}`}
+                className={`object-cover ${varBorderRadius}`}
+              />
+            </div>
+            <h3 className="text-lg font-bold">{`${judge.first} ${judge.last}`}</h3>
+            <p className="w-1/2 text-center text-sm">{judge.position}</p>
           </div>
         ))}
       </div>
@@ -73,11 +91,11 @@ export default function JudgesPage({ ref, showExpanded }: JudgesPageProps) {
   return (
     <section
       ref={ref}
-      className={`${showExpanded ? 'opacity-100' : 'opacity-0'} duration-[0.2s] w-full transition-opacity ease-in-out`}
+      className={`${showExpanded ? 'opacity-100' : 'opacity-0'} duration-[0.2s] w-full pt-[200px] transition-opacity ease-in-out`}
     >
-      <PageTitle title="Judges" subtitle="Meet our judges" />
+      <PageTitle title="Judges" subtitle="Judges" />
       <div className="flex h-full w-full flex-col items-center pt-[5%]">
-        <div className="md:w-max-[90%] flex flex-col items-center gap-5 md:max-w-[60%]">
+        <div className="md:w-max-[90%] flex flex-col items-center gap-5 lg:max-w-[60%]">
           {renderJudges()}
         </div>
       </div>

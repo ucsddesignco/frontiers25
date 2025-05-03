@@ -1,5 +1,6 @@
 import { Ref } from 'react';
 import PageTitle from '../PageTitle';
+import '../ExpandedCard/ExpandedCard.scss';
 import {
   Accordion,
   AccordionItem,
@@ -10,9 +11,26 @@ import {
 type FAQPageProps = {
   ref: Ref<HTMLDivElement>;
   showExpanded: boolean;
+  borderStyle?: string;
 };
 
-export default function FAQPage({ ref, showExpanded }: FAQPageProps) {
+type BorderStyle = 'rounded' | 'squircle' | 'none' | undefined;
+
+export default function FAQPage({ ref, showExpanded, borderStyle }: FAQPageProps) {
+  const varBorderRadius =
+    borderStyle === 'rounded'
+      ? 'rounded-xl'
+      : borderStyle === 'squircle'
+        ? 'rounded-[45px]'
+        : 'rounded-none';
+
+  const varBorderBottomRadius =
+    borderStyle === 'rounded'
+      ? 'rounded-b-xl'
+      : borderStyle === 'squircle'
+        ? 'rounded-b-full'
+        : 'rounded-b-none';
+
   const faqItems = [
     {
       question: 'What is Design Frontiers?',
@@ -46,20 +64,16 @@ export default function FAQPage({ ref, showExpanded }: FAQPageProps) {
   ];
 
   function renderFAQ() {
+    console.log(borderStyle);
     return (
       <>
         {faqItems.map((item, index) => (
-          <Accordion
-            type="single"
-            collapsible
-            className="relative w-full max-w-[90%] gap-4"
-            key={index}
-          >
+          <Accordion type="single" collapsible className="w-full max-w-[90%] gap-4" key={index}>
             <AccordionItem value={`item-${index}`}>
-              <AccordionTrigger>
+              <AccordionTrigger className={varBorderRadius}>
                 <p className="text-start text-lg md:max-w-[66%]">{item.question}</p>
               </AccordionTrigger>
-              <AccordionContent>
+              <AccordionContent borderStyle={borderStyle}>
                 <p className="text-md text-start">{item.answer}</p>
               </AccordionContent>
             </AccordionItem>
@@ -72,13 +86,13 @@ export default function FAQPage({ ref, showExpanded }: FAQPageProps) {
   return (
     <section
       ref={ref}
-      className={`${showExpanded ? 'opacity-100' : 'opacity-0'} duration-[0.2s] w-full transition-opacity ease-in-out`}
+      className={`${showExpanded ? 'opacity-100' : 'opacity-0'} duration-[0.2s] w-full pt-[200px] transition-opacity ease-in-out`}
     >
       <div className="flex h-full w-full flex-col items-center">
         {/*Page title and Subtitle*/}
         <PageTitle title="ABOUT" subtitle="Frequently Asked Questions" />
         {/*Accordion*/}
-        <div className="md:w-max-[90%] flex h-full w-full flex-col items-center gap-5 pt-[5%] md:max-w-[60%]">
+        <div className="md:w-max-[90%] flex h-full w-full flex-col items-center gap-5 pt-[5%] lg:max-w-[60%]">
           {renderFAQ()}
         </div>
       </div>
