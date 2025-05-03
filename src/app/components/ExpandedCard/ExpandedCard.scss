@@ -19,7 +19,7 @@
   background-color: var(--card-scrollbar-color);
 }
 
-.triangle {
+.accent-triangle {
   position: absolute;
   width: 30px;
   height: 30px;
@@ -29,5 +29,18 @@
     var(--card-primary-color) 39.5%,
     var(--card-accent-color) 40%,
     var(--card-accent-color) 100%
+  );
+}
+
+.primary-triangle {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  clip-path: polygon(0% 0%, 100% 0%, 0% 100%);
+  background: linear-gradient(
+    to bottom right,
+    var(--card-primary-color) 39.5%,
+    var(--card-primary-color) 40%,
+    var(--card-primary-color) 100%
   );
 }
