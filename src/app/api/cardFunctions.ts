@@ -4,6 +4,7 @@ import connectDB from '../../backend/connections/connection';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import { DatabaseCard } from '../components/InfiniteCanvas';
+import mongoose from 'mongoose';
 
 await connectDB();
 
@@ -115,6 +116,11 @@ export async function getAllCards() {
 
 export async function getCardByID(id: string) {
   try {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      console.warn('Invalid id');
+      return null;
+    }
+
     const found = await card.findOne({ _id: id });
     if (!found) {
       return null;

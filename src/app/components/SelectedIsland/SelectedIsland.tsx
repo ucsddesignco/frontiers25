@@ -5,10 +5,15 @@ import { useRouter } from 'next/navigation';
 import './SelectedIsland.scss';
 import { memo } from 'react';
 import DuplicateCardIcon from '@/app/assets/DuplicateCardIcon';
+import { authClient } from '@/lib/auth-client';
 
 type SelectedIslandProps = {
   selectedCard: CanvasState['selectedCard'];
 };
+
+const session = await authClient.getSession();
+
+console.log('Session in SelectedIsland:', session.data);
 
 const SelectedIsland = ({ selectedCard }: SelectedIslandProps) => {
   const router = useRouter();
@@ -19,23 +24,35 @@ const SelectedIsland = ({ selectedCard }: SelectedIslandProps) => {
     }))
   );
 
+  if (!selectedCard) {
+    return;
+  }
+  const selectedCardIndex = parseInt(selectedCard);
+  const cardId = basePattern[selectedCardIndex]._id;
+
   return (
     <div
       id="selected-island"
-      className={`${selectedCard && showLightFog ? 'translate-y-0' : 'translate-y-[200%]'} fixed bottom-6 left-0 right-0 z-[2] mx-auto flex w-fit items-center justify-center gap-6 rounded-[32px] py-2 pl-8 pr-[12px] transition-transform duration-300`}
+      className={`${selectedCard && showLightFog ? 'translate-y-0' : 'translate-y-[200%]'} fixed bottom-6 left-0 right-0 z-[2] mx-auto flex w-fit items-center justify-center gap-4 rounded-[32px] py-2 pl-8 pr-[12px] transition-transform duration-300`}
     >
       <p>Selected</p>
+
+      {session.data?.user.id === basePattern[selectedCardIndex].user && (
+        <GlassButton
+          text="Edit Card"
+          size="skinny"
+          color="light"
+          onClick={() => {
+            router.push(`/card/${cardId}`);
+          }}
+        />
+      )}
       <GlassButton
         text="Duplicate as New"
         size="skinny"
         color="dark"
         onClick={() => {
-          if (!selectedCard) {
-            return;
-          }
-          const selectedCardIndex = parseInt(selectedCard);
-          const cardId = basePattern[selectedCardIndex]._id;
-          router.push(`/card/${cardId}`);
+          router.push(`/card/new/${cardId}`);
         }}
       >
         <DuplicateCardIcon />
