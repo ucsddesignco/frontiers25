@@ -100,7 +100,7 @@ export default function CustomizationContainer({ card, session }: CustomizationC
       />
 
       {card ? (
-        card.user === session?.user.id ? (
+        card.user === session?.user.id || card.user === 'Guest' ? (
           <>
             <GlassButton
               onClick={handleCreateCard}
