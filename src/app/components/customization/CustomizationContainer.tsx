@@ -62,11 +62,9 @@ export default function CustomizationContainer({ card, session }: CustomizationC
         borderStyle
       });
 
-      const { error } = newCard;
-
-      if (error) {
+      if (newCard?.error) {
         customToast({
-          description: error,
+          description: newCard.error,
           type: 'error'
         });
       } else if (newCard) {
