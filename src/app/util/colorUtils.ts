@@ -1,68 +1,4 @@
-function hexToHSL(hex: string): { h: number; s: number; l: number } {
-  hex = hex.replace(/^#/, '');
-
-  const r = parseInt(hex.substring(0, 2), 16) / 255;
-  const g = parseInt(hex.substring(2, 4), 16) / 255;
-  const b = parseInt(hex.substring(4, 6), 16) / 255;
-
-  const max = Math.max(r, g, b);
-  const min = Math.min(r, g, b);
-  let h = 0,
-    s = 0;
-  const l = (max + min) / 2;
-
-  if (max !== min) {
-    const d = max - min;
-    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-
-    switch (max) {
-      case r:
-        h = (g - b) / d + (g < b ? 6 : 0);
-        break;
-      case g:
-        h = (b - r) / d + 2;
-        break;
-      case b:
-        h = (r - g) / d + 4;
-        break;
-    }
-
-    h /= 6;
-  }
-
-  return { h, s, l };
-}
-
-function hslToHex(h: number, s: number, l: number): string {
-  let r: number, g: number, b: number;
-
-  if (s === 0) {
-    r = g = b = l;
-  } else {
-    const hue2rgb = (p: number, q: number, t: number): number => {
-      if (t < 0) t += 1;
-      if (t > 1) t -= 1;
-      if (t < 1 / 6) return p + (q - p) * 6 * t;
-      if (t < 1 / 2) return q;
-      if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-      return p;
-    };
-
-    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-    const p = 2 * l - q;
-
-    r = hue2rgb(p, q, h + 1 / 3);
-    g = hue2rgb(p, q, h);
-    b = hue2rgb(p, q, h - 1 / 3);
-  }
-
-  const toHex = (x: number): string => {
-    const hex = Math.round(x * 255).toString(16);
-    return hex.length === 1 ? '0' + hex : hex;
-  };
-
-  return `#${toHex(r)}${toHex(g)}${toHex(b)}`.toUpperCase();
-}
+import { parseColor, Color } from '@react-stately/color'; // Make sure to install @react-stately/color
 
 type ColorVariations = {
   borderColor: string;
@@ -71,52 +7,64 @@ type ColorVariations = {
 };
 
 export function generateColorVariations(primary: string, accent: string): ColorVariations {
-  const hsl = hexToHSL(primary);
+  let primaryColor: Color;
+  let accentColor: Color;
 
-  // Create border color (darker, more saturated)
-  const borderHSL = {
-    h: hsl.h,
-    s: Math.min(hsl.s + 0.15, 1), // Increase saturation
-    l: Math.max(hsl.l - 0.15, 0) // Decrease lightness
-  };
-
-  // Create button color (lighter, slightly desaturated)
-  let buttonL;
-  if (hsl.l <= 0.05) {
-    buttonL = Math.min(hsl.l + 0.25, 1);
-  } else if (hsl.l >= 0.95) {
-    buttonL = Math.max(hsl.l - 0.25, 0);
-  } else {
-    buttonL = Math.min(hsl.l + 0.1, 0.95);
+  try {
+    primaryColor = parseColor(primary).toFormat('hsl');
+    accentColor = parseColor(accent).toFormat('hsl');
+  } catch (e) {
+    console.error('Invalid color format provided:', e);
+    return {
+      borderColor: '#000000',
+      buttonColor: '#FFFFFF',
+      scrollbarColor: '#808080'
+    };
   }
 
-  const buttonHSL = {
-    h: hsl.h,
-    s: Math.max(hsl.s - 0.05, 0),
-    l: buttonL
-  };
+  const primarySaturation = primaryColor.getChannelValue('saturation');
+  const primaryLightness = primaryColor.getChannelValue('lightness');
 
-  // Convert back to hex
-  const borderColor = hslToHex(borderHSL.h, borderHSL.s, borderHSL.l);
-  const buttonColor = hslToHex(buttonHSL.h, buttonHSL.s, buttonHSL.l);
+  // const accentHue = accentColor.getChannelValue('hue');
+  // const accentSaturation = accentColor.getChannelValue('saturation');
+  const accentLightness = accentColor.getChannelValue('lightness');
 
-  // Create scrollbar color based on accent lightness
-  const accentHSL = hexToHSL(accent);
-  let scrollbarL = accentHSL.l;
-  const adjustment = 0.1;
+  const borderSaturation = Math.min(primarySaturation + 15, 100);
+  const borderLightness = Math.max(primaryLightness - 15, 0);
 
-  if (accentHSL.l < 0.5) {
-    scrollbarL = Math.min(accentHSL.l + adjustment, 1);
+  const borderColorColor = primaryColor
+    .withChannelValue('saturation', borderSaturation)
+    .withChannelValue('lightness', borderLightness);
+
+  const buttonSaturation = Math.max(primarySaturation - 5, 0);
+
+  let buttonLightness: number;
+  if (primaryLightness <= 5) {
+    buttonLightness = Math.min(primaryLightness + 25, 100);
+  } else if (primaryLightness >= 95) {
+    buttonLightness = Math.max(primaryLightness - 25, 0);
   } else {
-    scrollbarL = Math.max(accentHSL.l - adjustment, 0);
+    buttonLightness = Math.min(primaryLightness + 10, 95);
   }
 
-  const scrollbarHSL = {
-    h: accentHSL.h,
-    s: accentHSL.s,
-    l: scrollbarL
-  };
-  const scrollbarColor = hslToHex(scrollbarHSL.h, scrollbarHSL.s, scrollbarHSL.l);
+  const buttonColorColor = primaryColor
+    .withChannelValue('saturation', buttonSaturation)
+    .withChannelValue('lightness', buttonLightness);
+
+  let scrollbarLightness: number;
+  const adjustment = 10;
+
+  if (accentLightness < 50) {
+    scrollbarLightness = Math.min(accentLightness + adjustment, 100);
+  } else {
+    scrollbarLightness = Math.max(accentLightness - adjustment, 0);
+  }
+
+  const scrollbarColorColor = accentColor.withChannelValue('lightness', scrollbarLightness);
+
+  const borderColor = borderColorColor.toString('hex');
+  const buttonColor = buttonColorColor.toString('hex');
+  const scrollbarColor = scrollbarColorColor.toString('hex');
 
   return { borderColor, buttonColor, scrollbarColor };
 }

@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import GlassButton from '../GlassButton/GlassButton';
 import SectionsIcon from '@/app/assets/SectionsIcon';
+import { getCardLogo } from '@/app/util/getCardLogo';
 
 export type SectionId = 'faq' | 'agenda' | 'judges';
 
@@ -86,6 +87,11 @@ const ExpandedCardComponent = ({ showExpanded }: ExpandedCardProps) => {
     }
   }, [showExpanded, expandedCardRef]);
 
+  const CardLogo = getCardLogo({
+    fontFamily: expandedCard?.fontFamily,
+    accent: expandedCard?.accent
+  });
+
   return (
     <>
       <div
@@ -104,7 +110,11 @@ const ExpandedCardComponent = ({ showExpanded }: ExpandedCardProps) => {
         }
         className={`${showExpanded ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'} duration-[0.2s] absolute z-[4] mx-auto flex h-full w-full flex-col items-center gap-[200px] overflow-y-scroll transition-opacity ease-in-out`}
       >
-        <HeroPage scrollToSection={scrollToSection} showExpanded={showExpanded} />
+        <HeroPage
+          scrollToSection={scrollToSection}
+          showExpanded={showExpanded}
+          CardLogo={CardLogo}
+        />
         {/* It is necessary for these pages to have showExpanded so that they continue to fade even when scrolling */}
         <FAQPage ref={faqRef} showExpanded={showExpanded} />
         <AgendaPage ref={agendaRef} showExpanded={showExpanded} />

@@ -1,32 +1,12 @@
-import { parseColor } from 'react-stately';
 import { useShallow } from 'zustand/shallow';
 import type { FontFamily, BorderStyle } from '@/app/stores/customizationStore';
 import { Rectangular, Rounded, Beveled, Squircle } from '@/app/assets/CardSvgs';
-import {
-  Jaro,
-  Bungee,
-  SFPro,
-  Jersey15,
-  GothamUltra,
-  Porkys,
-  Erica,
-  Calistoga,
-  Keania,
-  Adversal,
-  Rozha,
-  Aventena,
-  GaMaamli,
-  Poetsen,
-  Silkscreen,
-  Hanalei,
-  RacingSans,
-  Bonbon,
-  Workbench,
-  NicoMoji
-} from '@/app/assets/DF25Logos';
 import { useContext } from 'react';
 import { useStore } from 'zustand';
 import { CustomizationContext } from '@/app/contexts/CustomizationContext';
+import { getCardLogo } from '@/app/util/getCardLogo';
+import { generateColorVariations } from '@/app/util/colorUtils';
+import { getCardBorders } from '@/app/util/getCardBorders';
 
 export interface SimplifiedCard {
   id: string;
@@ -63,46 +43,18 @@ const SimplifiedCard: React.FC<SimplifiedCardProps> = ({ id }) => {
     }))
   );
 
-  const primaryColorParsed = parseColor(primary);
-  const primaryColorLightAccent = primaryColorParsed
-    .withChannelValue(
-      'lightness',
-      Math.min(primaryColorParsed.getChannelValue('lightness') + 5, 100)
-    )
-    .toString('hsl');
-  const primaryColorDarkAccent = primaryColorParsed
-    .withChannelValue('lightness', Math.max(primaryColorParsed.getChannelValue('lightness') - 5, 0))
-    .toString('hsl');
+  const { borderColor, buttonColor } = generateColorVariations(primary, accent);
 
-  const CardSvgs = {
-    rectangular: <Rectangular bgColor={primary} borderColor={primaryColorDarkAccent} />,
-    rounded: <Rounded bgColor={primary} borderColor={primaryColorDarkAccent} />,
-    beveled: <Beveled bgColor={primary} borderColor={primaryColorDarkAccent} />,
-    squircle: <Squircle bgColor={primary} borderColor={primaryColorDarkAccent} />
-  };
+  const CardBorderSVG = getCardBorders({
+    bgColor: primary,
+    borderColor,
+    borderStyle
+  });
 
-  const CardLogos = {
-    Jaro: <Jaro accent={accent} />,
-    Bungee: <Bungee accent={accent} />,
-    'SF Pro': <SFPro accent={accent} />,
-    'Jersey 15': <Jersey15 accent={accent} />,
-    'Gotham Ultra': <GothamUltra accent={accent} />,
-    Porkys: <Porkys accent={accent} />,
-    Erica: <Erica accent={accent} />,
-    Calistoga: <Calistoga accent={accent} />,
-    Keania: <Keania accent={accent} />,
-    Adversal: <Adversal accent={accent} />,
-    Rozha: <Rozha accent={accent} />,
-    Aventena: <Aventena accent={accent} />,
-    'Ga Maamli': <GaMaamli accent={accent} />,
-    Poetsen: <Poetsen accent={accent} />,
-    Silkscreen: <Silkscreen accent={accent} />,
-    Hanalei: <Hanalei accent={accent} />,
-    'Racing Sans': <RacingSans accent={accent} />,
-    Bonbon: <Bonbon accent={accent} />,
-    Workbench: <Workbench accent={accent} />,
-    'Nico Moji': <NicoMoji accent={accent} />
-  };
+  const CardLogo = getCardLogo({
+    fontFamily,
+    accent
+  });
 
   return (
     <>
@@ -115,7 +67,7 @@ const SimplifiedCard: React.FC<SimplifiedCardProps> = ({ id }) => {
             id={`card-bg-${id}`}
             className={`absolute transition-transform duration-card ease-in-out`}
           >
-            {CardSvgs[borderStyle as BorderStyle]}
+            {CardBorderSVG}
           </div>
 
           <div
@@ -124,7 +76,7 @@ const SimplifiedCard: React.FC<SimplifiedCardProps> = ({ id }) => {
             className={`relative flex h-full flex-col items-center justify-between p-[36px] text-[#530B67] transition-transform duration-card ease-in-out`}
           >
             <div className="w-full">
-              <div className="h-[80px] w-[220px]">{CardLogos[fontFamily as FontFamily]}</div>
+              <div>{CardLogo}</div>
               <p
                 style={{ color: primary }}
                 className="title relative z-[1] block w-fit transition-transform duration-card ease-in-out"
@@ -156,7 +108,7 @@ const SimplifiedCard: React.FC<SimplifiedCardProps> = ({ id }) => {
               <div className="relative flex w-full justify-center">
                 <button
                   style={{
-                    backgroundColor: primaryColorLightAccent,
+                    backgroundColor: buttonColor,
                     transitionDuration: '300ms,200ms'
                   }}
                   className="learn-more w-full cursor-pointer rounded-full p-2 transition-[transform,opacity] ease-in-out"
@@ -165,7 +117,7 @@ const SimplifiedCard: React.FC<SimplifiedCardProps> = ({ id }) => {
                 </button>
               </div>
               <button
-                style={{ color: primaryColorLightAccent }}
+                style={{ color: buttonColor }}
                 className="apply relative cursor-pointer rounded-full p-2 transition-transform duration-card ease-in-out"
               >
                 <span

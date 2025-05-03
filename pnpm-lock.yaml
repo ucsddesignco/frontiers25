@@ -32,6 +32,9 @@ importers:
       '@radix-ui/react-visually-hidden':
         specifier: ^1.2.0
         version: 1.2.0(@types/react-dom@19.1.2(@types/react@19.1.2))(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@react-stately/color':
+        specifier: ^3.8.4
+        version: 3.8.4(react@19.1.0)
       better-auth:
         specifier: ^1.2.7
         version: 1.2.7
@@ -77,9 +80,6 @@ importers:
       react-dom:
         specifier: ^19.0.0
         version: 19.1.0(react@19.1.0)
-      react-stately:
-        specifier: ^3.37.0
-        version: 3.37.0(react@19.1.0)
       sass:
         specifier: ^1.86.3
         version: 1.86.3

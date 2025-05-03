@@ -5,17 +5,14 @@ import { useRouter } from 'next/navigation';
 import './SelectedIsland.scss';
 import { memo } from 'react';
 import DuplicateCardIcon from '@/app/assets/DuplicateCardIcon';
-import { authClient } from '@/lib/auth-client';
+import { Session } from '@/lib/auth';
 
 type SelectedIslandProps = {
   selectedCard: CanvasState['selectedCard'];
+  session: Session | null;
 };
 
-const session = await authClient.getSession();
-
-console.log('Session in SelectedIsland:', session.data);
-
-const SelectedIsland = ({ selectedCard }: SelectedIslandProps) => {
+const SelectedIsland = ({ selectedCard, session }: SelectedIslandProps) => {
   const router = useRouter();
   const { showLightFog, basePattern } = useCanvasStore(
     useShallow((state: CanvasState) => ({
@@ -37,7 +34,7 @@ const SelectedIsland = ({ selectedCard }: SelectedIslandProps) => {
     >
       <p>Selected</p>
 
-      {session.data?.user.id === basePattern[selectedCardIndex].user && (
+      {session?.user.id === basePattern[selectedCardIndex].user && (
         <GlassButton
           text="Edit Card"
           size="skinny"

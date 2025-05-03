@@ -1,6 +1,6 @@
 'use client';
 import { MyColorSlider } from './MyColorSlider/MyColorSlider';
-import { parseColor } from 'react-stately';
+import { parseColor } from '@react-stately/color';
 import { useContext, useState } from 'react';
 import { Check, X } from 'lucide-react';
 import { contrastRatio } from 'wcag-contrast-utils';

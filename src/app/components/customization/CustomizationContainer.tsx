@@ -4,7 +4,7 @@ import { CustomizationContext } from '@/app/contexts/CustomizationContext';
 import SimplifiedCard from './SimplifiedCard';
 import { createCustomizationStore } from '@/app/stores/customizationStore';
 import { useRef, useState } from 'react';
-import { parseColor } from 'react-stately';
+import { parseColor } from '@react-stately/color';
 import { CustomizationPanel } from './CustomizationPanel';
 import { CustomizationDrawer } from './CustomizationDrawer';
 import GlassButton from '../GlassButton/GlassButton';

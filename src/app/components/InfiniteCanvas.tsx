@@ -185,7 +185,7 @@ const InfiniteCanvas = ({ data, session }: InfiniteCanvasProps) => {
           />
         </div>
 
-        <SelectedIsland selectedCard={selectedCard} />
+        <SelectedIsland selectedCard={selectedCard} session={session} />
 
         <CardGrid
           cardSize={cardSize}

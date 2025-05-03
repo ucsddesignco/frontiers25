@@ -84,7 +84,7 @@ export function TypographyTab() {
         <div className="top-highlight pointer-events-none"></div>
         <div className="0 flex flex-1 cursor-pointer justify-between rounded-md p-2">
           <span className="text-lg">{fontFamily}</span>
-          <span className="block h-8">{AllCardLogos[fontFamily]}</span>
+          <span className="block w-[88px]">{AllCardLogos[fontFamily]}</span>
         </div>
       </div>
 
@@ -104,7 +104,7 @@ export function TypographyTab() {
                   className="flex flex-1 cursor-pointer justify-between rounded-md p-2"
                 >
                   <span className="text-lg">{fontName}</span>
-                  <span className="block h-8">{logo}</span>
+                  <span className="block w-[88px]">{logo}</span>
                 </Label>
               </div>
             ))}
