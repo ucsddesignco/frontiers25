@@ -57,6 +57,7 @@ export default {
         'card-half': 'calc(var(--card-duration) / 2)'
       },
       cursor: {
+        default: "url('/default-cursor.svg') 6 6, default",
         auto: "url('/default-cursor.svg') 6 6, auto",
         pointer: "url('/pointer-cursor.svg') 6 6, pointer",
         grab: "url('/grab-cursor.svg') 6 6, grab",
@@ -66,6 +67,28 @@ export default {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)'
+      },
+      keyframes: {
+        'accordion-down': {
+          from: {
+            height: '0'
+          },
+          to: {
+            height: 'var(--radix-accordion-content-height)'
+          }
+        },
+        'accordion-up': {
+          from: {
+            height: 'var(--radix-accordion-content-height)'
+          },
+          to: {
+            height: '0'
+          }
+        }
+      },
+      animation: {
+        'accordion-down': 'accordion-down 0.2s ease-out',
+        'accordion-up': 'accordion-up 0.2s ease-out'
       }
     }
   },

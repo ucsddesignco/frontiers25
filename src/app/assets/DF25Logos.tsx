@@ -2,9 +2,8 @@ import { CardLogoProps } from '@/app/components/customization/SimplifiedCard';
 
 export const Jaro = ({ accent = 'black' }: CardLogoProps) => (
   <svg
-    xmlns="http://www.w3.org/2000/svg"
+    className="svg transition-transform duration-card ease-in-out"
     width="100%"
-    height="100%"
     viewBox="0 0 220 80"
     fill="none"
   >
@@ -29,9 +28,8 @@ export const Jaro = ({ accent = 'black' }: CardLogoProps) => (
 
 export const Bungee = ({ accent = 'black' }: CardLogoProps) => (
   <svg
-    xmlns="http://www.w3.org/2000/svg"
+    className="svg transition-transform duration-card ease-in-out"
     width="100%"
-    height="100%"
     viewBox="0 0 220 80"
     fill="none"
   >
@@ -56,9 +54,8 @@ export const Bungee = ({ accent = 'black' }: CardLogoProps) => (
 
 export const SFPro = ({ accent = 'black' }: CardLogoProps) => (
   <svg
-    xmlns="http://www.w3.org/2000/svg"
+    className="svg transition-transform duration-card ease-in-out"
     width="100%"
-    height="100%"
     viewBox="0 0 220 80"
     fill="none"
   >
@@ -83,9 +80,8 @@ export const SFPro = ({ accent = 'black' }: CardLogoProps) => (
 
 export const Jersey15 = ({ accent = 'black' }: CardLogoProps) => (
   <svg
-    xmlns="http://www.w3.org/2000/svg"
+    className="svg transition-transform duration-card ease-in-out"
     width="100%"
-    height="100%"
     viewBox="0 0 220 80"
     fill="none"
   >
@@ -110,9 +106,8 @@ export const Jersey15 = ({ accent = 'black' }: CardLogoProps) => (
 
 export const GothamUltra = ({ accent = 'black' }: CardLogoProps) => (
   <svg
-    xmlns="http://www.w3.org/2000/svg"
+    className="svg transition-transform duration-card ease-in-out"
     width="100%"
-    height="100%"
     viewBox="0 0 220 80"
     fill="none"
   >
@@ -137,9 +132,8 @@ export const GothamUltra = ({ accent = 'black' }: CardLogoProps) => (
 
 export const Porkys = ({ accent = 'black' }: CardLogoProps) => (
   <svg
-    xmlns="http://www.w3.org/2000/svg"
+    className="svg transition-transform duration-card ease-in-out"
     width="100%"
-    height="100%"
     viewBox="0 0 220 80"
     fill="none"
   >
@@ -164,9 +158,8 @@ export const Porkys = ({ accent = 'black' }: CardLogoProps) => (
 
 export const Erica = ({ accent = 'black' }: CardLogoProps) => (
   <svg
-    xmlns="http://www.w3.org/2000/svg"
+    className="svg transition-transform duration-card ease-in-out"
     width="100%"
-    height="100%"
     viewBox="0 0 220 80"
     fill="none"
   >
@@ -191,9 +184,8 @@ export const Erica = ({ accent = 'black' }: CardLogoProps) => (
 
 export const Calistoga = ({ accent = 'black' }: CardLogoProps) => (
   <svg
-    xmlns="http://www.w3.org/2000/svg"
+    className="svg transition-transform duration-card ease-in-out"
     width="100%"
-    height="100%"
     viewBox="0 0 220 80"
     fill="none"
   >
@@ -218,9 +210,8 @@ export const Calistoga = ({ accent = 'black' }: CardLogoProps) => (
 
 export const Keania = ({ accent = 'black' }: CardLogoProps) => (
   <svg
-    xmlns="http://www.w3.org/2000/svg"
+    className="svg transition-transform duration-card ease-in-out"
     width="100%"
-    height="100%"
     viewBox="0 0 220 80"
     fill="none"
   >
@@ -245,9 +236,8 @@ export const Keania = ({ accent = 'black' }: CardLogoProps) => (
 
 export const Adversal = ({ accent = 'black' }: CardLogoProps) => (
   <svg
-    xmlns="http://www.w3.org/2000/svg"
+    className="svg transition-transform duration-card ease-in-out"
     width="100%"
-    height="100%"
     viewBox="0 0 220 80"
     fill="none"
   >
@@ -272,9 +262,8 @@ export const Adversal = ({ accent = 'black' }: CardLogoProps) => (
 
 export const Rozha = ({ accent = 'black' }: CardLogoProps) => (
   <svg
-    xmlns="http://www.w3.org/2000/svg"
+    className="svg transition-transform duration-card ease-in-out"
     width="100%"
-    height="100%"
     viewBox="0 0 220 80"
     fill="none"
   >
@@ -299,9 +288,8 @@ export const Rozha = ({ accent = 'black' }: CardLogoProps) => (
 
 export const Aventena = ({ accent = 'black' }: CardLogoProps) => (
   <svg
-    xmlns="http://www.w3.org/2000/svg"
+    className="svg transition-transform duration-card ease-in-out"
     width="100%"
-    height="100%"
     viewBox="0 0 220 80"
     fill="none"
   >
@@ -326,9 +314,8 @@ export const Aventena = ({ accent = 'black' }: CardLogoProps) => (
 
 export const GaMaamli = ({ accent = 'black' }: CardLogoProps) => (
   <svg
-    xmlns="http://www.w3.org/2000/svg"
+    className="svg transition-transform duration-card ease-in-out"
     width="100%"
-    height="100%"
     viewBox="0 0 220 80"
     fill="none"
   >
@@ -353,9 +340,8 @@ export const GaMaamli = ({ accent = 'black' }: CardLogoProps) => (
 
 export const Poetsen = ({ accent = 'black' }: CardLogoProps) => (
   <svg
-    xmlns="http://www.w3.org/2000/svg"
+    className="svg transition-transform duration-card ease-in-out"
     width="100%"
-    height="100%"
     viewBox="0 0 220 80"
     fill="none"
   >
@@ -380,9 +366,8 @@ export const Poetsen = ({ accent = 'black' }: CardLogoProps) => (
 
 export const Silkscreen = ({ accent = 'black' }: CardLogoProps) => (
   <svg
-    xmlns="http://www.w3.org/2000/svg"
+    className="svg transition-transform duration-card ease-in-out"
     width="100%"
-    height="100%"
     viewBox="0 0 220 80"
     fill="none"
   >
@@ -404,9 +389,8 @@ export const Silkscreen = ({ accent = 'black' }: CardLogoProps) => (
 
 export const Hanalei = ({ accent = 'black' }: CardLogoProps) => (
   <svg
-    xmlns="http://www.w3.org/2000/svg"
+    className="svg transition-transform duration-card ease-in-out"
     width="100%"
-    height="100%"
     viewBox="0 0 220 80"
     fill="none"
   >
@@ -430,9 +414,8 @@ export const Hanalei = ({ accent = 'black' }: CardLogoProps) => (
 );
 export const RacingSans = ({ accent = 'black' }: CardLogoProps) => (
   <svg
-    xmlns="http://www.w3.org/2000/svg"
+    className="svg transition-transform duration-card ease-in-out"
     width="100%"
-    height="100%"
     viewBox="0 0 220 80"
     fill="none"
   >
@@ -457,9 +440,8 @@ export const RacingSans = ({ accent = 'black' }: CardLogoProps) => (
 
 export const Bonbon = ({ accent = 'black' }: CardLogoProps) => (
   <svg
-    xmlns="http://www.w3.org/2000/svg"
+    className="svg transition-transform duration-card ease-in-out"
     width="100%"
-    height="100%"
     viewBox="0 0 220 80"
     fill="none"
   >
@@ -484,9 +466,8 @@ export const Bonbon = ({ accent = 'black' }: CardLogoProps) => (
 
 export const Workbench = ({ accent = 'black' }: CardLogoProps) => (
   <svg
-    xmlns="http://www.w3.org/2000/svg"
+    className="svg transition-transform duration-card ease-in-out"
     width="100%"
-    height="100%"
     viewBox="0 0 220 80"
     fill="none"
   >
@@ -511,9 +492,8 @@ export const Workbench = ({ accent = 'black' }: CardLogoProps) => (
 
 export const NicoMoji = ({ accent = 'black' }: CardLogoProps) => (
   <svg
-    xmlns="http://www.w3.org/2000/svg"
+    className="svg transition-transform duration-card ease-in-out"
     width="100%"
-    height="100%"
     viewBox="0 0 220 80"
     fill="none"
   >

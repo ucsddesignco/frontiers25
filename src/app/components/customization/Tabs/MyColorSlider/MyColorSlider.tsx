@@ -18,11 +18,11 @@ export function MyColorSlider({ ...props }: MyColorSliderProps) {
           style={{
             boxShadow: '0px 2px 12px 0px rgba(250, 22, 34, 0.10) inset'
           }}
-          className="left-[50%] top-[50%] grid h-8 w-8 place-items-center rounded-full border border-white hover:cursor-pointer"
+          className="color-thumb left-[50%] top-[50%] grid h-8 w-8 place-items-center rounded-full border border-white hover:cursor-pointer"
         >
           <div
             style={{ boxShadow: '0px 2px 0px 0px #FFF inset' }}
-            className="h-7 w-7 rounded-full"
+            className="h-[26px] w-[26px] rounded-full"
           ></div>
         </ColorThumb>
       </SliderTrack>

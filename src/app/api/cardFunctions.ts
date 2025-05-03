@@ -1,6 +1,12 @@
 'use server';
 import card from '../../backend/models/card';
 import connectDB from '../../backend/connections/connection';
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
+import { DatabaseCard } from '../components/InfiniteCanvas';
+import mongoose from 'mongoose';
+
+await connectDB();
 
 const validBorders = ['rectangular', 'rounded', 'beveled', 'squircle'];
 const validFonts = [
@@ -37,97 +43,113 @@ type UpdateCard = {
   lastUpdated?: Date;
 };
 
-/**
- * Creates a new card in the database
- * @returns JSON of created card
- */
-export default async function createCard(
-  user: string,
-  author: string,
-  fontFamily: string,
-  borderStyle: string,
-  primary: string,
-  accent: string
-) {
+const requireAuth = async () => {
+  'use server';
+  const session = await auth.api.getSession({
+    headers: await headers()
+  });
+
+  if (!session) {
+    throw new Error('Unauthorized');
+  }
+
+  return session;
+};
+
+export default async function createCard({
+  fontFamily,
+  borderStyle,
+  primary,
+  accent
+}: {
+  fontFamily: string;
+  borderStyle: string;
+  primary: string;
+  accent: string;
+}) {
   try {
-    await connectDB();
-    const new_card = await card.create({
-      user: user,
-      author: author,
-      fontFamily: fontFamily,
-      borderStyle: borderStyle,
-      primary: primary,
-      accent: accent,
-      lastUpdated: new Date()
-    });
     if (!validFonts.includes(fontFamily)) {
       throw new Error('Invalid font family');
     } else if (!validBorders.includes(borderStyle)) {
       throw new Error('Invalid border style');
+    }
+
+    const session = await requireAuth();
+
+    const user_cards = await card.find({ user: session.user.id });
+    if (user_cards.length >= 3) {
+      return { error: 'You can only have up to 3 cards.' };
     } else {
-      return JSON.stringify(new_card);
+      const new_card = await card.create({
+        user: session.user.id,
+        author: session.user.name,
+        fontFamily: fontFamily,
+        borderStyle: borderStyle,
+        primary: primary,
+        accent: accent,
+        lastUpdated: new Date()
+      });
+
+      return new_card.toObject({ flattenObjectIds: true });
     }
   } catch (error) {
     console.error('Error creating card:', error);
-    throw new Error('Failed to create card');
+    // TODO: Handle error appropriately
+    return null;
   }
 }
 
-/**
- * Gets all cards from the database
- * @returns Array of card JSON objects
- */
 export async function getAllCards() {
   try {
-    await connectDB();
-    const cards = await card.find();
-    return JSON.stringify(cards);
+    const cards = await card.find().lean();
+
+    const serializedCards = cards.map(doc => ({
+      ...doc,
+      _id: doc._id!.toString()
+    }));
+    return serializedCards as unknown as DatabaseCard[];
   } catch (error) {
     console.error('Error fetching cards:', error);
     throw new Error('Failed to fetch cards');
   }
 }
 
-/**
- * Gets a card by user id from the database
- * @param user : user id from session
- * @returns Card with _id
- */
 export async function getCardByID(id: string) {
   try {
-    await connectDB();
-    const found = await card.find({ _id: id });
-    return found;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      console.error('Invalid id');
+      return null;
+    }
+
+    const found = await card.findOne({ _id: id });
+    if (!found) {
+      return null;
+    }
+    return found.toObject({ flattenObjectIds: true });
   } catch (error) {
     console.error('Error fetching card by user:', error);
     throw new Error('Failed to fetch card by user');
   }
 }
 
-/**
- * Gets a card by user id from the database
- * @param user : user id from session
- * @returns All user cards
- */
-export async function getCardByUser(user: string) {
+export async function getCardByUser() {
   try {
-    await connectDB();
-    const found = await card.find({ user: user });
-    return JSON.stringify(found);
+    const session = await requireAuth();
+    const cards = await card.find({ user: session.user.id });
+    const serializedCards = cards.map(doc => ({
+      ...doc,
+      _id: doc._id!.toString()
+    }));
+    return serializedCards as unknown as DatabaseCard[];
   } catch (error) {
     console.error('Error fetching card by user:', error);
     throw new Error('Failed to fetch card by user');
   }
 }
 
-/**
- * Deletes a card by mongoID id from the database
- * @param id : id from mongoDB
- * @returns JSON of removed card
- */
 export async function removeCardByID(id: string) {
   try {
-    await connectDB();
+    await requireAuth();
     const removed = await card.deleteOne({ _id: id });
     return JSON.stringify(removed);
   } catch (error) {
@@ -153,7 +175,7 @@ export async function updateCardByID(
   accent?: string
 ) {
   try {
-    await connectDB();
+    await requireAuth();
     if (!id) {
       throw new Error('ID is required');
     }
