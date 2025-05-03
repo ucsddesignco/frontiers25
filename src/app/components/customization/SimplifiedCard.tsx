@@ -1,6 +1,5 @@
 import { useShallow } from 'zustand/shallow';
 import type { FontFamily, BorderStyle } from '@/app/stores/customizationStore';
-import { Rectangular, Rounded, Beveled, Squircle } from '@/app/assets/CardSvgs';
 import { useContext } from 'react';
 import { useStore } from 'zustand';
 import { CustomizationContext } from '@/app/contexts/CustomizationContext';
@@ -76,34 +75,43 @@ const SimplifiedCard: React.FC<SimplifiedCardProps> = ({ id }) => {
             className={`relative flex h-full flex-col items-center justify-between p-[36px] text-[#530B67] transition-transform duration-card ease-in-out`}
           >
             <div className="w-full">
-              <div>{CardLogo}</div>
-              <p
-                style={{ color: primary }}
-                className="title relative z-[1] block w-fit transition-transform duration-card ease-in-out"
-              >
-                Design Sprint
-              </p>
+              {CardLogo}
               <div className="flex w-full justify-between pt-3">
                 <div>
                   <p className="date w-fit transition-transform duration-card ease-in-out">
-                    Wed May 8
+                    May 9-10
                   </p>
                   <p className="location w-fit transition-transform duration-card ease-in-out">
-                    DIB Room 208
+                    DIB 208
                   </p>
                 </div>
-                <p className="time hidden h-fit w-fit transition-transform duration-card ease-in-out md:block">
-                  9am-5pm
+                <p className="time hidden flex-col items-end md:flex">
+                  <span className="time-1 block w-fit transition-transform duration-card ease-in-out">
+                    by UCSD
+                  </span>
+                  <span className="time-2 block w-fit transition-transform duration-card ease-in-out">
+                    Design Co
+                  </span>
                 </p>
-                <p className="mobile-time h-fit w-fit transition-transform duration-card ease-in-out md:hidden">
-                  9am-5pm
+                <p className="mobile-time flex h-fit w-fit flex-col items-end md:hidden">
+                  <span className="mobile-time-1 block w-fit transition-transform duration-card ease-in-out md:flex">
+                    by UCSD
+                  </span>
+                  <span className="mobile-time-2 block w-fit transition-transform duration-card ease-in-out md:flex">
+                    Design Co
+                  </span>
                 </p>
               </div>
             </div>
 
             <div className="flex flex-col gap-3">
-              <p className="description transition-transform duration-card ease-in-out">
-                A 2-day sprint where UCSD designers ideate and iterate.
+              <p className="flex flex-col items-center">
+                <span className="description-1 block w-fit transition-transform duration-card ease-in-out">
+                  Create, test, & iterate on ideas
+                </span>
+                <span className="description-2 block w-fit transition-transform duration-card ease-in-out">
+                  at our annual design-a-thon.
+                </span>
               </p>
               <div className="relative flex w-full justify-center">
                 <button
