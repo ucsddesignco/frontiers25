@@ -117,7 +117,7 @@ export async function getAllCards() {
 export async function getCardByID(id: string) {
   try {
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      console.warn('Invalid id');
+      console.error('Invalid id');
       return null;
     }
 

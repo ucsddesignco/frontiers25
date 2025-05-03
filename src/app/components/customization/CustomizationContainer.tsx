@@ -26,7 +26,8 @@ interface CustomizationContainerProps {
 }
 
 export default function CustomizationContainer({ card, session }: CustomizationContainerProps) {
-  const [openModal, setOpenModal] = useState(false);
+  const [openAuthModal, setOpenAuthModal] = useState(false);
+  const [openContrastErrorModal, setOpenContrastErrorModal] = useState(false);
   const store = useRef(
     createCustomizationStore({
       primary: card ? parseColor(card.primary).toString('hsl') : undefined,
@@ -38,13 +39,14 @@ export default function CustomizationContainer({ card, session }: CustomizationC
 
   if (!store) throw new Error('Missing CustomizationContext');
 
-  const { primary, accent, fontFamily, borderStyle } = useStore(
+  const { primary, accent, fontFamily, borderStyle, validContrast } = useStore(
     store,
     useShallow(state => ({
       primary: state.primary,
       accent: state.accent,
       fontFamily: state.fontFamily,
-      borderStyle: state.borderStyle
+      borderStyle: state.borderStyle,
+      validContrast: state.validContrast
     }))
   );
 
@@ -52,8 +54,10 @@ export default function CustomizationContainer({ card, session }: CustomizationC
     const hexPrimary = parseColor(primary).toString('hex');
     const hexAccent = parseColor(accent).toString('hex');
 
-    if (!session) {
-      setOpenModal(true);
+    if (!validContrast) {
+      setOpenContrastErrorModal(true);
+    } else if (!session) {
+      setOpenAuthModal(true);
     } else {
       const newCard = await createCard({
         fontFamily,
@@ -88,15 +92,26 @@ export default function CustomizationContainer({ card, session }: CustomizationC
       </GlassButton>
 
       <Modal
-        open={openModal}
-        onOpenChange={setOpenModal}
+        open={openAuthModal}
+        onOpenChange={setOpenAuthModal}
         buttonOnClick={() => {
-          handleGoogleSignIn({ onSuccess: () => setOpenModal(false) });
+          handleGoogleSignIn({ onSuccess: () => setOpenAuthModal(false) });
         }}
         buttonText="Sign In Via UCSD"
         Icon={LoginIcon}
         title="Keep Your Cards Safe."
         description="You're not signed in — your cards might disappear later."
+      />
+
+      <Modal
+        open={openContrastErrorModal}
+        onOpenChange={setOpenContrastErrorModal}
+        buttonOnClick={() => setOpenContrastErrorModal(false)}
+        buttonText="Okay"
+        Icon={null}
+        noThanks={false}
+        title="Oops, No Contrast!"
+        description="To save your card, it must pass the contrast checker."
       />
 
       {card ? (

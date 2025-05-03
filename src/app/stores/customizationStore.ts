@@ -29,6 +29,7 @@ interface CustomizationProps {
   accent: string;
   fontFamily: FontFamily;
   borderStyle: BorderStyle;
+  validContrast: boolean;
 }
 
 export type CustomizationStore = ReturnType<typeof createCustomizationStore>;
@@ -39,12 +40,14 @@ export interface CustomizationState {
   accent: string;
   fontFamily: FontFamily;
   borderStyle: BorderStyle;
+  validContrast: boolean;
 
   // Card actions
   setPrimary: (primary: string) => void;
   setAccent: (accent: string) => void;
   setFontFamily: (fontFamily: FontFamily) => void;
   setBorderStyle: (borderStyle: BorderStyle) => void;
+  setValidContrast: (validContrast: boolean) => void;
   initialize: (initialState: Partial<CustomizationProps>) => void;
 }
 
@@ -53,7 +56,8 @@ export const createCustomizationStore = (initProps?: Partial<CustomizationProps>
     primary: '',
     accent: '',
     fontFamily: 'Jaro',
-    borderStyle: 'rounded'
+    borderStyle: 'rounded',
+    validContrast: false
   };
 
   return create<CustomizationState>((set, _get) => ({
@@ -65,6 +69,7 @@ export const createCustomizationStore = (initProps?: Partial<CustomizationProps>
     setAccent: accent => set({ accent }),
     setFontFamily: fontFamily => set({ fontFamily }),
     setBorderStyle: borderStyle => set({ borderStyle }),
+    setValidContrast: validContrast => set({ validContrast }),
     initialize: initialState => set(initialState)
   }));
 };

@@ -6,15 +6,28 @@ import { CustomizationPanel } from './CustomizationPanel';
 import { BorderIcon } from '@/app/assets/BorderIcons';
 import ColorIcon from '@/app/assets/ColorIcon';
 import TextIcon from '@/app/assets/TextIcon';
+import { CustomizationContext } from '@/app/contexts/CustomizationContext';
+import { useContext } from 'react';
+import { useShallow } from 'zustand/shallow';
+import { useStore } from 'zustand';
 
 export function CustomizationDrawer() {
+  const store = useContext(CustomizationContext);
+  if (!store) throw new Error('Missing CustomizationContext');
+
+  const { validContrast } = useStore(
+    store,
+    useShallow(state => ({
+      validContrast: state.validContrast
+    }))
+  );
   return (
     <Drawer>
       <DrawerTrigger asChild>
         <Button variant="outline" className="h-16 w-60 rounded-full">
           <div className="flex justify-between gap-10">
             <span className="hover:cursor-pointer">
-              <ColorIcon />
+              <ColorIcon color={validContrast ? '#4D4857' : '#AC271E'} />
             </span>
             <span className="h-full hover:cursor-pointer">
               <TextIcon />

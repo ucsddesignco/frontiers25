@@ -16,13 +16,15 @@ export function ColorTab() {
 
   const store = useContext(CustomizationContext);
   if (!store) throw new Error('Missing CustomizationContext');
-  const { primary, accent, setPrimary, setAccent } = useStore(
+  const { primary, accent, validContrast, setPrimary, setAccent, setValidContrast } = useStore(
     store,
     useShallow(state => ({
       primary: state.primary,
       accent: state.accent,
+      validContrast: state.validContrast,
       setPrimary: state.setPrimary,
-      setAccent: state.setAccent
+      setAccent: state.setAccent,
+      setValidContrast: state.setValidContrast
     }))
   );
 
@@ -30,7 +32,7 @@ export function ColorTab() {
   const accentHex = parseColor(accent).toString('hex');
   const contrast = contrastRatio(primaryHex, accentHex);
 
-  const contrastIsGood = contrast >= 4.5;
+  setValidContrast(contrast >= 4.5);
   const primaryContrast = contrastRatio(primaryHex, '#000');
   const accentContrast = contrastRatio(accentHex, '#000');
 
@@ -139,12 +141,12 @@ export function ColorTab() {
         <span
           className="flex items-center gap-1 rounded-full px-2 py-0.5 uppercase"
           style={{
-            backgroundColor: contrastIsGood ? '#BEFCB6' : '#FFB6B6',
-            color: contrastIsGood ? '#078D00' : '#CF1414',
+            backgroundColor: validContrast ? '#BEFCB6' : '#FFB6B6',
+            color: validContrast ? '#078D00' : '#CF1414',
             boxShadow: '0px -1px 1px 0px rgba(0, 0, 0, 0.12), 0px 1px 1px 0px #FFF'
           }}
         >
-          {contrastIsGood ? (
+          {validContrast ? (
             <>
               <Check className="h-5 w-5 stroke-[2px]" />
               PASS

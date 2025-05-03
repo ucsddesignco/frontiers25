@@ -6,13 +6,29 @@ import { TypographyTab } from './Tabs/TypographyTab/TypographyTab';
 import { ColorTab } from './Tabs/ColorTab';
 import ColorIcon from '@/app/assets/ColorIcon';
 import TextIcon from '@/app/assets/TextIcon';
+import { CustomizationContext } from '@/app/contexts/CustomizationContext';
+import { useContext } from 'react';
+import { useShallow } from 'zustand/shallow';
+import { useStore } from 'zustand';
 
 export function CustomizationPanel() {
+  const store = useContext(CustomizationContext);
+  if (!store) throw new Error('Missing CustomizationContext');
+
+  const { validContrast } = useStore(
+    store,
+    useShallow(state => ({
+      validContrast: state.validContrast
+    }))
+  );
   return (
     <Tabs defaultValue="color" className="relative h-full w-full">
       <TabsList className="relative top-0 mb-12 grid w-full grid-cols-3">
-        <TabsTrigger value="color" className="hover:cursor-pointer">
-          <ColorIcon />
+        <TabsTrigger
+          value="color"
+          className={`hover:cursor-pointer ${!validContrast ? 'data-[state=active]:border-[#AC271E]' : ''}`}
+        >
+          <ColorIcon color={validContrast ? '#4D4857' : '#AC271E'} />
         </TabsTrigger>
         <TabsTrigger value="typography" className="h-full hover:cursor-pointer">
           <TextIcon />

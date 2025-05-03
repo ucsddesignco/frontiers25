@@ -17,6 +17,7 @@ interface ModalProps {
   buttonText: string;
   buttonOnClick?: () => void;
   Icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>> | null;
+  noThanks?: boolean;
 }
 
 export default function Modal({
@@ -26,7 +27,8 @@ export default function Modal({
   description,
   buttonText,
   buttonOnClick,
-  Icon
+  Icon,
+  noThanks = true
 }: ModalProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -36,15 +38,17 @@ export default function Modal({
         </DialogHeader>
         <DialogFooter>
           <DialogDescription>{description}</DialogDescription>
-          <DialogClose asChild>
-            <GlassButton
-              onClick={() => {}}
-              onMouseDown={e => e.stopPropagation()}
-              text="No Thanks"
-              className="modal-button justify-center"
-              width="full"
-            />
-          </DialogClose>
+          {noThanks && (
+            <DialogClose asChild>
+              <GlassButton
+                onClick={() => {}}
+                onMouseDown={e => e.stopPropagation()}
+                text="No Thanks"
+                className="modal-button justify-center"
+                width="full"
+              />
+            </DialogClose>
+          )}
           <GlassButton
             onClick={() => {
               buttonOnClick?.();
