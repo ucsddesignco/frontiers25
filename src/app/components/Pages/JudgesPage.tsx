@@ -1,11 +1,12 @@
 import { Ref } from 'react';
 import PageTitle from '../PageTitle';
 import Image from 'next/image';
+import { BorderStyle } from '@/app/stores/customizationStore';
 
 type JudgesPageProps = {
   ref: Ref<HTMLDivElement>;
   showExpanded: boolean;
-  borderStyle?: string;
+  borderStyle?: BorderStyle | undefined;
 };
 
 export default function JudgesPage({ ref, showExpanded, borderStyle }: JudgesPageProps) {

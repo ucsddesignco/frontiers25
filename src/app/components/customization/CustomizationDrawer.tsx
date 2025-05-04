@@ -15,19 +15,13 @@ export function CustomizationDrawer() {
   const store = useContext(CustomizationContext);
   if (!store) throw new Error('Missing CustomizationContext');
 
-  const { validContrast } = useStore(
-    store,
-    useShallow(state => ({
-      validContrast: state.validContrast
-    }))
-  );
   return (
     <Drawer>
       <DrawerTrigger asChild>
         <Button variant="outline" className="h-16 w-60 rounded-full">
           <div className="flex justify-between gap-10">
             <span className="hover:cursor-pointer">
-              <ColorIcon color={validContrast ? '#4D4857' : '#AC271E'} />
+              <ColorIcon />
             </span>
             <span className="h-full hover:cursor-pointer">
               <TextIcon />

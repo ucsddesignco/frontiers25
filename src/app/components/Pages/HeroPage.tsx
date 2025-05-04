@@ -1,19 +1,19 @@
-import { APPLY_LINK } from '../constants';
-import { SectionId } from '../ExpandedCard/ExpandedCard';
+import { BorderStyle } from '@/app/stores/customizationStore';
+import { APPLY_LINK, BUTTON_STYLES } from '../constants';
+import BevelTriangles from '../BevelTriangles';
+import card from '@/backend/models/card';
 
 type HeroPageProps = {
-  scrollToSection: (id: SectionId) => void;
   showExpanded: boolean;
   CardLogo: React.ReactNode;
+  borderStyle: BorderStyle | undefined;
 };
 
-const NAV_BUTTONS = [
-  { id: 'faq', label: 'FAQ' },
-  { id: 'agenda', label: 'Agenda' },
-  { id: 'judges', label: 'Judges' }
-];
-
-export default function HeroPage({ scrollToSection, showExpanded, CardLogo }: HeroPageProps) {
+export default function HeroPage({
+  showExpanded,
+  CardLogo,
+  borderStyle = 'rounded'
+}: HeroPageProps) {
   return (
     <section
       className={`${showExpanded ? 'opacity-100' : 'opacity-0'} hero-page mx-auto flex h-[100dvh] min-h-[100dvh] w-full max-w-[80%] flex-col items-center transition-none md:max-w-[40rem] md:justify-center md:pb-24`}
@@ -51,25 +51,11 @@ export default function HeroPage({ scrollToSection, showExpanded, CardLogo }: He
 
         <div className="flex w-full flex-col gap-4 pb-12 md:gap-8 md:px-36 md:pb-0 md:pt-16">
           <div className="relative flex justify-between opacity-0 md:opacity-100">
-            <button className="learn-more bg-[var(--card-button-color] invisible absolute left-0 top-0 w-full rounded-full p-2">
+            <button
+              className={`${BUTTON_STYLES[borderStyle]} learn-more bg-[var(--card-button-color] invisible absolute left-0 top-0 w-full rounded-full p-2`}
+            >
               Learn More
             </button>
-            {NAV_BUTTONS.map(({ id, label }) => (
-              <button
-                key={'expanded-button-' + id}
-                onClick={() => scrollToSection(id as SectionId)}
-                className="relative cursor-pointer rounded-[51px] bg-[var(--card-button-color)] px-6 py-2 outline-dashed outline-[2px] outline-[var(--card-accent-color)]"
-              >
-                <span
-                  className={`${id}-bg absolute inset-0 z-[0] rounded-full bg-[var(--card-button-color)] transition-[transform,width] duration-card ease-in-out`}
-                ></span>
-                <span
-                  className={`${id}-text relative z-[1] mx-auto block w-fit transition-transform duration-card ease-in-out`}
-                >
-                  {label}
-                </span>
-              </button>
-            ))}
           </div>
 
           <p className="mx-auto md:hidden">Scroll to see more</p>
@@ -77,9 +63,18 @@ export default function HeroPage({ scrollToSection, showExpanded, CardLogo }: He
             onClick={() => {
               window.open(APPLY_LINK, '_blank');
             }}
+            style={
+              {
+                '--bg-triangle-size': '12px'
+              } as React.CSSProperties
+            }
             className="relative cursor-pointer rounded-full p-2 transition-transform duration-card ease-in-out"
           >
-            <span className="apply-bg absolute inset-0 z-[0] h-full w-full rounded-full bg-[var(--card-accent-color)] transition-[transform,width] duration-card ease-in-out"></span>
+            <span
+              className={`${BUTTON_STYLES[borderStyle]} apply-bg absolute inset-0 z-[0] h-full w-full bg-[var(--card-accent-color)] transition-[transform,width] duration-card ease-in-out`}
+            >
+              {borderStyle === 'beveled' && <BevelTriangles />}
+            </span>
             <span className="apply-text relative z-[1] mx-auto block w-fit text-[var(--card-primary-color)] transition-transform duration-card ease-in-out">
               Apply
             </span>

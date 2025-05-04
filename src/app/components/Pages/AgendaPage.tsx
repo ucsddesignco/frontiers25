@@ -1,11 +1,12 @@
 import { Ref, useState } from 'react';
 import PageTitle from '../PageTitle';
 import BevelTriangles from '../BevelTriangles';
+import { BorderStyle } from '@/app/stores/customizationStore';
 
 type AgendaPageProps = {
   ref: Ref<HTMLDivElement>;
   showExpanded: boolean;
-  borderStyle?: string;
+  borderStyle?: BorderStyle | undefined;
 };
 
 export default function AgendaPage({ ref, showExpanded, borderStyle }: AgendaPageProps) {

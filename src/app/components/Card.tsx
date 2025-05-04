@@ -1,8 +1,9 @@
 import React from 'react';
 import { VisibleCard } from '../hooks/useVisibleCards';
-import { APPLY_LINK } from './constants';
+import { APPLY_LINK, BUTTON_STYLES } from './constants';
 import { getCardLogo } from '../util/getCardLogo';
 import { getCardBorders } from '../util/getCardBorders';
+import BevelTriangles from './BevelTriangles';
 
 interface CardProps {
   card: VisibleCard;
@@ -11,12 +12,6 @@ interface CardProps {
   onLearnMore: (e: React.MouseEvent<HTMLButtonElement>) => void;
   className?: string;
 }
-
-const NAV_BUTTONS = [
-  { id: 'faq', label: 'FAQ' },
-  { id: 'agenda', label: 'Agenda' },
-  { id: 'judges', label: 'Judges' }
-];
 
 const Card: React.FC<CardProps> = ({ card, onClick, onMouseDown, onLearnMore, className = '' }) => {
   // Calculate opacity for fading cards
@@ -86,7 +81,15 @@ const Card: React.FC<CardProps> = ({ card, onClick, onMouseDown, onLearnMore, cl
               </div>
             </div>
 
-            <div className="flex flex-col gap-3">
+            <div
+              className="flex flex-col gap-3"
+              style={
+                {
+                  '--card-primary-color': card.primary,
+                  '--bg-triangle-size': '12px'
+                } as React.CSSProperties
+              }
+            >
               <p className="flex flex-col items-center">
                 <span className="description-1 block w-fit transition-transform duration-card ease-in-out">
                   Create, test, & iterate on ideas
@@ -95,44 +98,38 @@ const Card: React.FC<CardProps> = ({ card, onClick, onMouseDown, onLearnMore, cl
                   at our annual design-a-thon.
                 </span>
               </p>
-              <div className="relative flex w-full justify-center">
+              <div
+                className="relative flex w-full justify-center"
+                style={{ '--card-accent-color': card.buttonColor } as React.CSSProperties}
+              >
                 <button
                   onClick={onLearnMore}
                   style={{ backgroundColor: card.buttonColor, transitionDuration: '300ms,200ms' }}
-                  className="learn-more w-full cursor-pointer rounded-full p-2 transition-[transform,opacity] ease-in-out"
+                  className={`${BUTTON_STYLES[card.borderStyle]} learn-more w-full cursor-pointer p-2 transition-[transform,opacity] ease-in-out`}
                 >
-                  Learn More
+                  <span>Learn More</span>
+                  {card.borderStyle === 'beveled' && <BevelTriangles />}
                 </button>
-
-                {NAV_BUTTONS.map(({ id, label }) => (
-                  <button
-                    key={'card-button-' + id}
-                    className="pointer-events-none absolute cursor-pointer rounded-full px-6 py-2 opacity-0 md:opacity-100"
-                  >
-                    <span
-                      style={{ backgroundColor: card.buttonColor, outlineColor: card.accent }}
-                      className={`${id}-bg absolute inset-0 z-[0] inline-block h-full w-full rounded-full opacity-0 outline-dashed outline-[2px]`}
-                    ></span>
-                    <span
-                      className={`${id}-text inline-block opacity-0 transition-[transform,opacity] duration-card-half ease-in-out`}
-                    >
-                      {label}
-                    </span>
-                  </button>
-                ))}
               </div>
               <button
                 onClick={e => {
                   e.stopPropagation();
                   window.open(APPLY_LINK, '_blank');
                 }}
-                style={{ color: card.buttonColor }}
+                style={
+                  {
+                    color: card.buttonColor,
+                    '--card-accent-color': card.accent
+                  } as React.CSSProperties
+                }
                 className="apply relative cursor-pointer rounded-full p-2 transition-transform duration-card ease-in-out"
               >
                 <span
                   style={{ backgroundColor: card.accent }}
-                  className={`apply-bg absolute inset-0 z-[0] inline-block h-full w-full rounded-full transition-[transform,width,height] duration-card ease-in-out`}
-                ></span>
+                  className={`${BUTTON_STYLES[card.borderStyle]} apply-bg absolute inset-0 z-[0] inline-block h-full w-full transition-[transform,width,height] duration-card ease-in-out`}
+                >
+                  {card.borderStyle === 'beveled' && <BevelTriangles />}
+                </span>
                 <p
                   style={{ color: card.primary }}
                   className="apply-text relative z-[1] mx-auto block w-fit transition-transform duration-card ease-in-out"

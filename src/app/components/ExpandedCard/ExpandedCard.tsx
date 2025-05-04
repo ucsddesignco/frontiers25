@@ -114,9 +114,9 @@ const ExpandedCardComponent = ({ showExpanded }: ExpandedCardProps) => {
         className={`${showExpanded ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'} duration-[0.2s] absolute z-[4] mx-auto flex h-full w-full flex-col items-center gap-[200px] overflow-y-scroll transition-opacity ease-in-out`}
       >
         <HeroPage
-          scrollToSection={scrollToSection}
           showExpanded={showExpanded}
           CardLogo={CardLogo}
+          borderStyle={expandedCard?.borderStyle}
         />
         {/* It is necessary for these pages to have showExpanded so that they continue to fade even when scrolling */}
         <FAQPage ref={faqRef} showExpanded={showExpanded} borderStyle={expandedCard?.borderStyle} />

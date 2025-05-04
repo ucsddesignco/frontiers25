@@ -25,14 +25,6 @@ export const calculateTransitionValues = (
 
   const initialElements: InitialElements = [];
   const expandedElements: InitialElements = [];
-  const navElements = [
-    'faq-bg',
-    'faq-text',
-    'agenda-bg',
-    'agenda-text',
-    'judges-bg',
-    'judges-text'
-  ];
 
   let timeElementNames = ['time-1', 'time-2'];
   if (window.innerWidth < MOBILE_BREAKPOINT) {
@@ -48,13 +40,7 @@ export const calculateTransitionValues = (
     'description-2',
     'learn-more',
     'apply-bg',
-    'apply-text',
-    'faq-bg',
-    'faq-text',
-    'agenda-bg',
-    'agenda-text',
-    'judges-bg',
-    'judges-text'
+    'apply-text'
   ];
 
   function updateElementList(
@@ -66,9 +52,6 @@ export const calculateTransitionValues = (
       const element = parentElement?.querySelector(`.${name}`) as HTMLElement;
       if (element) {
         let type: TransitionElementType = '';
-        if (navElements.includes(name)) {
-          type = 'nav';
-        }
         if (name === 'apply-bg') {
           type = 'button';
         }

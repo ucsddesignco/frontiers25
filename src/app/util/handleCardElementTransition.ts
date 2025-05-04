@@ -25,22 +25,14 @@ export function handleCardElementTransition({
   setCardIsExpanding(true);
 
   if (type === 'open') {
-    const navElements = initialElements.filter(element => element.type === 'nav');
     const learnMoreData = initialElements.find(element => element.name === 'learn-more');
-    const middleNavElementX = navElements[2].data.translateX;
 
     if (!learnMoreData) {
       throw new Error('Learn More data not found');
     }
 
-    navElements.forEach(navElement => {
-      const element = navElement.element;
-      element.style.transition = 'none';
-      element.style.transform = `translate(${middleNavElementX}px, ${navElement.data.translateY}px) scale(0.1)`;
-    });
-
     // Transition all elements except nav elements
-    initialElements.forEach(element => {
+    initialElements.forEach((element, index) => {
       if (element.type === 'nav') return;
 
       transitionElement({
@@ -49,19 +41,8 @@ export function handleCardElementTransition({
         type: element.type,
         parentScale: parentScale,
         onTransitionEnd: () => {
-          if (element.type === 'learn-more') {
-            navElements.forEach((element, index) => {
-              transitionElement({
-                from: element.element,
-                transformProperties: element.data,
-                type: element.type,
-                onTransitionEnd: () => {
-                  if (index === navElements.length - 1) {
-                    onTransitionEnd();
-                  }
-                }
-              });
-            });
+          if (index === initialElements.length - 1) {
+            onTransitionEnd();
           }
         }
       });

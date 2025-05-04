@@ -36,3 +36,10 @@ export type TransformProperties = {
   height: number;
   initialDim?: DOMRect;
 };
+
+export const BUTTON_STYLES: { [key in BorderStyle]: string } = {
+  squircle: 'rounded-full',
+  rounded: 'rounded-[4px]',
+  rectangular: 'rounded-0',
+  beveled: ''
+};
