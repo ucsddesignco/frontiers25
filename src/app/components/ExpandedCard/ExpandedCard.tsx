@@ -17,6 +17,9 @@ import {
 import GlassButton from '../GlassButton/GlassButton';
 import SectionsIcon from '@/app/assets/SectionsIcon';
 import { getCardLogo } from '@/app/util/getCardLogo';
+import ProfileIcon from '@/app/assets/ProfileIcon';
+import AgendaIcon from '@/app/assets/AgendaIcon';
+import AboutIcon from '@/app/assets/AboutIcon';
 
 export type SectionId = 'faq' | 'agenda' | 'judges';
 
@@ -142,10 +145,22 @@ const ExpandedCardComponent = ({ showExpanded }: ExpandedCardProps) => {
               <SectionsIcon />
             </GlassButton>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="center">
-            <DropdownMenuItem onClick={() => scrollToSection('faq')}>FAQ</DropdownMenuItem>{' '}
-            <DropdownMenuItem onClick={() => scrollToSection('agenda')}>Agenda</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => scrollToSection('judges')}>Judges</DropdownMenuItem>
+          <DropdownMenuContent className="rounded-lg" sideOffset={8} align="center">
+            <DropdownMenuItem onClick={() => scrollToSection('faq')}>
+              <AboutIcon />
+              About
+            </DropdownMenuItem>{' '}
+            {/* Divider Line*/}
+            <div className="my-1 h-0.5 bg-gray-300" />
+            <DropdownMenuItem onClick={() => scrollToSection('agenda')}>
+              <AgendaIcon />
+              Agenda
+            </DropdownMenuItem>
+            <div className="my-1 h-0.5 bg-gray-300" />
+            <DropdownMenuItem onClick={() => scrollToSection('judges')}>
+              <ProfileIcon />
+              Judges
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
