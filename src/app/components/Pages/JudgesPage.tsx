@@ -48,13 +48,13 @@ export default function JudgesPage({ ref, showExpanded, borderStyle }: JudgesPag
       image: '/AnindyaBasu.webp'
     },
     {
-      first: 'Daxter',
+      first: 'Dexter',
       last: 'Zavalza',
       position: 'Gen AI UX Design Lead @ Deloitte',
       image: '/DexterZavalza.webp'
     },
     {
-      first: 'Key',
+      first: 'Kay',
       last: 'Monette',
       position: 'Senior Product Designer @ Epic',
       image: '/KayMonette.webp'

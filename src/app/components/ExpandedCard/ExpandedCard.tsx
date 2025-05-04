@@ -129,7 +129,7 @@ const ExpandedCardComponent = ({ showExpanded }: ExpandedCardProps) => {
         />
       </div>
       <div
-        className={`${!showLightFog ? '' : 'invisible'} fixed right-9 top-5 z-[4] border-none outline-none`}
+        className={`${!showLightFog ? '' : 'invisible'} fixed right-6 top-5 z-[4] border-none outline-none`}
       >
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
