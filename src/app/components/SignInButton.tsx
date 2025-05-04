@@ -1,5 +1,5 @@
 import { memo, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { authClient } from '@/lib/auth-client';
 import LoginIcon from '../assets/LoginIcon';
 import GlassButton from './GlassButton/GlassButton';
@@ -13,6 +13,8 @@ import {
 import ProfileIcon from '../assets/ProfileIcon';
 import { Session } from '@/lib/auth';
 import Modal from './Modal';
+import MyCardsIcon from '../assets/MyCardsIcon';
+import GalleryIcon from '../assets/GalleryIcon';
 
 interface SignInButtonProps {
   session: Session | null;
@@ -22,6 +24,7 @@ interface SignInButtonProps {
 function SignInButton({ session, className }: SignInButtonProps) {
   const [openLoginModal, setOpenLoginModal] = useState(false);
   const [openSignOutModal, setOpenSignOutModal] = useState(false);
+  const pathname = usePathname();
   const router = useRouter();
 
   const handleSignOut = async () => {
@@ -68,10 +71,17 @@ function SignInButton({ session, className }: SignInButtonProps) {
             <ProfileIcon />
           </GlassButton>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="center">
-          <DropdownMenuItem onClick={() => router.push('/my-cards')}>My Cards</DropdownMenuItem>{' '}
-          {/* Placeholder for now */}
-          <DropdownMenuItem onClick={() => setOpenSignOutModal(true)}>Sign Out</DropdownMenuItem>
+        <DropdownMenuContent className="rounded-md" sideOffset={8} align="center">
+          <DropdownMenuItem
+            onClick={() => router.push(pathname === '/my-cards' ? '/' : '/my-cards')}
+          >
+            {pathname === '/my-cards' ? <GalleryIcon /> : <MyCardsIcon />}
+            {pathname === '/my-cards' ? 'Gallery' : 'My Cards'}
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setOpenSignOutModal(true)}>
+            <LoginIcon />
+            Sign Out
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
