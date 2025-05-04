@@ -116,9 +116,17 @@ const ExpandedCardComponent = ({ showExpanded }: ExpandedCardProps) => {
           CardLogo={CardLogo}
         />
         {/* It is necessary for these pages to have showExpanded so that they continue to fade even when scrolling */}
-        <FAQPage ref={faqRef} showExpanded={showExpanded} />
-        <AgendaPage ref={agendaRef} showExpanded={showExpanded} />
-        <JudgesPage ref={judgesRef} showExpanded={showExpanded} />
+        <FAQPage ref={faqRef} showExpanded={showExpanded} borderStyle={expandedCard?.borderStyle} />
+        <AgendaPage
+          ref={agendaRef}
+          showExpanded={showExpanded}
+          borderStyle={expandedCard?.borderStyle}
+        />
+        <JudgesPage
+          ref={judgesRef}
+          showExpanded={showExpanded}
+          borderStyle={expandedCard?.borderStyle}
+        />
       </div>
       <div
         className={`${!showLightFog ? '' : 'invisible'} fixed right-9 top-5 z-[4] border-none outline-none`}
