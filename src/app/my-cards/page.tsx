@@ -6,12 +6,18 @@ import GalleryPage from '../components/Pages/GalleryPage';
 import { auth } from '@/lib/auth';
 import { VisibleCard } from '../hooks/useVisibleCards';
 import { processCardData } from '../util/processCardData';
+import { redirect } from 'next/navigation';
 
 export default async function MyCards() {
-  const databaseCards = await getCardByUser();
   const session = await auth.api.getSession({
     headers: await headers()
   });
+
+  if (!session) {
+    redirect('/');
+  }
+
+  const databaseCards = await getCardByUser();
 
   const processedData = processCardData(databaseCards);
 
