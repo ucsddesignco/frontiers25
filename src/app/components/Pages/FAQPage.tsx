@@ -16,32 +16,19 @@ export default function FAQPage({ ref, showExpanded }: FAQPageProps) {
   const faqItems = [
     {
       question: 'What is Design Frontiers?',
-      answer:
-        'Design Frontiers is a design sprint event where UCSD designers ideate and iterate on innovative solutions.'
+      answer: `Design Frontiers is Design Co's annual designathon—a two-day sprint where teams tackle real-world challenges with creative design solutions. Final projects are presented to a panel of industry professionals who offer feedback and select standout work.`
     },
     {
       question: 'Who can participate?',
-      answer: 'Anyone with a passion for design and innovation can participate in Design Frontiers.'
+      answer: `UCSD students of all levels and backgrounds are encouraged to apply! Additionally, teams are not assigned, so we encourage you to form your own groups in advance! Teams can be up to four members.`
     },
     {
-      question: 'How big can my team be?',
-      answer: 'Answer 3'
+      question: 'What will the event look like?',
+      answer: `This year, Design Frontiers will be split over the course of two days. The event kicks off Friday night with lightning talks, an overview of the event, and the start of the design sprint. On Day 2, teams will continue working before presenting to the judges panel at 2:00 PM. The event will conclude with finalist presentations and a closing ceremony.`
     },
     {
-      question: 'When is the deadline to register?',
-      answer: 'Answer 4'
-    },
-    {
-      question: 'Where is the Design & Innovation Building?',
-      answer: 'Answer 5'
-    },
-    {
-      question: 'How should I prepare for Design Frontiers if I have no design experience?',
-      answer: 'Answer 6'
-    },
-    {
-      question: 'What should I bring to Design Frontiers?',
-      answer: 'Answer 7'
+      question: 'When is the registration deadline?',
+      answer: `Space is limited to 80 participants, so we recommend signing up early. Waitlisted students are not guaranteed a spot, but we will keep you updated if there are any openings!`
     }
   ];
 

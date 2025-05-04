@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { headers } from 'next/headers';
 import { getCardByUser } from '../api/cardFunctions';
 import GalleryPage from '../components/Pages/GalleryPage';
@@ -5,7 +7,7 @@ import { auth } from '@/lib/auth';
 import { VisibleCard } from '../hooks/useVisibleCards';
 import { processCardData } from '../util/processCardData';
 
-export default async function UserGalleryPage() {
+export default async function MyCards() {
   const databaseCards = await getCardByUser();
   const session = await auth.api.getSession({
     headers: await headers()

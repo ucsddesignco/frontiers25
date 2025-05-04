@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: 'Design Frontiers 2025: UCSD Design Co',
-  description: `Design Frontiers is Design Co's very own long day sprint, where student teams of all backgrounds come together to create innovative solutions for real-world problems.`,
+  description: `Design Frontiers is a day-long designathon where student teams compete to create authentic, innovative, and empathetic designs.`,
   keywords: 'Design Co, UCSD, Designathon, Design Frontiers 2025, Design Frontiers',
   authors: [
     { name: 'Aaron Chan' },
