@@ -78,9 +78,11 @@ function SignInButton({ session, className }: SignInButtonProps) {
             {pathname === '/my-cards' ? <GalleryIcon /> : <MyCardsIcon />}
             {pathname === '/my-cards' ? 'Gallery' : 'My Cards'}
           </DropdownMenuItem>
+          {/* Divider Line*/}
+          <div className="my-1 h-0.5 bg-gray-300" />
           <DropdownMenuItem onClick={() => setOpenSignOutModal(true)}>
             <LoginIcon />
-            Sign Out
+            Log Out
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
