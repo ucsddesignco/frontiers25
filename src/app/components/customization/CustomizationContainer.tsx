@@ -119,6 +119,7 @@ export default function CustomizationContainer({
           description: 'Card Created Successfully.',
           type: 'success'
         });
+        router.push('/');
       } else {
         customToast({
           description: 'Failed to create card.',
@@ -128,13 +129,26 @@ export default function CustomizationContainer({
     }
   };
 
+  const handleExitPage = () => {
+    if (type === 'edit' && card) {
+      const isDifferent =
+        primary !== parseColor(card.primary).toString('hsl') ||
+        accent !== parseColor(card.accent).toString('hsl') ||
+        fontFamily !== card.fontFamily ||
+        borderStyle !== card.borderStyle;
+      if (isDifferent) {
+        setOpenExitPageModal(true);
+      } else {
+        router.push('/');
+      }
+    } else if (type === 'new') {
+      setOpenExitPageModal(true);
+    }
+  };
+
   return (
     <CustomizationContext.Provider value={store}>
-      <GlassButton
-        text="Back"
-        className="fixed left-5 top-5"
-        onClick={() => setOpenExitPageModal(true)}
-      >
+      <GlassButton text="Back" className="fixed left-5 top-5" onClick={handleExitPage}>
         <BackIcon />
       </GlassButton>
 
