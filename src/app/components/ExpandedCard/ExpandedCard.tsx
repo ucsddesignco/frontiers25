@@ -19,7 +19,7 @@ import SectionsIcon from '@/app/assets/SectionsIcon';
 import { getCardLogo } from '@/app/util/getCardLogo';
 import ProfileIcon from '@/app/assets/ProfileIcon';
 import AgendaIcon from '@/app/assets/AgendaIcon';
-import FAQIcon from '@/app/assets/FAQIcon';
+import AboutIcon from '@/app/assets/AboutIcon';
 
 export type SectionId = 'faq' | 'agenda' | 'judges';
 
@@ -147,8 +147,8 @@ const ExpandedCardComponent = ({ showExpanded }: ExpandedCardProps) => {
           </DropdownMenuTrigger>
           <DropdownMenuContent className="rounded-lg" sideOffset={8} align="center">
             <DropdownMenuItem onClick={() => scrollToSection('faq')}>
-              <FAQIcon />
-              FAQ
+              <AboutIcon />
+              About
             </DropdownMenuItem>{' '}
             {/* Divider Line*/}
             <div className="my-1 h-0.5 bg-gray-300" />
