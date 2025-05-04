@@ -63,11 +63,11 @@ export default function JudgesPage({ ref, showExpanded, borderStyle }: JudgesPag
 
   function renderJudges() {
     return (
-      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-2">
         {judges.map((judge, index) => (
           <div
             key={index}
-            className={`flex flex-col items-center ${index >= 3 ? 'lg:col-span-1' : ''}`}
+            className={`flex flex-col items-center ${index >= 4 ? 'lg:col-span-2' : ''}`}
           >
             <div
               className={`relative h-[250px] w-[200px] bg-[var(--card-accent-color)] ${varBorderRadius}`}
