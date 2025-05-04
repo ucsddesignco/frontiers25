@@ -71,7 +71,7 @@ function SignInButton({ session, className }: SignInButtonProps) {
             <ProfileIcon />
           </GlassButton>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="rounded-md" sideOffset={8} align="center">
+        <DropdownMenuContent className="rounded-lg" sideOffset={8} align="center">
           <DropdownMenuItem
             onClick={() => router.push(pathname === '/my-cards' ? '/' : '/my-cards')}
           >
