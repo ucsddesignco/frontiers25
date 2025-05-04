@@ -7,29 +7,22 @@ import {
   AccordionTrigger,
   AccordionContent
 } from '@/components/ui/accordion';
+import { BorderStyle } from '@/app/stores/customizationStore';
+import BevelTriangles from '../BevelTriangles';
 
 type FAQPageProps = {
   ref: Ref<HTMLDivElement>;
   showExpanded: boolean;
-  borderStyle?: string;
+  borderStyle?: BorderStyle;
 };
-
-type BorderStyle = 'rounded' | 'squircle' | 'none' | undefined;
 
 export default function FAQPage({ ref, showExpanded, borderStyle }: FAQPageProps) {
   const varBorderRadius =
     borderStyle === 'rounded'
       ? 'rounded-xl'
       : borderStyle === 'squircle'
-        ? 'rounded-[45px]'
+        ? 'rounded-[32px]'
         : 'rounded-none';
-
-  const varBorderBottomRadius =
-    borderStyle === 'rounded'
-      ? 'rounded-b-xl'
-      : borderStyle === 'squircle'
-        ? 'rounded-b-full'
-        : 'rounded-b-none';
 
   const faqItems = [
     {
@@ -50,10 +43,10 @@ export default function FAQPage({ ref, showExpanded, borderStyle }: FAQPageProps
     {
       question: 'When is the deadline to register?',
       answer:
-        'DATE HERE - Space is limited to 80 participants, so we recommend signing up early. Waitlisted students are not guaranteed a spot, but we will keep you updated if there are any openings!'
+        'May 5th @ 11:59 PM- Space is limited to 80 participants, so we recommend signing up early. Waitlisted students are not guaranteed a spot, but we will keep you updated if there are any openings!'
     },
     {
-      question: 'Where is the Design and Innovation Building(DIB)?',
+      question: 'Where is the Design and Innovation Building (DIB)?',
       answer:
         'DIB is located next to the Pepper Canyon Trolley Station, with entrances located across from the Structural Materials and Engineering building or next to the Regents Loop shuttle stop. Design Frontiers will be hosted in Room 208 on the second floor.'
     },
@@ -65,17 +58,22 @@ export default function FAQPage({ ref, showExpanded, borderStyle }: FAQPageProps
   ];
 
   function renderFAQ() {
-    console.log(borderStyle);
     return (
       <>
         {faqItems.map((item, index) => (
-          <Accordion type="single" collapsible className="w-full max-w-[90%] gap-4" key={index}>
+          <Accordion
+            type="single"
+            collapsible
+            className="relative w-full max-w-[90%] gap-4"
+            key={index}
+          >
+            {borderStyle === 'beveled' && <BevelTriangles />}
             <AccordionItem value={`item-${index}`}>
               <AccordionTrigger className={varBorderRadius}>
-                <p className="text-start text-lg md:max-w-[66%]">{item.question}</p>
+                <p className="text-[22px]">{item.question}</p>
               </AccordionTrigger>
               <AccordionContent borderStyle={borderStyle}>
-                <p className="text-md text-start">{item.answer}</p>
+                <p className="">{item.answer}</p>
               </AccordionContent>
             </AccordionItem>
           </Accordion>
@@ -87,13 +85,13 @@ export default function FAQPage({ ref, showExpanded, borderStyle }: FAQPageProps
   return (
     <section
       ref={ref}
-      className={`${showExpanded ? 'opacity-100' : 'opacity-0'} duration-[0.2s] w-full pt-[200px] transition-opacity ease-in-out`}
+      className={`${showExpanded ? 'opacity-100' : 'opacity-0'} duration-[0.2s] w-full transition-opacity ease-in-out`}
     >
       <div className="flex h-full w-full flex-col items-center">
         {/*Page title and Subtitle*/}
         <PageTitle title="ABOUT" subtitle="Frequently Asked Questions" />
         {/*Accordion*/}
-        <div className="md:w-max-[90%] flex h-full w-full flex-col items-center gap-5 pt-[5%] lg:max-w-[60%]">
+        <div className="md:w-max-[90%] flex h-full w-full flex-col items-center gap-5 pt-12 lg:max-w-[60%]">
           {renderFAQ()}
         </div>
       </div>

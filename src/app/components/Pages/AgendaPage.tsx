@@ -1,5 +1,6 @@
 import { Ref, useState } from 'react';
 import PageTitle from '../PageTitle';
+import BevelTriangles from '../BevelTriangles';
 
 type AgendaPageProps = {
   ref: Ref<HTMLDivElement>;
@@ -19,24 +20,17 @@ export default function AgendaPage({ ref, showExpanded, borderStyle }: AgendaPag
 
   function renderAccentTriangles() {
     if (borderStyle !== 'beveled') return null;
-    return (
-      <>
-        <div className="accent-triangle absolute left-[-0.5px] top-[-0.5px] z-10"></div>
-        <div className="accent-triangle absolute right-[-0.5px] top-[-0.5px] z-10 rotate-90"></div>
-        <div className="accent-triangle absolute bottom-[-0.5px] left-[-0.5px] z-10 rotate-[270deg]"></div>
-        <div className="accent-triangle absolute bottom-[-0.5px] right-[-0.5px] z-10 rotate-180"></div>
-      </>
-    );
+    return <BevelTriangles />;
   }
 
   function renderPrimaryTriangles() {
     if (borderStyle !== 'beveled') return null;
     return (
       <>
-        <div className="primary-triangle absolute left-[-1px] top-[-1px]"></div>
-        <div className="primary-triangle absolute right-[-1px] top-[-1px] rotate-90"></div>
-        <div className="primary-triangle absolute bottom-[-1px] left-[-1px] rotate-[270deg]"></div>
-        <div className="primary-triangle absolute bottom-[-1px] right-[-1px] rotate-180"></div>
+        <div className="primary-triangle absolute left-[0] top-[0] z-10"></div>
+        <div className="primary-triangle absolute right-[0] top-[0] z-10 rotate-90"></div>
+        <div className="primary-triangle absolute bottom-[0] left-[0] z-10 rotate-[270deg]"></div>
+        <div className="primary-triangle absolute bottom-[0] right-[0] z-10 rotate-180"></div>
       </>
     );
   }
@@ -52,10 +46,10 @@ export default function AgendaPage({ ref, showExpanded, borderStyle }: AgendaPag
           <div className={`relative mb-[15%] bg-[var(--card-primary-color)]`}>
             {renderAccentTriangles()}
             <div
-              className={`items-center overflow-clip border-[4px] border-[var(--card-accent-color)] p-10 text-center ${varBorderRadius}`}
+              className={`items-center overflow-clip border-[4px] border-[var(--card-accent-color)] p-16 text-center ${varBorderRadius}`}
             >
-              <p className="text-center text-[1.3rem] font-bold uppercase">7:00 PM</p>
-              <h1 className="text-center text-[2rem] font-bold uppercase leading-[1.25] lg:text-[3rem]">
+              <p className="text-center text-[22px] font-bold">7:00 PM</p>
+              <h1 className="pb-4 text-center text-[2rem] font-bold leading-[1.25] lg:text-[3rem]">
                 Event Kickoff
               </h1>
               <p>
@@ -68,10 +62,10 @@ export default function AgendaPage({ ref, showExpanded, borderStyle }: AgendaPag
           <div className={`relative mb-[15%] bg-[var(--card-primary-color)]`}>
             {renderAccentTriangles()}
             <div
-              className={`items-center overflow-clip border-[4px] border-[var(--card-accent-color)] p-10 text-center ${varBorderRadius}`}
+              className={`items-center overflow-clip border-[4px] border-[var(--card-accent-color)] p-16 text-center ${varBorderRadius}`}
             >
-              <p className="text-center text-[1.3rem] font-bold uppercase">8:00 PM</p>
-              <h1 className="text-center text-[2rem] font-bold uppercase leading-[1.25] lg:text-[3rem]">
+              <p className="text-center text-[22px] font-bold">8:00 PM</p>
+              <h1 className="pb-4 text-center text-[2rem] font-bold leading-[1.25] lg:text-[3rem]">
                 Sprint Starts
               </h1>
               <p>
@@ -84,10 +78,10 @@ export default function AgendaPage({ ref, showExpanded, borderStyle }: AgendaPag
           <div className={`relative mb-[15%] bg-[var(--card-primary-color)]`}>
             {renderAccentTriangles()}
             <div
-              className={`items-center overflow-clip border-[4px] border-[var(--card-accent-color)] p-10 text-center ${varBorderRadius}`}
+              className={`items-center overflow-clip border-[4px] border-[var(--card-accent-color)] p-16 text-center ${varBorderRadius}`}
             >
-              <p className="text-center text-[1.3rem] font-bold uppercase">9:00 PM</p>
-              <h1 className="text-center text-[2rem] font-bold uppercase leading-[1.25] lg:text-[3rem]">
+              <p className="text-center text-[22px] font-bold">9:00 PM</p>
+              <h1 className="pb-4 text-center text-[2rem] font-bold leading-[1.25] lg:text-[3rem]">
                 Day 1 Wrap-up
               </h1>
               <p>
@@ -112,10 +106,10 @@ export default function AgendaPage({ ref, showExpanded, borderStyle }: AgendaPag
           <div className={`relative mb-[1%] w-full bg-[var(--card-primary-color)]`}>
             {renderAccentTriangles()}
             <div
-              className={`items-center overflow-clip border-[4px] border-[var(--card-accent-color)] p-10 text-center ${varBorderRadius}`}
+              className={`items-center overflow-clip border-[4px] border-[var(--card-accent-color)] p-16 text-center ${varBorderRadius}`}
             >
-              <p className="text-center text-[1.3rem] font-bold uppercase">10:00 AM</p>
-              <h1 className="text-center text-[2rem] font-bold uppercase leading-[1.25] lg:text-[3rem]">
+              <p className="text-center text-[22px] font-bold">10:00 AM</p>
+              <h1 className="pb-4 text-center text-[2rem] font-bold leading-[1.25] lg:text-[3rem]">
                 Event Kickoff
               </h1>
               <p>
@@ -128,10 +122,10 @@ export default function AgendaPage({ ref, showExpanded, borderStyle }: AgendaPag
           <div className={`relative mb-[20%] w-full bg-[var(--card-primary-color)]`}>
             {renderAccentTriangles()}
             <div
-              className={`items-center overflow-clip border-[4px] border-[var(--card-accent-color)] p-10 text-center ${varBorderRadius}`}
+              className={`items-center overflow-clip border-[4px] border-[var(--card-accent-color)] p-16 text-center ${varBorderRadius}`}
             >
-              <p className="text-center text-[1.3rem] font-bold uppercase">10:30 AM</p>
-              <h1 className="text-center text-[2rem] font-bold uppercase leading-[1.25] lg:text-[3rem]">
+              <p className="text-center text-[22px] font-bold">10:30 AM</p>
+              <h1 className="pb-4 text-center text-[2rem] font-bold leading-[1.25] lg:text-[3rem]">
                 Sprint Starts
               </h1>
               <p>
@@ -144,10 +138,10 @@ export default function AgendaPage({ ref, showExpanded, borderStyle }: AgendaPag
           <div className={`relative mb-[5%] w-full bg-[var(--card-primary-color)]`}>
             {renderAccentTriangles()}
             <div
-              className={`items-center overflow-clip border-[4px] border-[var(--card-accent-color)] p-10 text-center ${varBorderRadius}`}
+              className={`items-center overflow-clip border-[4px] border-[var(--card-accent-color)] p-16 text-center ${varBorderRadius}`}
             >
-              <p className="text-center text-[1.3rem] font-bold uppercase">2:00 PM</p>
-              <h1 className="text-center text-[2rem] font-bold uppercase leading-[1.25] lg:text-[3rem]">
+              <p className="text-center text-[22px] font-bold">2:00 PM</p>
+              <h1 className="pb-4 text-center text-[2rem] font-bold leading-[1.25] lg:text-[3rem]">
                 Sprint Ends
               </h1>
               <p>Teams will present their designs to our panel of judges.</p>
@@ -157,10 +151,10 @@ export default function AgendaPage({ ref, showExpanded, borderStyle }: AgendaPag
           <div className={`relative mb-[5%] w-full bg-[var(--card-primary-color)]`}>
             {renderAccentTriangles()}
             <div
-              className={`items-center overflow-clip border-[4px] border-[var(--card-accent-color)] p-10 text-center ${varBorderRadius}`}
+              className={`items-center overflow-clip border-[4px] border-[var(--card-accent-color)] p-16 text-center ${varBorderRadius}`}
             >
-              <p className="text-center text-[1.3rem] font-bold uppercase">3:00 PM</p>
-              <h1 className="text-center text-[2rem] font-bold uppercase leading-[1.25] lg:text-[3rem]">
+              <p className="text-center text-[22px] font-bold">3:00 PM</p>
+              <h1 className="pb-4 text-center text-[2rem] font-bold leading-[1.25] lg:text-[3rem]">
                 Finalist Revealed
               </h1>
               <p>Finalist presentations will begin.</p>
@@ -170,10 +164,10 @@ export default function AgendaPage({ ref, showExpanded, borderStyle }: AgendaPag
           <div className={`relative mb-[5%] w-full bg-[var(--card-primary-color)]`}>
             {renderAccentTriangles()}
             <div
-              className={`items-center overflow-clip border-[4px] border-[var(--card-accent-color)] p-10 text-center ${varBorderRadius}`}
+              className={`items-center overflow-clip border-[4px] border-[var(--card-accent-color)] p-16 text-center ${varBorderRadius}`}
             >
-              <p className="text-center text-[1.3rem] font-bold uppercase">3:30 PM</p>
-              <h1 className="text-center text-[2rem] font-bold uppercase leading-[1.25] lg:text-[3rem]">
+              <p className="text-center text-[22px] font-bold">3:30 PM</p>
+              <h1 className="pb-4 text-center text-[2rem] font-bold leading-[1.25] lg:text-[3rem]">
                 Closing Ceremony
               </h1>
               <p>3 winners will be announced and prizes will be announced.</p>
@@ -187,26 +181,26 @@ export default function AgendaPage({ ref, showExpanded, borderStyle }: AgendaPag
   return (
     <section
       ref={ref}
-      className={`${showExpanded ? 'opacity-100' : 'opacity-0'} duration-[0.2s] w-full pt-[200px] transition-opacity ease-in-out`}
+      className={`${showExpanded ? 'opacity-100' : 'opacity-0'} duration-[0.2s] w-full transition-opacity ease-in-out`}
     >
       <PageTitle title="Agenda" subtitle="What’s the timeline of our design sprint?" />
       <div className="flex h-full w-full flex-col items-center pt-5">
         {/* Days */}
         <div className="h-[200px] w-full flex-row justify-center p-5 sm:max-w-[90%] md:max-w-[50%]">
           <button
-            className={`${activeDay === 1 ? 'relative bg-[var(--card-button-color)] duration-500 ease-in-out' : 'bg-transparent duration-500 ease-in-out'} h-[150px] w-1/2 ${varBorderRadius}`}
+            className={`${activeDay === 1 ? 'relative bg-[var(--card-button-color)] duration-500 ease-in-out' : 'bg-transparent duration-500 ease-in-out'} relative h-[150px] w-1/2 ${varBorderRadius}`}
             onClick={() => setActiveDay(1)}
           >
             {renderPrimaryTriangles()}
-            <h1 className="text-center text-[2rem] font-bold uppercase lg:text-[3rem]">DAY 1</h1>
+            <h1 className="pb-4 text-center text-[2rem] font-bold lg:text-[3rem]">DAY 1</h1>
             <p>7:00pm - 11:00pm</p>
           </button>
           <button
-            className={`${activeDay === 2 ? 'relative bg-[var(--card-button-color)] duration-500 ease-in-out' : 'bg-transparent duration-500 ease-in-out'} h-[150px] w-1/2 ${varBorderRadius}`}
+            className={`${activeDay === 2 ? 'relative bg-[var(--card-button-color)] duration-500 ease-in-out' : 'bg-transparent duration-500 ease-in-out'} relative h-[150px] w-1/2 ${varBorderRadius}`}
             onClick={() => setActiveDay(2)}
           >
             {renderPrimaryTriangles()}
-            <h1 className="text-center text-[2rem] font-bold uppercase lg:text-[3rem]">DAY 2</h1>
+            <h1 className="pb-4 text-center text-[2rem] font-bold lg:text-[3rem]">DAY 2</h1>
             <p>7:00pm - 11:00pm</p>
           </button>
         </div>

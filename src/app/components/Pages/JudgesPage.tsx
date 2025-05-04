@@ -63,12 +63,9 @@ export default function JudgesPage({ ref, showExpanded, borderStyle }: JudgesPag
 
   function renderJudges() {
     return (
-      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-2">
+      <div className="flex max-w-[80%] flex-wrap items-center justify-center gap-10">
         {judges.map((judge, index) => (
-          <div
-            key={index}
-            className={`flex flex-col items-center ${index >= 4 ? 'lg:col-span-2' : ''}`}
-          >
+          <div key={index} className={`flex h-[330px] w-[200px] flex-col items-center`}>
             <div
               className={`relative h-[250px] w-[200px] bg-[var(--card-accent-color)] ${varBorderRadius}`}
             >
@@ -80,8 +77,8 @@ export default function JudgesPage({ ref, showExpanded, borderStyle }: JudgesPag
                 className={`object-cover ${varBorderRadius}`}
               />
             </div>
-            <h3 className="text-lg font-bold">{`${judge.first} ${judge.last}`}</h3>
-            <p className="w-1/2 text-center text-sm">{judge.position}</p>
+            <h3 className="pt-4 text-[22px] font-bold">{`${judge.first} ${judge.last}`}</h3>
+            <p className="w-[90%] text-center">{judge.position}</p>
           </div>
         ))}
       </div>
@@ -91,9 +88,9 @@ export default function JudgesPage({ ref, showExpanded, borderStyle }: JudgesPag
   return (
     <section
       ref={ref}
-      className={`${showExpanded ? 'opacity-100' : 'opacity-0'} duration-[0.2s] w-full pt-[200px] transition-opacity ease-in-out`}
+      className={`${showExpanded ? 'opacity-100' : 'opacity-0'} duration-[0.2s] w-full transition-opacity ease-in-out`}
     >
-      <PageTitle title="Judges" subtitle="Judges" />
+      <PageTitle title="Judges" subtitle="Meet Our Judges!" />
       <div className="flex h-full w-full flex-col items-center pt-[5%]">
         <div className="md:w-max-[90%] flex flex-col items-center gap-5 lg:max-w-[60%]">
           {renderJudges()}

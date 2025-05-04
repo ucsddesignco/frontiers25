@@ -5,14 +5,13 @@ import * as AccordionPrimitive from '@radix-ui/react-accordion';
 import { ChevronDown } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
+import { BorderStyle } from '@/app/stores/customizationStore';
 
-type BorderStyle = 'rounded' | 'squircle' | 'none' | undefined;
-
-function getBorderRadiusClass(borderStyle: BorderStyle) {
+function getBorderRadiusClass(borderStyle: BorderStyle | undefined) {
   return borderStyle === 'rounded'
     ? 'rounded-b-xl'
     : borderStyle === 'squircle'
-      ? 'rounded-b-[45px]'
+      ? 'rounded-b-[32px]'
       : 'rounded-b-none';
 }
 
@@ -34,7 +33,7 @@ const AccordionTrigger = React.forwardRef<
     <AccordionPrimitive.Trigger
       ref={ref}
       className={cn(
-        'gap-auto flex flex-1 items-center justify-between bg-[var(--card-accent-color)] p-6 py-4 font-medium text-[var(--card-primary-color)] transition-all data-[state=open]:rounded-b-none [&[data-state=open]>svg]:rotate-180',
+        'gap-auto flex flex-1 items-center justify-between bg-[var(--card-accent-color)] p-6 pl-8 font-medium text-[var(--card-primary-color)] transition-all data-[state=open]:rounded-b-none data-[state=open]:transition-none data-[state=closed]:[transition-delay:0.185s] [&[data-state=open]>svg]:rotate-180',
         className
       )}
       {...props}
@@ -54,12 +53,12 @@ const AccordionContent = React.forwardRef<
     ref={ref}
     className={cn(
       getBorderRadiusClass(borderStyle),
-      'agp-4 text-md data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden border-x-[3px] border-b-[3px] border-[var(--card-accent-color)] bg-[var(--card-primary-color)] transition-all',
+      'agp-4 text-md overflow-hidden border-x-[4px] border-b-[4px] border-[var(--card-accent-color)] bg-[var(--card-primary-color)] transition-all data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down',
       className
     )}
     {...props}
   >
-    <div className={cn('p-4 pt-2', className)}>{children}</div>
+    <div className={cn('p-6 pl-8', className)}>{children}</div>
   </AccordionPrimitive.Content>
 ));
 

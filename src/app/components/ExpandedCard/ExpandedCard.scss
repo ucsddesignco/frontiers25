@@ -21,8 +21,8 @@
 
 .accent-triangle {
   position: absolute;
-  width: 30px;
-  height: 30px;
+  width: 24px;
+  height: 24px;
   clip-path: polygon(0% 0%, 100% 0%, 0% 100%);
   background: linear-gradient(
     to bottom right,
@@ -34,8 +34,8 @@
 
 .primary-triangle {
   position: absolute;
-  width: 30px;
-  height: 30px;
+  width: 24px;
+  height: 24px;
   clip-path: polygon(0% 0%, 100% 0%, 0% 100%);
   background: linear-gradient(
     to bottom right,
@@ -43,4 +43,20 @@
     var(--card-primary-color) 40%,
     var(--card-primary-color) 100%
   );
+}
+
+.accordion-triangle {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  clip-path: polygon(0% 0%, 100% 0%, 0% 100%);
+  background: var(--card-primary-color);
+}
+
+.accordion-triangle-border {
+  position: absolute;
+  width: 27px;
+  height: 27px;
+  clip-path: polygon(0% 0%, 100% 0%, 0% 100%);
+  background: var(--card-accent-color);
 }
