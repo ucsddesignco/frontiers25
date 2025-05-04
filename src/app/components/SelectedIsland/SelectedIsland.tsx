@@ -22,11 +22,12 @@ const SelectedIsland = ({ selectedCard, session }: SelectedIslandProps) => {
   );
 
   const selectedCardIndex = selectedCard ? parseInt(selectedCard) : 0;
+
   const cardId = selectedCard ? basePattern[selectedCardIndex]._id : '';
 
   return (
     <GlassIsland className={selectedCard && showLightFog ? 'translate-y-0' : 'translate-y-[200%]'}>
-      <p>Selected</p>
+      <p className="hidden pl-2 md:block">Selected</p>
 
       {selectedCard && session?.user.id === basePattern[selectedCardIndex].user && (
         <GlassButton

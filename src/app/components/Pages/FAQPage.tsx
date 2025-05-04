@@ -83,7 +83,7 @@ export default function FAQPage({ ref, showExpanded, borderStyle }: FAQPageProps
   return (
     <section
       ref={ref}
-      className={`${showExpanded ? 'opacity-100' : 'opacity-0'} duration-[0.2s] w-full transition-opacity ease-in-out`}
+      className={`${showExpanded ? 'opacity-100' : 'opacity-0'} duration-[0.2s] w-full scroll-m-24 transition-opacity ease-in-out`}
     >
       <div className="flex h-full w-full flex-col items-center">
         <PageTitle title="ABOUT" subtitle="Frequently Asked Questions" />

@@ -181,7 +181,7 @@ export default function AgendaPage({ ref, showExpanded, borderStyle }: AgendaPag
   return (
     <section
       ref={ref}
-      className={`${showExpanded ? 'opacity-100' : 'opacity-0'} duration-[0.2s] w-full transition-opacity ease-in-out`}
+      className={`${showExpanded ? 'opacity-100' : 'opacity-0'} duration-[0.2s] w-full scroll-m-24 transition-opacity ease-in-out`}
     >
       <PageTitle title="Agenda" subtitle="What’s the timeline of our design sprint?" />
       <div className="flex h-full w-full flex-col items-center pt-5">

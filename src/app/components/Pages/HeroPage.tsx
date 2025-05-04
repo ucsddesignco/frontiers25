@@ -38,7 +38,7 @@ export default function HeroPage({ scrollToSection, showExpanded, CardLogo }: He
             <span className="time-1 w-fit">by UCSD</span>
             <span className="time-2 w-fit">Design Co</span>
           </p>
-          <p className="flex flex-col text-center">
+          <p className="flex flex-col items-center text-center">
             <span className="description-1 w-fit transition-transform duration-card ease-in-out">
               Create, test, & iterate on ideas
             </span>

@@ -1,22 +1,16 @@
 export default function LoginIcon() {
   return (
-    <svg
-      width={14}
-      height={18}
-      viewBox="0 0 14 18"
-      fill="currentColor"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
       <path
         fillRule="evenodd"
         clipRule="evenodd"
-        d="M0.25 0.25H13.75V17.75H0.25V12H1.75V16.25H12.25V1.75H1.75V6H0.25V0.25Z"
+        d="M18.25 3.25H4.75V20.75H18.25V17H16.75V19.25H6.25V4.75H16.75V7H18.25V3.25Z"
         fill="currentColor"
       />
       <path
         fillRule="evenodd"
         clipRule="evenodd"
-        d="M6.53033 4.46967L11.0607 9L6.53033 13.5303L5.46967 12.4697L8.18934 9.75H0.25V8.25H8.18934L5.46967 5.53033L6.53033 4.46967Z"
+        d="M14.7198 7.46973L19.2501 12.0001L14.7198 16.5304L13.6591 15.4697L16.3788 12.7501H7.99942V11.2501H16.3788L13.6591 8.53039L14.7198 7.46973Z"
         fill="currentColor"
       />
     </svg>

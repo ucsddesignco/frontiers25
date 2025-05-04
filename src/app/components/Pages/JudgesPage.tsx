@@ -88,7 +88,7 @@ export default function JudgesPage({ ref, showExpanded, borderStyle }: JudgesPag
   return (
     <section
       ref={ref}
-      className={`${showExpanded ? 'opacity-100' : 'opacity-0'} duration-[0.2s] w-full transition-opacity ease-in-out`}
+      className={`${showExpanded ? 'opacity-100' : 'opacity-0'} duration-[0.2s] w-full scroll-m-24 transition-opacity ease-in-out`}
     >
       <PageTitle title="Judges" subtitle="Meet Our Judges!" />
       <div className="flex h-full w-full flex-col items-center pt-[5%]">

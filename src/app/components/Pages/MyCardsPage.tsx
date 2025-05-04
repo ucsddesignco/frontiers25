@@ -68,52 +68,23 @@ function MyCardsPage({ cards, handleLearnMore: _handleLearnMore }: CardsPageProp
         Icon={<DeleteIcon />}
         buttonOnClick={handleDeleteCard}
       />
-      <div
-        className="pointer-events-none absolute inset-0"
-        onClick={() => setSelectedCard(null)}
-      ></div>
+      <div className="absolute inset-0" onClick={() => setSelectedCard(null)}></div>
       <GlassIsland className={selectedCard ? 'translate-y-0' : 'translate-y-[200%]'}>
-        <p>Selected</p>
+        <p className="hidden md:block">Selected</p>
         {/* Desktop */}
         <GlassButton
-          text="Edit Variant"
-          color="dark"
+          text="Edit Card"
+          color="light"
           size="skinny"
           href={`/card/${selectedCard?._id}`}
-          className="hidden md:block"
-        >
-          <EditIcon />
-        </GlassButton>
+        ></GlassButton>
         <GlassButton
-          text="Delete Variant"
-          color="dark"
+          text="Delete Card"
+          color="red"
           size="skinny"
           onClick={() => {
             setOpenModal(true);
           }}
-          className="hidden md:block"
-        >
-          <DeleteIcon />
-        </GlassButton>
-
-        {/* Mobile */}
-        <GlassButton
-          text="Edit"
-          color="dark"
-          size="skinny"
-          href={`/card/${selectedCard?._id}`}
-          className="md:hidden"
-        >
-          <EditIcon />
-        </GlassButton>
-        <GlassButton
-          text="Delete"
-          color="dark"
-          size="skinny"
-          onClick={() => {
-            setOpenModal(true);
-          }}
-          className="md:hidden"
         >
           <DeleteIcon />
         </GlassButton>

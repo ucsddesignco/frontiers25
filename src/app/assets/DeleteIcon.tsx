@@ -1,8 +1,16 @@
 export default function DeleteIcon() {
   return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+    <svg width="25" height="24" viewBox="0 0 25 24" fill="none">
       <path
-        d="M6 19C6 19.5304 6.21071 20.0391 6.58579 20.4142C6.96086 20.7893 7.46957 21 8 21H16C16.5304 21 17.0391 20.7893 17.4142 20.4142C17.7893 20.0391 18 19.5304 18 19V7H6V19ZM8 9H16V19H8V9ZM15.5 4L14.5 3H9.5L8.5 4H5V6H19V4H15.5Z"
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M5.75 3.24993H10.1V4.74993H7.25V19.2499H17.75V12.6153H19.25V20.7499H5.75V3.24993Z"
+        fill="currentColor"
+      />
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M13.6716 2.11084L16.5 4.93927L19.3284 2.11084L20.3891 3.1715L17.5607 5.99993L20.3891 8.82835L19.3284 9.88901L16.5 7.06059L13.6716 9.88901L12.6109 8.82835L15.4393 5.99993L12.6109 3.1715L13.6716 2.11084Z"
         fill="currentColor"
       />
     </svg>

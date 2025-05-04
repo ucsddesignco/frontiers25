@@ -6,9 +6,33 @@ import { cn } from '@/lib/utils';
 type GlassButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   text: string;
   size?: 'skinny' | 'thick';
-  color?: 'light' | 'dark';
+  color?: 'light' | 'dark' | 'red';
   width?: 'auto' | 'full';
   href?: string | undefined;
+};
+
+const GRADIENT_COLORS = {
+  light: '#D8D7D9',
+  dark: '#4D4857',
+  red: '#560000'
+};
+
+const BLUR_COLORS = {
+  light: 'bg-[rgba(255,255,255,0.80)]',
+  dark: 'bg-[rgba(26,22,34,0.80)]',
+  red: 'bg-[rgba(255,0,0,0.80)]'
+};
+
+const TEXT_COLORS = {
+  light: 'text-[#1A1622]',
+  dark: 'text-white',
+  red: 'text-white'
+};
+
+const TEXT_SHADOW = {
+  light: '#FFF',
+  dark: 'rgba(0, 0, 0, 0.24)',
+  red: 'rgba(0, 0, 0, 0.24)'
 };
 
 const GlassButton = forwardRef<HTMLButtonElement, GlassButtonProps>(
@@ -26,11 +50,11 @@ const GlassButton = forwardRef<HTMLButtonElement, GlassButtonProps>(
     ref
   ) => {
     const sizeClass = size === 'skinny' ? 'px-5 h-10' : 'px-6 h-[52px]';
-    const blurColorClass =
-      color === 'light' ? 'bg-[rgba(255,255,255,0.80)]' : 'bg-[rgba(26,22,34,0.80)]';
-    const gradientColor = color === 'light' ? '#D8D7D9' : '#4D4857';
-    const textShadowColor = color === 'light' ? '#FFF' : 'rgba(0, 0, 0, 0.24)';
-    const textColor = color === 'light' ? 'text-[#1A1622]' : 'text-white';
+    const blurColorClass = BLUR_COLORS[color];
+
+    const gradientColor = GRADIENT_COLORS[color];
+    const textShadowColor = TEXT_SHADOW[color];
+    const textColor = TEXT_COLORS[color];
     const widthClass = width === 'full' ? 'w-full' : 'w-auto';
 
     const ButtonContent = () => (

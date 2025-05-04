@@ -14,7 +14,7 @@ function LightFog() {
             // 'radial-gradient(closest-corner,rgba(255, 0, 0, 0) 50%,rgba(233, 233, 233, 0.5) 70%,rgba(233, 233, 233, 0.8) 100%)'
             'radial-gradient(closest-corner,rgba(255, 0, 0, 0) 50%,rgba(233, 233, 233, 0.5) 70%,rgba(233, 233, 233, 0.8) 100%)'
         }}
-        className={`pointer-events-none fixed inset-0 z-[1] transition-[opacity] ease-in-out`}
+        className={`pointer-events-none fixed inset-0 z-[1] hidden transition-[opacity] ease-in-out md:block`}
       ></div>
     </>
   );
