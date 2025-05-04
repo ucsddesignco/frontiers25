@@ -136,35 +136,33 @@ export const useVisibleCards = ({
       }
     }
 
-    if (window.innerWidth > MOBILE_BREAKPOINT) {
-      // Create a new map of previous cards
-      // This is used to fade out cards which is important to make centerToCard look smooth
-      const newPrevVisibleCards: Record<string, VisibleCard> = {};
+    // Create a new map of previous cards
+    // This is used to fade out cards which is important to make centerToCard look smooth
+    const newPrevVisibleCards: Record<string, VisibleCard> = {};
 
-      // Add fading cards that were previously visible but not currently visible
-      Object.values(prevVisibleCardsRef.current).forEach(prevCard => {
-        if (!currentlyVisibleKeys.has(prevCard.key)) {
-          if (!prevCard.isFading) {
-            prevCard.isFading = true;
-            prevCard.fadeStartTime = nowRef.current;
-          }
-
-          const fadeTime = nowRef.current - (prevCard.fadeStartTime || 0);
-          if (fadeTime < FADE_DURATION_MS) {
-            cardsToRender.push(prevCard);
-            newPrevVisibleCards[prevCard.key] = prevCard;
-          }
+    // Add fading cards that were previously visible but not currently visible
+    Object.values(prevVisibleCardsRef.current).forEach(prevCard => {
+      if (!currentlyVisibleKeys.has(prevCard.key)) {
+        if (!prevCard.isFading) {
+          prevCard.isFading = true;
+          prevCard.fadeStartTime = nowRef.current;
         }
+
+        const fadeTime = nowRef.current - (prevCard.fadeStartTime || 0);
+        if (fadeTime < FADE_DURATION_MS) {
+          cardsToRender.push(prevCard);
+          newPrevVisibleCards[prevCard.key] = prevCard;
+        }
+      }
+    });
+
+    cardsToRender
+      .filter(card => !card.isFading)
+      .forEach(card => {
+        newPrevVisibleCards[card.key] = card;
       });
 
-      cardsToRender
-        .filter(card => !card.isFading)
-        .forEach(card => {
-          newPrevVisibleCards[card.key] = card;
-        });
-
-      prevVisibleCardsRef.current = newPrevVisibleCards;
-    }
+    prevVisibleCardsRef.current = newPrevVisibleCards;
 
     // --- Determine centered card index (do NOT set state here) ---
     let centeredIndex: number | null = null;
