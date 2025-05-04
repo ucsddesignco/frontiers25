@@ -16,7 +16,7 @@ export default function AgendaPage({ ref, showExpanded, borderStyle }: AgendaPag
     borderStyle === 'rounded'
       ? 'rounded-xl'
       : borderStyle === 'squircle'
-        ? 'rounded-full'
+        ? 'rounded-[64px]'
         : 'rounded-none';
 
   function renderAccentTriangles() {
