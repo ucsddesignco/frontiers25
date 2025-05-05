@@ -39,6 +39,6 @@ export default async function NewCardPage({ params }: { params: Promise<{ cardId
   };
 
   return (
-    <CustomizationContainer card={newCard} session={session} cardAuthor={card.author} type="new" />
+    <CustomizationContainer card={newCard} session={session} />
   );
 }
