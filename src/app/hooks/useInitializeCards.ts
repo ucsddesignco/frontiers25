@@ -16,7 +16,6 @@ export function useInitializeCards({ data, session }: InitializeCardsProps) {
 
   useEffect(() => {
     const processedData = processCardData(data);
-    console.log(processedData);
     // Set middle three cards to user cards
     if (session) {
       const fetchUserCards = async () => {
