@@ -59,7 +59,7 @@ const SimplifiedCard: React.FC<SimplifiedCardProps> = ({ id }) => {
     <>
       <div
         id={`card-container-${id}`}
-        className="duration-[0.2s] relative z-[0] h-full transition-[transform,opacity] ease-out"
+        className="duration-[0.2s] relative z-[0] h-[400px] w-[300px] transition-[transform,opacity] ease-out"
       >
         <div className="relative h-full">
           <div
