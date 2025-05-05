@@ -10,7 +10,7 @@ export default async function Home() {
   const cardData = await getRandomCards(50, session?.user?.id);
 
   return (
-    <main className="font-[family-name:var(--font-geist-sans)]">
+    <main className="font-proxima">
       <InfiniteCanvas data={cardData} session={session} />
     </main>
   );

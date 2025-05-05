@@ -21,6 +21,7 @@ body {
     url('/default-cursor.svg') 6 6,
     default;
   font-family:
+    'ProximaNova',
     var(--font-geist-sans),
     system-ui,
     -apple-system,
@@ -143,4 +144,28 @@ h6 {
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
   }
+}
+
+@font-face {
+  font-family: 'ProximaNova';
+  src: url('/fonts/ProximaNova-Reg.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ProximaNova';
+  src: url('/fonts/ProximaNova-Semibold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ProximaNova';
+  src: url('/fonts/ProximaNova-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
 }
