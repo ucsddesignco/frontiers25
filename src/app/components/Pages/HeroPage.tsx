@@ -1,22 +1,33 @@
-import { BorderStyle } from '@/app/stores/customizationStore';
+import { getCardLogo } from '@/app/util/getCardLogo';
 import { APPLY_LINK, BUTTON_STYLES } from '../constants';
 import BevelTriangles from '../BevelTriangles';
-import card from '@/backend/models/card';
+import Marquee from '../Marquee/Marquee';
+import type { FontFamily } from '@/app/stores/customizationStore';
+import type { BorderStyle } from '@/app/stores/customizationStore';
 
 type HeroPageProps = {
   showExpanded: boolean;
-  CardLogo: React.ReactNode;
-  borderStyle: BorderStyle | undefined;
+  accent?: string;
+  buttonColor?: string;
+  borderStyle?: BorderStyle;
+  fontFamily?: FontFamily;
 };
 
 export default function HeroPage({
   showExpanded,
-  CardLogo,
-  borderStyle = 'rounded'
+  accent,
+  buttonColor,
+  borderStyle = 'rounded',
+  fontFamily
 }: HeroPageProps) {
+  const CardLogo = getCardLogo({
+    fontFamily: fontFamily,
+    accent: accent
+  });
+
   return (
     <section
-      className={`${showExpanded ? 'opacity-100' : 'opacity-0'} hero-page mx-auto flex h-[100dvh] min-h-[100dvh] w-full max-w-[80%] flex-col items-center transition-none md:max-w-[40rem] md:justify-center md:pb-24`}
+      className={`${showExpanded ? 'opacity-100' : 'opacity-0'} hero-page relative mx-auto flex h-[100dvh] min-h-[100dvh] w-full max-w-[80%] flex-col items-center transition-none md:max-w-[40rem] md:justify-center md:pb-24`}
     >
       <div className="w-full pt-32 md:pt-0">{CardLogo}</div>
       <div className="flex h-full w-full flex-col justify-between md:block md:h-auto">
@@ -81,6 +92,12 @@ export default function HeroPage({
           </button>
         </div>
       </div>
+      <Marquee
+        accent={accent}
+        buttonColor={buttonColor}
+        borderStyle={borderStyle}
+        fontFamily={fontFamily}
+      />
     </section>
   );
 }

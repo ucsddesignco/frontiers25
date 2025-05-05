@@ -16,7 +16,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import GlassButton from '../GlassButton/GlassButton';
 import SectionsIcon from '@/app/assets/SectionsIcon';
-import { getCardLogo } from '@/app/util/getCardLogo';
 import ProfileIcon from '@/app/assets/ProfileIcon';
 import AgendaIcon from '@/app/assets/AgendaIcon';
 import AboutIcon from '@/app/assets/AboutIcon';
@@ -90,11 +89,6 @@ const ExpandedCardComponent = ({ showExpanded }: ExpandedCardProps) => {
     }
   }, [showExpanded, expandedCardRef]);
 
-  const CardLogo = getCardLogo({
-    fontFamily: expandedCard?.fontFamily,
-    accent: expandedCard?.accent
-  });
-
   return (
     <>
       <div
@@ -111,12 +105,14 @@ const ExpandedCardComponent = ({ showExpanded }: ExpandedCardProps) => {
             backgroundColor: !showExpanded ? 'transparent' : expandedCard?.primary
           } as React.CSSProperties
         }
-        className={`${showExpanded ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'} duration-[0.2s] absolute z-[4] mx-auto flex h-full w-full flex-col items-center gap-[200px] overflow-y-scroll transition-opacity ease-in-out`}
+        className={`${showExpanded ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'} duration-[0.2s] absolute z-[4] mx-auto flex h-full w-full flex-col items-center gap-[200px] overflow-x-hidden overflow-y-scroll transition-opacity ease-in-out`}
       >
         <HeroPage
           showExpanded={showExpanded}
-          CardLogo={CardLogo}
+          accent={expandedCard?.accent}
+          buttonColor={expandedCard?.buttonColor}
           borderStyle={expandedCard?.borderStyle}
+          fontFamily={expandedCard?.fontFamily}
         />
         {/* It is necessary for these pages to have showExpanded so that they continue to fade even when scrolling */}
         <FAQPage ref={faqRef} showExpanded={showExpanded} borderStyle={expandedCard?.borderStyle} />
