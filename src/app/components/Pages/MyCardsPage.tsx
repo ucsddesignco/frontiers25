@@ -80,7 +80,7 @@ function MyCardsPage({ cards, handleLearnMore: _handleLearnMore }: CardsPageProp
         ></GlassButton>
         <GlassButton
           text="Delete Card"
-          color="red"
+          color="dark"
           size="skinny"
           onClick={() => {
             setOpenModal(true);
