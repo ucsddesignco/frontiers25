@@ -93,6 +93,7 @@ export default function CustomizationContainer({
           description: 'Card Updated Successfully.',
           type: 'success'
         });
+        router.push('/');
       } else {
         customToast({
           description: 'Failed to update card.',
@@ -115,11 +116,11 @@ export default function CustomizationContainer({
           type: 'error'
         });
       } else if (newCard) {
+        router.push('/');
         customToast({
           description: 'Card Created Successfully.',
           type: 'success'
         });
-        router.push('/');
       } else {
         customToast({
           description: 'Failed to create card.',
