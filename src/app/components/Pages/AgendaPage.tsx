@@ -110,12 +110,8 @@ export default function AgendaPage({
             >
               <p className="text-center text-[22px] font-bold">10:00 AM</p>
               <h1 className="pb-4 text-center text-[2rem] font-bold leading-[1.25] lg:text-[3rem]">
-                Event Kickoff
+                Check-in
               </h1>
-              <p>
-                Designers will begin with registration and sign-in, an introduction to the event,
-                and energizing lighting talks.
-              </p>
             </div>
           </div>
           {/* Item 2 */}
@@ -126,12 +122,8 @@ export default function AgendaPage({
             >
               <p className="text-center text-[22px] font-bold">10:30 AM</p>
               <h1 className="pb-4 text-center text-[2rem] font-bold leading-[1.25] lg:text-[3rem]">
-                Sprint Starts
+                Sprint Continues
               </h1>
-              <p>
-                Prompt is revealed and participants begin designing to address the prompt and
-                prepare to present their solution.
-              </p>
             </div>
           </div>
           {/* Item 3 */}
@@ -166,7 +158,7 @@ export default function AgendaPage({
             <div
               className={`items-center overflow-clip border-[4px] border-[var(--card-button-color)] p-8 text-center md:p-16 ${borderRadius}`}
             >
-              <p className="text-center text-[22px] font-bold">3:30 PM</p>
+              <p className="text-center text-[22px] font-bold">4:00 PM</p>
               <h1 className="pb-4 text-center text-[2rem] font-bold leading-[1.25] lg:text-[3rem]">
                 Closing Ceremony
               </h1>
@@ -199,7 +191,7 @@ export default function AgendaPage({
           >
             {renderPrimaryTriangles()}
             <h1 className="text-center text-[2rem] font-bold lg:text-[3rem]">DAY 1</h1>
-            <p>7:00pm - 11:00pm</p>
+            <p>6:45 PM - 9:00 PM</p>
           </button>
           <button
             className={`${activeDay === 2 ? 'relative bg-[var(--card-button-color)] duration-500 ease-in-out' : 'bg-transparent duration-500 ease-in-out'} relative w-1/2 py-4 ${borderRadius}`}
@@ -207,7 +199,7 @@ export default function AgendaPage({
           >
             {renderPrimaryTriangles()}
             <h1 className="text-center text-[2rem] font-bold lg:text-[3rem]">DAY 2</h1>
-            <p>7:00pm - 11:00pm</p>
+            <p>10:00 AM - 4:00 PM</p>
           </button>
         </div>
         {/* Time Line*/}
