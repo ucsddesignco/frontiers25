@@ -36,7 +36,7 @@ export default function FAQPage({ ref, showExpanded, borderStyle, borderRadius }
     {
       question: 'When is the deadline to register?',
       answer:
-        'May 5th @ 11:59 PM- Space is limited to 80 participants, so we recommend signing up early. Waitlisted students are not guaranteed a spot, but we will keep you updated if there are any openings!'
+        'May 7th @ 11:59 PM - Space is limited to 80 participants, so we recommend signing up early. Waitlisted students are not guaranteed a spot, but we will keep you updated if there are any openings!'
     },
     {
       question: 'Where is the Design and Innovation Building (DIB)?',

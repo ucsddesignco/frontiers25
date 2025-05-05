@@ -4,10 +4,7 @@ import connectDB from '../../backend/connections/connection';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import { DatabaseCard } from '../components/InfiniteCanvas';
-import mongoose from 'mongoose';
 import { revalidatePath } from 'next/cache';
-
-await connectDB();
 
 const validBorders = ['rectangular', 'rounded', 'beveled', 'squircle'];
 const validFonts = [
@@ -51,7 +48,8 @@ const requireAuth = async () => {
   });
 
   if (!session) {
-    throw new Error('Unauthorized');
+    console.log('No session found');
+    return null;
   }
 
   return session;
@@ -69,13 +67,21 @@ export default async function createCard({
   accent: string;
 }) {
   try {
+    await connectDB();
+
     if (!validFonts.includes(fontFamily)) {
-      throw new Error('Invalid font family');
+      console.error('Invalid font family');
+      return null;
     } else if (!validBorders.includes(borderStyle)) {
-      throw new Error('Invalid border style');
+      console.error('Invalid border style');
+      return null;
     }
 
     const session = await requireAuth();
+
+    if (!session) {
+      return null;
+    }
 
     const user_cards = await card.find({ user: session.user.id });
     if (user_cards.length >= 3) {
@@ -102,6 +108,8 @@ export default async function createCard({
 
 export async function getAllCards() {
   try {
+    await connectDB();
+
     const cards = await card.find().lean();
 
     const serializedCards = cards.map(doc => ({
@@ -111,12 +119,14 @@ export async function getAllCards() {
     return serializedCards as unknown as DatabaseCard[];
   } catch (error) {
     console.error('Error fetching cards:', error);
-    throw new Error('Failed to fetch cards');
+    return null;
   }
 }
 
 export async function getRandomCards(limit = 50, excludeUserId?: string) {
   try {
+    await connectDB();
+
     const randomCards = await card
       .aggregate([
         {
@@ -136,16 +146,13 @@ export async function getRandomCards(limit = 50, excludeUserId?: string) {
     return serializedCards as unknown as DatabaseCard[];
   } catch (error) {
     console.error('Error fetching random filtered cards:', error);
-    throw new Error('Failed to fetch random filtered cards');
+    return null;
   }
 }
 
 export async function getCardByID(id: string) {
   try {
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      console.error('Invalid id');
-      return null;
-    }
+    await connectDB();
 
     const found = await card.findOne({ _id: id });
     if (!found) {
@@ -154,13 +161,18 @@ export async function getCardByID(id: string) {
     return found.toObject({ flattenObjectIds: true });
   } catch (error) {
     console.error('Error fetching card by user:', error);
-    throw new Error('Failed to fetch card by user');
+    return null;
   }
 }
 
 export async function getCardByUser() {
   try {
+    await connectDB();
+
     const session = await requireAuth();
+    if (!session) {
+      return null;
+    }
     const cards = await card.find({ user: session.user.id }).lean();
     const serializedCards = cards.map(doc => ({
       ...doc,
@@ -169,30 +181,34 @@ export async function getCardByUser() {
     return serializedCards as unknown as DatabaseCard[];
   } catch (error) {
     console.error('Error fetching card by user:', error);
-    throw new Error('Failed to fetch card by user');
+    return null;
   }
 }
 
 export async function removeCardByID(id: string) {
   try {
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      console.warn('Invalid id');
+    await connectDB();
+
+    const session = await requireAuth();
+    if (!session) {
       return null;
     }
-    const session = await requireAuth();
     const foundCard = await card.findById(id);
     if (!foundCard) {
-      throw new Error('Card not found');
+      console.error('Card not found');
+      return null;
     }
     if (foundCard.user !== session.user.id) {
-      throw new Error('Unauthorized');
+      console.error('Unauthorized');
+      return null;
     }
     const removed = await card.deleteOne({ _id: id });
     revalidatePath('/my-cards');
     return removed.deletedCount;
   } catch (error) {
     console.error('Error deleting card by id:', error);
-    throw new Error('Failed to delete card by id');
+    console.error('Failed to delete card by id');
+    return null;
   }
 }
 
@@ -220,30 +236,41 @@ export async function updateCardByID({
   accent?: string;
 }) {
   try {
-    const session = await requireAuth();
+    await connectDB();
+
     if (!id) {
-      throw new Error('ID is required');
+      console.error('ID is required');
+      return null;
+    }
+    const session = await requireAuth();
+
+    if (!session) {
+      return null;
     }
 
     const foundCard = await card.findById(id);
     if (!foundCard) {
-      throw new Error('Card not found');
+      console.error('Card not found');
+      return null;
     }
     if (foundCard.user !== session.user.id) {
-      throw new Error('Unauthorized');
+      console.error('Unauthorized');
+      return null;
     }
     const updateData: UpdateCard = { id: id };
 
     if (fontFamily !== undefined) {
       if (!validFonts.includes(fontFamily)) {
-        throw new Error('Invalid font family');
+        console.error('Invalid font family');
+        return null;
       }
       updateData.fontFamily = fontFamily;
     }
 
     if (borderStyle !== undefined) {
       if (!validBorders.includes(borderStyle)) {
-        throw new Error('Invalid border style');
+        console.error('Invalid border style');
+        return null;
       }
       updateData.borderStyle = borderStyle;
     }
@@ -256,11 +283,12 @@ export async function updateCardByID({
     revalidatePath('/my-cards');
 
     if (!cardData) {
-      throw new Error('Card not found');
+      console.error('Card not found');
+      return null;
     }
     return cardData.toObject({ flattenObjectIds: true });
   } catch (error) {
     console.error('Error updating card by id:', error);
-    throw new Error('Failed to update card by id');
+    return;
   }
 }

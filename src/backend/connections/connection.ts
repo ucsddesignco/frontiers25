@@ -19,7 +19,6 @@ if (!cached) {
 }
 
 async function connectDB(): Promise<mongoose.Connection> {
-  console.log('Connecting to MongoDB...');
   if (cached.conn) {
     return cached.conn;
   }

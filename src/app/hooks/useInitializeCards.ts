@@ -20,7 +20,7 @@ export function useInitializeCards({ data, session }: InitializeCardsProps) {
     if (session) {
       const fetchUserCards = async () => {
         const userCards = await getCardByUser();
-        const processsedUserCards = processCardData(userCards);
+        const processsedUserCards = processCardData(userCards || []);
 
         if (processsedUserCards.length === 3) {
           processedData[MIDDLE_CARD_INDEX - 1] = processsedUserCards[0];

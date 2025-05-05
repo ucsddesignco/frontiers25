@@ -19,7 +19,7 @@ export default async function MyCards() {
 
   const databaseCards = await getCardByUser();
 
-  const processedData = processCardData(databaseCards);
+  const processedData = processCardData(databaseCards || []);
 
   const cardData: VisibleCard[] = processedData.map(card => ({
     ...card,
