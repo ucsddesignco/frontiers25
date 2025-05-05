@@ -26,7 +26,7 @@ export default function JudgesPage({ ref, showExpanded, borderStyle }: JudgesPag
     borderStyle === 'rounded'
       ? 'rounded-xl'
       : borderStyle === 'squircle'
-        ? 'rounded-full'
+        ? 'rounded-[64px]'
         : 'rounded-none';
 
   const judges = [

@@ -16,7 +16,7 @@ export function useInitializeCards({ data, session }: InitializeCardsProps) {
 
   useEffect(() => {
     const processedData = processCardData(data);
-
+    console.log(processedData);
     // Set middle three cards to user cards
     if (session) {
       const fetchUserCards = async () => {
@@ -32,8 +32,6 @@ export function useInitializeCards({ data, session }: InitializeCardsProps) {
           processedData[MIDDLE_CARD_INDEX] = processsedUserCards[1];
         } else if (processsedUserCards.length === 1) {
           processedData[MIDDLE_CARD_INDEX] = processsedUserCards[0];
-        } else {
-          return;
         }
         setBasePattern(processedData);
       };
