@@ -3,7 +3,7 @@ import { VisibleCard } from '../hooks/useVisibleCards';
 import { APPLY_LINK, BUTTON_STYLES } from './constants';
 import { getCardLogo } from '../util/getCardLogo';
 import { getCardBorders } from '../util/getCardBorders';
-import BevelTriangles from './BevelTriangles';
+import BevelTriangles from './BevelTriangles/BevelTriangles';
 
 interface CardProps {
   card: VisibleCard;

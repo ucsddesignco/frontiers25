@@ -1,0 +1,15 @@
+.accordion-triangle {
+  position: absolute;
+  width: var(--bg-triangle-size, 24px);
+  height: var(--bg-triangle-size, 24px);
+  clip-path: polygon(0% 0%, 100% 0%, 0% 100%);
+  background: var(--triangle-primary-color, var(--card-primary-color));
+}
+
+.accordion-triangle-border {
+  position: absolute;
+  width: calc(var(--bg-triangle-size, 24px) + 3px);
+  height: calc(var(--bg-triangle-size, 24px) + 3px);
+  clip-path: polygon(0% 0%, 100% 0%, 0% 100%);
+  background: var(--triangle-accent-color, var(--card-accent-color));
+}

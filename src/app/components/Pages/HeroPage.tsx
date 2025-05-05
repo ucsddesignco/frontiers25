@@ -1,7 +1,6 @@
 import { BorderStyle } from '@/app/stores/customizationStore';
 import { APPLY_LINK, BUTTON_STYLES } from '../constants';
-import BevelTriangles from '../BevelTriangles';
-import card from '@/backend/models/card';
+import BevelTriangles from '../BevelTriangles/BevelTriangles';
 
 type HeroPageProps = {
   showExpanded: boolean;

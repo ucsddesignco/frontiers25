@@ -1,11 +1,13 @@
 import { useShallow } from 'zustand/shallow';
 import type { FontFamily, BorderStyle } from '@/app/stores/customizationStore';
-import { useContext } from 'react';
+import { CSSProperties, useContext } from 'react';
 import { useStore } from 'zustand';
 import { CustomizationContext } from '@/app/contexts/CustomizationContext';
 import { getCardLogo } from '@/app/util/getCardLogo';
 import { generateColorVariations } from '@/app/util/colorUtils';
 import { getCardBorders } from '@/app/util/getCardBorders';
+import BevelTriangles from '../BevelTriangles/BevelTriangles';
+import { getBorderRadius } from '../ExpandedCard/ExpandedCard';
 
 export interface SimplifiedCard {
   id: string;
@@ -54,6 +56,8 @@ const SimplifiedCard: React.FC<SimplifiedCardProps> = ({ id }) => {
     fontFamily,
     accent
   });
+
+  const borderRadius = getBorderRadius(borderStyle);
 
   return (
     <>
@@ -113,24 +117,41 @@ const SimplifiedCard: React.FC<SimplifiedCardProps> = ({ id }) => {
                   at our annual design-a-thon.
                 </span>
               </p>
-              <div className="relative flex w-full justify-center">
+              <div
+                style={
+                  {
+                    '--triangle-primary-color': primary,
+                    '--triangle-accent-color': buttonColor,
+                    '--bg-triangle-size': '12px'
+                  } as CSSProperties
+                }
+                className="relative flex w-full justify-center"
+              >
                 <button
                   style={{
                     backgroundColor: buttonColor,
                     transitionDuration: '300ms,200ms'
                   }}
-                  className="learn-more w-full cursor-pointer rounded-full p-2 transition-[transform,opacity] ease-in-out"
+                  className={`${borderRadius} learn-more w-full cursor-pointer p-2 transition-[transform,opacity] ease-in-out`}
                 >
-                  Learn More
+                  <span>Learn More</span>
                 </button>
+                {borderStyle === 'beveled' && <BevelTriangles />}
               </div>
               <button
-                style={{ color: buttonColor }}
-                className="apply relative cursor-pointer rounded-full p-2 transition-transform duration-card ease-in-out"
+                style={
+                  {
+                    color: buttonColor,
+                    '--triangle-primary-color': primary,
+                    '--triangle-accent-color': accent,
+                    '--bg-triangle-size': '12px'
+                  } as CSSProperties
+                }
+                className="apply relative cursor-pointer p-2 transition-transform duration-card ease-in-out"
               >
                 <span
                   style={{ backgroundColor: accent }}
-                  className={`apply-bg absolute inset-0 z-[0] inline-block h-full w-full rounded-full transition-[transform,width,height] duration-card ease-in-out`}
+                  className={`${borderRadius} apply-bg absolute inset-0 z-[0] inline-block h-full w-full transition-[transform,width,height] duration-card ease-in-out`}
                 ></span>
                 <p
                   style={{ color: primary }}
@@ -138,6 +159,7 @@ const SimplifiedCard: React.FC<SimplifiedCardProps> = ({ id }) => {
                 >
                   Apply
                 </p>
+                {borderStyle === 'beveled' && <BevelTriangles />}
               </button>
             </div>
           </div>

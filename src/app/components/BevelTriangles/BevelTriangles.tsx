@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils';
+import './BevelTriangles.scss';
 
 export default function BevelTriangles({ className }: { className?: string }) {
   return (

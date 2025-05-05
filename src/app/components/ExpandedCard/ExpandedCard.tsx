@@ -28,7 +28,7 @@ type ExpandedCardProps = {
   showExpanded: boolean;
 };
 
-function getBorderRadius(borderStyle: BorderStyle | undefined) {
+export function getBorderRadius(borderStyle: BorderStyle | undefined) {
   switch (borderStyle) {
     case 'rounded':
       return 'rounded-[8px]';

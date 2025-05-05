@@ -8,7 +8,7 @@ import {
   AccordionContent
 } from '@/components/ui/accordion';
 import { BorderStyle } from '@/app/stores/customizationStore';
-import BevelTriangles from '../BevelTriangles';
+import BevelTriangles from '../BevelTriangles/BevelTriangles';
 
 type FAQPageProps = {
   ref: Ref<HTMLDivElement>;

@@ -1,6 +1,6 @@
 import { Ref, useState } from 'react';
 import PageTitle from '../PageTitle';
-import BevelTriangles from '../BevelTriangles';
+import BevelTriangles from '../BevelTriangles/BevelTriangles';
 import { BorderStyle } from '@/app/stores/customizationStore';
 
 type AgendaPageProps = {
@@ -100,7 +100,7 @@ export default function AgendaPage({
       <div className="relative flex h-full w-full flex-col items-center justify-between gap-5">
         <div className="absolute left-1/2 top-0 z-0 h-[85%] w-[4px] bg-[var(--card-button-color)]"></div>
         <div
-          className={`z-10 flex h-[80%] w-[85%] flex-col items-center justify-between gap-10 ${borderRadius}`}
+          className={`z-10 flex h-[80%] w-full max-w-[85%] flex-col items-center justify-between gap-10 ${borderRadius}`}
         >
           {/* Item 1 */}
           <div className={`relative mb-[1%] w-full bg-[var(--card-primary-color)]`}>
@@ -112,6 +112,7 @@ export default function AgendaPage({
               <h1 className="pb-4 text-center text-[2rem] font-bold leading-[1.25] lg:text-[3rem]">
                 Check-in
               </h1>
+              <p>Participants will check-in for day 2.</p>
             </div>
           </div>
           {/* Item 2 */}
@@ -124,6 +125,7 @@ export default function AgendaPage({
               <h1 className="pb-4 text-center text-[2rem] font-bold leading-[1.25] lg:text-[3rem]">
                 Sprint Continues
               </h1>
+              <p>Participants continue to work and craft their presentations.</p>
             </div>
           </div>
           {/* Item 3 */}
@@ -147,7 +149,7 @@ export default function AgendaPage({
             >
               <p className="text-center text-[22px] font-bold">3:00 PM</p>
               <h1 className="pb-4 text-center text-[2rem] font-bold leading-[1.25] lg:text-[3rem]">
-                Finalist Revealed
+                Finalists Revealed
               </h1>
               <p>Finalist presentations will begin.</p>
             </div>
@@ -204,13 +206,13 @@ export default function AgendaPage({
         </div>
         {/* Time Line*/}
         <div
-          className={`duration-2000 ease-in-out ${activeDay === 1 ? 'opacity-100' : 'opacity-0'}`}
+          className={`w-full ease-in-out lg:max-w-[60%] ${activeDay === 1 ? 'opacity-100' : 'opacity-0'}`}
           style={{ transition: 'opacity 0.5s ease-in-out' }}
         >
           {activeDay === 1 && renderDay1()}
         </div>
         <div
-          className={`duration-2000 ease-in-out ${activeDay === 2 ? 'opacity-100' : 'opacity-0'}`}
+          className={`w-full ease-in-out lg:max-w-[60%] ${activeDay === 2 ? 'opacity-100' : 'opacity-0'}`}
           style={{ transition: 'opacity 0.5s ease-in-out' }}
         >
           {activeDay === 2 && renderDay2()}
