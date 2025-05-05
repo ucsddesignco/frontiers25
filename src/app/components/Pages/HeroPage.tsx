@@ -75,7 +75,7 @@ export default function HeroPage({
             >
               {borderStyle === 'beveled' && <BevelTriangles />}
             </span>
-            <span className="apply-text relative z-[1] mx-auto block w-fit text-[var(--card-primary-color)] transition-transform duration-card ease-in-out">
+            <span className="apply-text relative z-[1] mx-auto block w-fit text-[var(--card-button-color)] transition-transform duration-card ease-in-out">
               Apply
             </span>
           </button>

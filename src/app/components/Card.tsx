@@ -131,7 +131,7 @@ const Card: React.FC<CardProps> = ({ card, onClick, onMouseDown, onLearnMore, cl
                   {card.borderStyle === 'beveled' && <BevelTriangles />}
                 </span>
                 <p
-                  style={{ color: card.primary }}
+                  style={{ color: card.buttonColor }}
                   className="apply-text relative z-[1] mx-auto block w-fit transition-transform duration-card ease-in-out"
                 >
                   Apply
