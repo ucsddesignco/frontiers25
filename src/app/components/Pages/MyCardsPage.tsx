@@ -89,32 +89,39 @@ function MyCardsPage({ cards, handleLearnMore: _handleLearnMore }: CardsPageProp
           <DeleteIcon />
         </GlassButton>
       </GlassIsland>
+
       <div className="flex h-full w-screen flex-wrap items-center justify-center gap-16 overflow-auto bg-[#eaeaea] py-32 md:min-h-screen md:py-0">
-        {cards.map(card => {
-          const isSelected = selectedCard?.key === card.key;
-          const scaleClass = isSelected ? 'scale-[1.07]' : '';
-          return (
-            <div
-              key={card.key}
-              style={{
-                width: `${cardWidth}px`,
-                height: `${cardHeight}px`
-              }}
-            >
-              <Card
-                card={card}
-                onClick={() => {
-                  handleCardClick(card);
-                }}
-                onLearnMore={(e: React.MouseEvent<HTMLButtonElement>) => {
-                  e.stopPropagation();
-                  // handleLearnMore(card);
-                }}
-                className={`${scaleClass} hover:scale-[1.07]`}
-              />
-            </div>
-          );
-        })}
+        {cards.length === 0 ? (
+          <h1 className="text-3xl font-bold">No cards found.</h1>
+        ) : (
+          <>
+            {cards.map(card => {
+              const isSelected = selectedCard?.key === card.key;
+              const scaleClass = isSelected ? 'scale-[1.07]' : '';
+              return (
+                <div
+                  key={card.key}
+                  style={{
+                    width: `${cardWidth}px`,
+                    height: `${cardHeight}px`
+                  }}
+                >
+                  <Card
+                    card={card}
+                    onClick={() => {
+                      handleCardClick(card);
+                    }}
+                    onLearnMore={(e: React.MouseEvent<HTMLButtonElement>) => {
+                      e.stopPropagation();
+                      // handleLearnMore(card);
+                    }}
+                    className={`${scaleClass} hover:scale-[1.07]`}
+                  />
+                </div>
+              );
+            })}
+          </>
+        )}
       </div>
     </>
   );
