@@ -42,10 +42,6 @@ export default function FAQPage({ ref, showExpanded, borderStyle, borderRadius }
       question: 'Where is the Design and Innovation Building (DIB)?',
       answer:
         'DIB is located next to the Pepper Canyon Trolley Station, with entrances located across from the Structural Materials and Engineering building or next to the Regents Loop shuttle stop. Design Frontiers will be hosted in Room 208 on the second floor.'
-    },
-    {
-      question: 'How should I prepare if I have no design experience?',
-      answer: `We'll be hosting a Crash Course on Design Frontiers GBM workshop on Wednesday, May 7th from 6:30-8 PM in DIB Room 208!`
     }
   ];
 

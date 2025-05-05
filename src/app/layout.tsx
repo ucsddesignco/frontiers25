@@ -15,6 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://df25.ucsddesign.co/'),
   title: 'Design Frontiers 2025: UCSD Design Co',
   description: `Design Frontiers is Design Co's annual designathon—a two-day sprint where teams tackle real-world challenges with creative design solutions.`,
   keywords: 'Design Co, UCSD, Designathon, Design Frontiers 2025, Design Frontiers',
