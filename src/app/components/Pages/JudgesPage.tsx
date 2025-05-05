@@ -67,7 +67,7 @@ export default function JudgesPage({
         {judges.map((judge, index) => (
           <div key={index} className={`flex h-[330px] w-[200px] flex-col items-center`}>
             <div
-              className={`relative h-[250px] w-[200px] bg-[var(--card-accent-color)] ${borderRadius}`}
+              className={`relative h-[250px] w-[200px] bg-[var(--card-button-color)] ${borderRadius}`}
             >
               {renderPrimaryTriangles()}
               <Image

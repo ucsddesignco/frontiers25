@@ -38,7 +38,7 @@ export default function AgendaPage({
   function renderDay1() {
     return (
       <div className="relative flex h-full w-full flex-col items-center justify-between gap-5">
-        <div className="absolute left-1/2 top-0 z-0 h-[85%] w-[4px] bg-[var(--card-accent-color)]"></div>
+        <div className="absolute left-1/2 top-0 z-0 h-[85%] w-[4px] bg-[var(--card-button-color)]"></div>
         <div
           className={`z-10 flex h-[80%] w-[85%] flex-col items-center justify-between gap-10 ${borderRadius}`}
         >
@@ -46,7 +46,7 @@ export default function AgendaPage({
           <div className={`relative mb-[15%] bg-[var(--card-primary-color)]`}>
             {renderAccentTriangles()}
             <div
-              className={`items-center overflow-clip border-[4px] border-[var(--card-accent-color)] p-8 text-center md:p-16 ${borderRadius}`}
+              className={`items-center overflow-clip border-[4px] border-[var(--card-button-color)] p-8 text-center md:p-16 ${borderRadius}`}
             >
               <p className="text-center text-[22px] font-bold">7:00 PM</p>
               <h1 className="pb-4 text-center text-[2rem] font-bold leading-[1.25] lg:text-[3rem]">
@@ -62,7 +62,7 @@ export default function AgendaPage({
           <div className={`relative mb-[15%] bg-[var(--card-primary-color)]`}>
             {renderAccentTriangles()}
             <div
-              className={`items-center overflow-clip border-[4px] border-[var(--card-accent-color)] p-8 text-center md:p-16 ${borderRadius}`}
+              className={`items-center overflow-clip border-[4px] border-[var(--card-button-color)] p-8 text-center md:p-16 ${borderRadius}`}
             >
               <p className="text-center text-[22px] font-bold">8:00 PM</p>
               <h1 className="pb-4 text-center text-[2rem] font-bold leading-[1.25] lg:text-[3rem]">
@@ -78,7 +78,7 @@ export default function AgendaPage({
           <div className={`relative mb-[15%] bg-[var(--card-primary-color)]`}>
             {renderAccentTriangles()}
             <div
-              className={`items-center overflow-clip border-[4px] border-[var(--card-accent-color)] p-8 text-center md:p-16 ${borderRadius}`}
+              className={`items-center overflow-clip border-[4px] border-[var(--card-button-color)] p-8 text-center md:p-16 ${borderRadius}`}
             >
               <p className="text-center text-[22px] font-bold">9:00 PM</p>
               <h1 className="pb-4 text-center text-[2rem] font-bold leading-[1.25] lg:text-[3rem]">
@@ -98,7 +98,7 @@ export default function AgendaPage({
   function renderDay2() {
     return (
       <div className="relative flex h-full w-full flex-col items-center justify-between gap-5">
-        <div className="absolute left-1/2 top-0 z-0 h-[85%] w-[4px] bg-[var(--card-accent-color)]"></div>
+        <div className="absolute left-1/2 top-0 z-0 h-[85%] w-[4px] bg-[var(--card-button-color)]"></div>
         <div
           className={`z-10 flex h-[80%] w-[85%] flex-col items-center justify-between gap-10 ${borderRadius}`}
         >
@@ -106,7 +106,7 @@ export default function AgendaPage({
           <div className={`relative mb-[1%] w-full bg-[var(--card-primary-color)]`}>
             {renderAccentTriangles()}
             <div
-              className={`items-center overflow-clip border-[4px] border-[var(--card-accent-color)] p-8 text-center md:p-16 ${borderRadius}`}
+              className={`items-center overflow-clip border-[4px] border-[var(--card-button-color)] p-8 text-center md:p-16 ${borderRadius}`}
             >
               <p className="text-center text-[22px] font-bold">10:00 AM</p>
               <h1 className="pb-4 text-center text-[2rem] font-bold leading-[1.25] lg:text-[3rem]">
@@ -122,7 +122,7 @@ export default function AgendaPage({
           <div className={`relative mb-[20%] w-full bg-[var(--card-primary-color)]`}>
             {renderAccentTriangles()}
             <div
-              className={`items-center overflow-clip border-[4px] border-[var(--card-accent-color)] p-8 text-center md:p-16 ${borderRadius}`}
+              className={`items-center overflow-clip border-[4px] border-[var(--card-button-color)] p-8 text-center md:p-16 ${borderRadius}`}
             >
               <p className="text-center text-[22px] font-bold">10:30 AM</p>
               <h1 className="pb-4 text-center text-[2rem] font-bold leading-[1.25] lg:text-[3rem]">
@@ -138,7 +138,7 @@ export default function AgendaPage({
           <div className={`relative mb-[5%] w-full bg-[var(--card-primary-color)]`}>
             {renderAccentTriangles()}
             <div
-              className={`items-center overflow-clip border-[4px] border-[var(--card-accent-color)] p-8 text-center md:p-16 ${borderRadius}`}
+              className={`items-center overflow-clip border-[4px] border-[var(--card-button-color)] p-8 text-center md:p-16 ${borderRadius}`}
             >
               <p className="text-center text-[22px] font-bold">2:00 PM</p>
               <h1 className="pb-4 text-center text-[2rem] font-bold leading-[1.25] lg:text-[3rem]">
@@ -151,7 +151,7 @@ export default function AgendaPage({
           <div className={`relative mb-[5%] w-full bg-[var(--card-primary-color)]`}>
             {renderAccentTriangles()}
             <div
-              className={`items-center overflow-clip border-[4px] border-[var(--card-accent-color)] p-8 text-center md:p-16 ${borderRadius}`}
+              className={`items-center overflow-clip border-[4px] border-[var(--card-button-color)] p-8 text-center md:p-16 ${borderRadius}`}
             >
               <p className="text-center text-[22px] font-bold">3:00 PM</p>
               <h1 className="pb-4 text-center text-[2rem] font-bold leading-[1.25] lg:text-[3rem]">
@@ -164,7 +164,7 @@ export default function AgendaPage({
           <div className={`relative mb-[5%] w-full bg-[var(--card-primary-color)]`}>
             {renderAccentTriangles()}
             <div
-              className={`items-center overflow-clip border-[4px] border-[var(--card-accent-color)] p-8 text-center md:p-16 ${borderRadius}`}
+              className={`items-center overflow-clip border-[4px] border-[var(--card-button-color)] p-8 text-center md:p-16 ${borderRadius}`}
             >
               <p className="text-center text-[22px] font-bold">3:30 PM</p>
               <h1 className="pb-4 text-center text-[2rem] font-bold leading-[1.25] lg:text-[3rem]">
@@ -182,6 +182,12 @@ export default function AgendaPage({
     <section
       ref={ref}
       className={`${showExpanded ? 'opacity-100' : 'opacity-0'} duration-[0.2s] w-full scroll-m-24 transition-opacity ease-in-out`}
+      style={
+        {
+          '--triangle-primary-color': 'var(--card-primary-color)',
+          '--triangle-accent-color': 'var(--card-button-color)'
+        } as React.CSSProperties
+      }
     >
       <PageTitle title="Agenda" subtitle="What’s the timeline of our design sprint?" />
       <div className="flex h-full w-full flex-col items-center pt-5">

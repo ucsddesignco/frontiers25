@@ -50,7 +50,7 @@
   width: var(--bg-triangle-size, 24px);
   height: var(--bg-triangle-size, 24px);
   clip-path: polygon(0% 0%, 100% 0%, 0% 100%);
-  background: var(--card-primary-color);
+  background: var(--triangle-primary-color, var(--card-primary-color));
 }
 
 .accordion-triangle-border {
@@ -58,5 +58,5 @@
   width: calc(var(--bg-triangle-size, 24px) + 3px);
   height: calc(var(--bg-triangle-size, 24px) + 3px);
   clip-path: polygon(0% 0%, 100% 0%, 0% 100%);
-  background: var(--card-accent-color);
+  background: var(--triangle-accent-color, var(--card-accent-color));
 }

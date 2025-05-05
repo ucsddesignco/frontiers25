@@ -58,6 +58,12 @@ export default function FAQPage({ ref, showExpanded, borderStyle, borderRadius }
             collapsible
             className="relative w-full max-w-[90%] gap-4"
             key={index}
+            style={
+              {
+                '--triangle-primary-color': 'var(--card-primary-color)',
+                '--triangle-accent-color': 'var(--card-button-color)'
+              } as React.CSSProperties
+            }
           >
             {borderStyle === 'beveled' && <BevelTriangles />}
             <AccordionItem value={`item-${index}`}>

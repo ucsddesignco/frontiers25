@@ -33,7 +33,7 @@ const AccordionTrigger = React.forwardRef<
     <AccordionPrimitive.Trigger
       ref={ref}
       className={cn(
-        'gap-auto flex flex-1 items-center justify-between bg-[var(--card-accent-color)] p-6 pl-8 font-medium text-[var(--card-primary-color)] transition-all data-[state=open]:rounded-b-none data-[state=open]:transition-none data-[state=closed]:[transition-delay:0.185s] [&[data-state=open]>svg]:rotate-180',
+        'gap-auto flex flex-1 items-center justify-between bg-[var(--card-button-color)] p-6 pl-8 font-medium text-[var(--card-accent-color)] transition-all data-[state=open]:rounded-b-none data-[state=open]:transition-none data-[state=closed]:[transition-delay:0.185s] [&[data-state=open]>svg]:rotate-180',
         className
       )}
       {...props}
@@ -53,7 +53,7 @@ const AccordionContent = React.forwardRef<
     ref={ref}
     className={cn(
       getBorderRadiusClass(borderStyle),
-      'agp-4 text-md overflow-hidden border-x-[4px] border-b-[4px] border-[var(--card-accent-color)] bg-[var(--card-primary-color)] transition-all data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down',
+      'agp-4 text-md overflow-hidden border-x-[4px] border-b-[4px] border-[var(--card-button-color)] bg-[var(--card-primary-color)] transition-all data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down',
       className
     )}
     {...props}

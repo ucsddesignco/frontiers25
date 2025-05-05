@@ -10,6 +10,9 @@ export const usePreviousCards = (selectedCard: CanvasState['selectedCard']) => {
     if (map.has(index)) {
       const time = map.get(index) as number;
       if (time === -1) {
+        setTimeout(() => {
+          map.delete(index);
+        }, 800);
         return true;
       } else if (Date.now() - time > 350) {
         map.delete(index);
