@@ -35,6 +35,19 @@ export default function RootLayout({
     <html lang="en">
       <GoogleAnalytics gaId="G-YFF64V3JQF" />
       <head>
+        <meta name="theme-color" content="#000"></meta>
+        <link
+          rel="icon"
+          href="favicon-light.png"
+          type="image/png"
+          media="(prefers-color-scheme: dark)"
+        ></link>
+        <link
+          rel="icon"
+          href="favicon-dark.png"
+          type="image/png"
+          media="(prefers-color-scheme: light)"
+        ></link>
         {/* <script crossOrigin="anonymous" src="//unpkg.com/react-scan/dist/auto.global.js" /> */}
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
