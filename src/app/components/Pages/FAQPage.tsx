@@ -14,16 +14,10 @@ type FAQPageProps = {
   ref: Ref<HTMLDivElement>;
   showExpanded: boolean;
   borderStyle?: BorderStyle;
+  borderRadius: string;
 };
 
-export default function FAQPage({ ref, showExpanded, borderStyle }: FAQPageProps) {
-  const varBorderRadius =
-    borderStyle === 'rounded'
-      ? 'rounded-xl'
-      : borderStyle === 'squircle'
-        ? 'rounded-[32px]'
-        : 'rounded-none';
-
+export default function FAQPage({ ref, showExpanded, borderStyle, borderRadius }: FAQPageProps) {
   const faqItems = [
     {
       question: 'What is Design Frontiers?',
@@ -67,7 +61,7 @@ export default function FAQPage({ ref, showExpanded, borderStyle }: FAQPageProps
           >
             {borderStyle === 'beveled' && <BevelTriangles />}
             <AccordionItem value={`item-${index}`}>
-              <AccordionTrigger className={varBorderRadius}>
+              <AccordionTrigger className={borderRadius}>
                 <p className="max-w-[80%] text-start text-[22px]">{item.question}</p>
               </AccordionTrigger>
               <AccordionContent borderStyle={borderStyle}>

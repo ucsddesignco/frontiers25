@@ -7,9 +7,15 @@ type JudgesPageProps = {
   ref: Ref<HTMLDivElement>;
   showExpanded: boolean;
   borderStyle?: BorderStyle | undefined;
+  borderRadius: string;
 };
 
-export default function JudgesPage({ ref, showExpanded, borderStyle }: JudgesPageProps) {
+export default function JudgesPage({
+  ref,
+  showExpanded,
+  borderStyle,
+  borderRadius
+}: JudgesPageProps) {
   function renderPrimaryTriangles() {
     if (borderStyle !== 'beveled') return null;
     return (
@@ -21,13 +27,6 @@ export default function JudgesPage({ ref, showExpanded, borderStyle }: JudgesPag
       </>
     );
   }
-
-  const varBorderRadius =
-    borderStyle === 'rounded'
-      ? 'rounded-xl'
-      : borderStyle === 'squircle'
-        ? 'rounded-[64px]'
-        : 'rounded-none';
 
   const judges = [
     {
@@ -68,14 +67,14 @@ export default function JudgesPage({ ref, showExpanded, borderStyle }: JudgesPag
         {judges.map((judge, index) => (
           <div key={index} className={`flex h-[330px] w-[200px] flex-col items-center`}>
             <div
-              className={`relative h-[250px] w-[200px] bg-[var(--card-accent-color)] ${varBorderRadius}`}
+              className={`relative h-[250px] w-[200px] bg-[var(--card-accent-color)] ${borderRadius}`}
             >
               {renderPrimaryTriangles()}
               <Image
                 fill
                 src={judge.image}
                 alt={`${judge.first} ${judge.last}`}
-                className={`object-cover ${varBorderRadius}`}
+                className={`object-cover ${borderRadius}`}
               />
             </div>
             <h3 className="pt-4 text-[22px] font-bold">{`${judge.first} ${judge.last}`}</h3>

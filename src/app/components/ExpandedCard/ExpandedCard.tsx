@@ -20,12 +20,28 @@ import { getCardLogo } from '@/app/util/getCardLogo';
 import ProfileIcon from '@/app/assets/ProfileIcon';
 import AgendaIcon from '@/app/assets/AgendaIcon';
 import AboutIcon from '@/app/assets/AboutIcon';
+import { BorderStyle } from '@/app/stores/customizationStore';
 
 export type SectionId = 'faq' | 'agenda' | 'judges';
 
 type ExpandedCardProps = {
   showExpanded: boolean;
 };
+
+function getBorderRadius(borderStyle: BorderStyle | undefined) {
+  switch (borderStyle) {
+    case 'rounded':
+      return 'rounded-[8px]';
+    case 'squircle':
+      return 'rounded-[32px]';
+    case 'beveled':
+      return 'rounded-[8px]';
+    case 'rectangular':
+      return 'rounded-none';
+    default:
+      return 'rounded-none';
+  }
+}
 
 const ExpandedCardComponent = ({ showExpanded }: ExpandedCardProps) => {
   const { expandedCard, expandedCardRef, showLightFog } = useCanvasStore(
@@ -95,6 +111,8 @@ const ExpandedCardComponent = ({ showExpanded }: ExpandedCardProps) => {
     accent: expandedCard?.accent
   });
 
+  const borderRadius = getBorderRadius(expandedCard?.borderStyle);
+
   return (
     <>
       <div
@@ -119,16 +137,23 @@ const ExpandedCardComponent = ({ showExpanded }: ExpandedCardProps) => {
           borderStyle={expandedCard?.borderStyle}
         />
         {/* It is necessary for these pages to have showExpanded so that they continue to fade even when scrolling */}
-        <FAQPage ref={faqRef} showExpanded={showExpanded} borderStyle={expandedCard?.borderStyle} />
+        <FAQPage
+          ref={faqRef}
+          showExpanded={showExpanded}
+          borderStyle={expandedCard?.borderStyle}
+          borderRadius={borderRadius}
+        />
         <AgendaPage
           ref={agendaRef}
           showExpanded={showExpanded}
           borderStyle={expandedCard?.borderStyle}
+          borderRadius={borderRadius}
         />
         <JudgesPage
           ref={judgesRef}
           showExpanded={showExpanded}
           borderStyle={expandedCard?.borderStyle}
+          borderRadius={borderRadius}
         />
       </div>
       <div
