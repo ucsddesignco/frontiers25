@@ -14,7 +14,7 @@ export default function LoginModal({ open, onOpenChange }: LoginModalProps) {
       open={open}
       onOpenChange={onOpenChange}
       Icon={<LoginIcon />}
-      buttonOnClick={() => {
+      onPrimaryClick={() => {
         handleGoogleSignIn({});
       }}
       primaryText="Sign In Via UCSD"

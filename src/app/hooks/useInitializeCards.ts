@@ -1,10 +1,11 @@
-import { MIDDLE_CARD_INDEX } from './../components/constants';
-import { useEffect } from 'react';
+import { CardType, MIDDLE_CARD_INDEX } from '../components/constants';
+import { useEffect, useCallback } from 'react';
 import { useCanvasStore } from '../stores/canvasStore';
 import { DatabaseCard } from '../components/InfiniteCanvas';
 import { processCardData } from '../util/processCardData';
 import { Session } from '@/lib/auth';
 import { getCardByUser } from '../api/cardFunctions';
+import { formatRelativeTime } from '../util/formatTime';
 
 interface InitializeCardsProps {
   data: DatabaseCard[];
@@ -14,34 +15,72 @@ interface InitializeCardsProps {
 export function useInitializeCards({ data, session }: InitializeCardsProps) {
   const { setBasePattern } = useCanvasStore();
 
-  useEffect(() => {
-    const processedData = processCardData(data);
-    // Set middle three cards to user cards
-    if (session) {
-      const fetchUserCards = async () => {
-        const userCards = await getCardByUser();
-        const processsedUserCards = processCardData(userCards || []);
+  const placeUserCards = useCallback((processedData: CardType[], userCards: CardType[]) => {
+    if (!userCards.length) return processedData;
 
-        if (processsedUserCards.length === 3) {
-          processsedUserCards.sort(
-            (a, b) => new Date(a.lastUpdated).getTime() - new Date(b.lastUpdated).getTime()
-          );
-          processedData[MIDDLE_CARD_INDEX - 1] = processsedUserCards[0];
-          processedData[MIDDLE_CARD_INDEX] = processsedUserCards[2];
-          processedData[MIDDLE_CARD_INDEX + 1] = processsedUserCards[1];
-        } else if (processsedUserCards.length === 2) {
-          processedData[MIDDLE_CARD_INDEX - 1] = processsedUserCards[0];
-          processedData[MIDDLE_CARD_INDEX] = processsedUserCards[1];
-        } else if (processsedUserCards.length === 1) {
-          processedData[MIDDLE_CARD_INDEX] = processsedUserCards[0];
-        }
-        setBasePattern(processedData);
-      };
-      fetchUserCards();
-    } else {
-      setBasePattern(processedData);
+    const sortedUserCards = [...userCards].sort(
+      (a, b) => new Date(a.lastUpdated).getTime() - new Date(b.lastUpdated).getTime()
+    );
+
+    const updatedData = [...processedData];
+
+    switch (sortedUserCards.length) {
+      case 3:
+        updatedData[MIDDLE_CARD_INDEX - 1] = sortedUserCards[0];
+        updatedData[MIDDLE_CARD_INDEX] = sortedUserCards[2];
+        updatedData[MIDDLE_CARD_INDEX + 1] = sortedUserCards[1];
+        break;
+      case 2:
+        updatedData[MIDDLE_CARD_INDEX - 1] = sortedUserCards[0];
+        updatedData[MIDDLE_CARD_INDEX] = sortedUserCards[1];
+        break;
+      case 1:
+        updatedData[MIDDLE_CARD_INDEX] = sortedUserCards[0];
+        break;
     }
 
+    return updatedData;
+  }, []);
+
+  const fetchUserCards = useCallback(
+    async (processedData: CardType[]) => {
+      try {
+        const userCards = await getCardByUser();
+        const processedUserCards = processCardData(userCards || []);
+        setBasePattern(placeUserCards(processedData, processedUserCards));
+      } catch (error) {
+        console.error('Error fetching user cards:', error);
+        setBasePattern(processedData);
+      }
+    },
+    [placeUserCards, setBasePattern]
+  );
+
+  const getLocalCards = useCallback(
+    (processedData: CardType[]) => {
+      try {
+        const localCards = localStorage.getItem('localCards') || '[]';
+        const parsedLocalCards = JSON.parse(localCards).map((card: CardType) => ({
+          ...card,
+          lastUpdated: formatRelativeTime(card.lastUpdated)
+        }));
+
+        setBasePattern(placeUserCards(processedData, parsedLocalCards));
+      } catch (error) {
+        console.error('Error retrieving local cards:', error);
+        setBasePattern(processedData);
+      }
+    },
+    [placeUserCards, setBasePattern]
+  );
+
+  useEffect(() => {
+    const processedData = processCardData(data);
+    if (session) {
+      fetchUserCards(processedData);
+    } else {
+      getLocalCards(processedData);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 }

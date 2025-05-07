@@ -4,18 +4,27 @@ import { VisibleCard } from '@/app/hooks/useVisibleCards';
 // import ExpandedCard from '../ExpandedCard/ExpandedCard';
 import GlassIsland from '../GlassIsland/GlassIsland';
 import GlassButton from '../GlassButton/GlassButton';
-import EditIcon from '@/app/assets/EditIcon';
 import DeleteIcon from '@/app/assets/DeleteIcon';
 import Modal from '../Modal';
 import { removeCardByID } from '@/app/api/cardFunctions';
 import { customToast } from '@/app/util/CustomToast/CustomToast';
+import { Session } from '@/lib/auth';
+import { formatRelativeTime } from '@/app/util/formatTime';
+import { CardType } from '../constants';
 
 type CardsPageProps = {
   cards: VisibleCard[];
+  setCards: (cards: VisibleCard[]) => void;
   handleLearnMore: (card: VisibleCard) => void;
+  session: Session | null;
 };
 
-function MyCardsPage({ cards, handleLearnMore: _handleLearnMore }: CardsPageProps) {
+function MyCardsPage({
+  cards,
+  setCards,
+  handleLearnMore: _handleLearnMore,
+  session
+}: CardsPageProps) {
   const [selectedCard, setSelectedCard] = useState<VisibleCard | null>(null);
   const [openModal, setOpenModal] = useState(false);
   // const showExpanded = useCanvasStore(state => state.showExpanded);
@@ -34,6 +43,26 @@ function MyCardsPage({ cards, handleLearnMore: _handleLearnMore }: CardsPageProp
 
   const handleDeleteCard = async () => {
     if (!selectedCard) return;
+    if (!session) {
+      const localCards = localStorage.getItem('localCards') || '[]';
+      const parsedCards = JSON.parse(localCards);
+      const updatedCards = parsedCards.filter(
+        (card: VisibleCard) => card._id !== selectedCard?._id
+      );
+      localStorage.setItem('localCards', JSON.stringify(updatedCards));
+      setSelectedCard(null);
+      customToast({
+        description: 'Card deleted successfully',
+        type: 'success'
+      });
+      const updatedCardsWithDate = updatedCards.map((card: CardType) => {
+        card.lastUpdated = formatRelativeTime(card.lastUpdated);
+        return card;
+      });
+      setCards(updatedCardsWithDate);
+      setOpenModal(false);
+      return;
+    }
     const deleteCount = await removeCardByID(selectedCard._id);
     setOpenModal(false);
 
@@ -46,6 +75,8 @@ function MyCardsPage({ cards, handleLearnMore: _handleLearnMore }: CardsPageProp
       return;
     }
     if (deleteCount > 0) {
+      const updatedCards = cards.filter(card => card._id !== selectedCard._id);
+      setCards(updatedCards);
       setSelectedCard(null);
       customToast({
         description: 'Card deleted successfully',
@@ -66,7 +97,7 @@ function MyCardsPage({ cards, handleLearnMore: _handleLearnMore }: CardsPageProp
         primaryText="Delete Card"
         secondaryText="Nevermind"
         Icon={<DeleteIcon />}
-        buttonOnClick={handleDeleteCard}
+        onPrimaryClick={handleDeleteCard}
       />
       <div className="absolute inset-0" onClick={() => setSelectedCard(null)}></div>
       <GlassIsland className={selectedCard ? 'translate-y-0' : 'translate-y-[200%]'}>
@@ -90,39 +121,33 @@ function MyCardsPage({ cards, handleLearnMore: _handleLearnMore }: CardsPageProp
         </GlassButton>
       </GlassIsland>
 
-      <div className="flex h-full w-screen flex-wrap items-center justify-center gap-16 overflow-auto bg-[#eaeaea] py-32 md:min-h-screen md:py-0">
-        {cards.length === 0 ? (
-          <h1 className="text-3xl font-bold">No cards found.</h1>
-        ) : (
-          <>
-            {cards.map(card => {
-              const isSelected = selectedCard?.key === card.key;
-              const scaleClass = isSelected ? 'scale-[1.07]' : '';
-              return (
-                <div
-                  key={card.key}
-                  style={{
-                    width: `${cardWidth}px`,
-                    height: `${cardHeight}px`
-                  }}
-                >
-                  <Card
-                    card={card}
-                    onClick={() => {
-                      handleCardClick(card);
-                    }}
-                    onLearnMore={(e: React.MouseEvent<HTMLButtonElement>) => {
-                      e.stopPropagation();
-                      // handleLearnMore(card);
-                    }}
-                    className={`${scaleClass} hover:scale-[1.07]`}
-                  />
-                </div>
-              );
-            })}
-          </>
-        )}
-      </div>
+      <>
+        {cards.map(card => {
+          const isSelected = selectedCard?._id === card._id;
+          const scaleClass = isSelected ? 'scale-[1.07]' : '';
+          return (
+            <div
+              key={card._id}
+              style={{
+                width: `${cardWidth}px`,
+                height: `${cardHeight}px`
+              }}
+            >
+              <Card
+                card={card}
+                onClick={() => {
+                  handleCardClick(card);
+                }}
+                onLearnMore={(e: React.MouseEvent<HTMLButtonElement>) => {
+                  // e.stopPropagation();
+                  // handleLearnMore(card);
+                }}
+                className={`${scaleClass} hover:scale-[1.07]`}
+              />
+            </div>
+          );
+        })}
+      </>
     </>
   );
 }

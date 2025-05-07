@@ -16,7 +16,8 @@ interface ModalProps {
   description: string;
   primaryText: string;
   secondaryText?: string;
-  buttonOnClick?: () => void;
+  onPrimaryClick?: () => void;
+  onSecondaryClick?: () => void;
   Icon: React.ReactNode | null;
   onlyPrimary?: boolean;
 }
@@ -28,7 +29,8 @@ export default function Modal({
   description,
   primaryText,
   secondaryText = 'No Thanks',
-  buttonOnClick,
+  onPrimaryClick,
+  onSecondaryClick,
   Icon,
   onlyPrimary = false
 }: ModalProps) {
@@ -43,7 +45,9 @@ export default function Modal({
           {!onlyPrimary && (
             <DialogClose asChild>
               <GlassButton
-                onClick={() => {}}
+                onClick={() => {
+                  onSecondaryClick?.();
+                }}
                 onMouseDown={e => e.stopPropagation()}
                 text={secondaryText}
                 className="modal-button justify-center"
@@ -53,7 +57,7 @@ export default function Modal({
           )}
           <GlassButton
             onClick={() => {
-              buttonOnClick?.();
+              onPrimaryClick?.();
             }}
             onMouseDown={e => e.stopPropagation()}
             text={primaryText}

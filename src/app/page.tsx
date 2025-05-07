@@ -16,7 +16,7 @@ export default async function Home() {
   }
 
   return (
-    <main className="font-proxima">
+    <main>
       <InfiniteCanvas data={cardData || []} session={session} newCardToast={newCardToast} />
     </main>
   );

@@ -12,8 +12,7 @@ export default {
     extend: {
       fontFamily: {
         proxima: [
-          'ProximaNova',
-          'var(--font-geist-sans)',
+          'var(--font-proxima-nova)',
           'system-ui',
           '-apple-system',
           'BlinkMacSystemFont',
@@ -105,7 +104,8 @@ export default {
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
-        'accordion-up': 'accordion-up 0.2s ease-out'
+        'accordion-up': 'accordion-up 0.2s ease-out',
+        'spin-slow': 'spin 2s linear infinite'
       }
     }
   },

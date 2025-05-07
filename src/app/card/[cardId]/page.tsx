@@ -11,7 +11,11 @@ export default async function Page({ params }: { params: Promise<{ cardId: strin
   const param = await params;
   const cardId = param.cardId as string;
 
-  const card = await getCardByID(cardId);
+  let foundCard = null;
 
-  return <CustomizationContainer card={card} session={session} type="edit" />;
+  if (cardId.substring(0, 10) !== 'local-card') {
+    foundCard = await getCardByID(cardId);
+  }
+
+  return <CustomizationContainer card={foundCard} cardId={cardId} session={session} type="edit" />;
 }

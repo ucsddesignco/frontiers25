@@ -3,7 +3,7 @@
 import { CustomizationContext } from '@/app/contexts/CustomizationContext';
 import SimplifiedCard from './SimplifiedCard';
 import { createCustomizationStore } from '@/app/stores/customizationStore';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { parseColor } from '@react-stately/color';
 import { CustomizationPanel } from './CustomizationPanel';
 import { CustomizationDrawer } from './CustomizationDrawer';
@@ -20,21 +20,29 @@ import Modal from '../Modal';
 import LoginIcon from '@/app/assets/LoginIcon';
 import { handleGoogleSignIn } from '@/app/util/handleGoogleSignin';
 import { useRouter } from 'next/navigation';
+import { generateColorVariations } from '@/app/util/colorUtils';
+import LoadingIcon from '@/app/assets/LoadingIcon';
+import { v4 as uuidv4 } from 'uuid';
 
 interface CustomizationContainerProps {
   card: DatabaseCard | null;
+  cardId: string;
   session: Session | null;
   type: 'edit' | 'new';
 }
 
 export default function CustomizationContainer({
   card,
+  cardId,
   session,
   type
 }: CustomizationContainerProps) {
   const [openAuthModal, setOpenAuthModal] = useState(false);
   const [openContrastErrorModal, setOpenContrastErrorModal] = useState(false);
   const [openExitPageModal, setOpenExitPageModal] = useState(false);
+  const [loadedLocalCards, setLoadedLocalCards] = useState(session !== null || card);
+  const [newCard, setNewCard] = useState<DatabaseCard | null>(card);
+
   const router = useRouter();
   const store = useRef(
     createCustomizationStore({
@@ -47,16 +55,46 @@ export default function CustomizationContainer({
 
   if (!store) throw new Error('Missing CustomizationContext');
 
-  const { primary, accent, fontFamily, borderStyle, validContrast } = useStore(
+  const {
+    primary,
+    accent,
+    fontFamily,
+    borderStyle,
+    validContrast,
+    setPrimary,
+    setAccent,
+    setFontFamily,
+    setBorderStyle
+  } = useStore(
     store,
     useShallow(state => ({
       primary: state.primary,
       accent: state.accent,
       fontFamily: state.fontFamily,
       borderStyle: state.borderStyle,
-      validContrast: state.validContrast
+      validContrast: state.validContrast,
+      setPrimary: state.setPrimary,
+      setAccent: state.setAccent,
+      setFontFamily: state.setFontFamily,
+      setBorderStyle: state.setBorderStyle
     }))
   );
+
+  useEffect(() => {
+    // If card is not found in DB and user is guest, check local storage
+    if (!card && !session) {
+      const localCards = JSON.parse(localStorage.getItem('localCards') || '[]');
+      const newCard = localCards.find((card: DatabaseCard) => cardId === card._id);
+      if (newCard) {
+        setNewCard(newCard);
+        setPrimary(parseColor(newCard.primary).toString('hsl'));
+        setAccent(parseColor(newCard.accent).toString('hsl'));
+        setFontFamily(newCard.fontFamily);
+        setBorderStyle(newCard.borderStyle);
+      }
+      setLoadedLocalCards(true);
+    }
+  }, []);
 
   const handleCreateCard = async () => {
     const hexPrimary = parseColor(primary).toString('hex');
@@ -144,8 +182,101 @@ export default function CustomizationContainer({
       }
     } else if (type === 'new') {
       setOpenExitPageModal(true);
+    } else {
+      router.push('/');
     }
   };
+
+  const handleSaveLocally = () => {
+    if (session) return;
+    if (!validContrast) {
+      setOpenContrastErrorModal(true);
+      return;
+    }
+
+    const { borderColor, buttonColor, scrollbarColor } = generateColorVariations(primary, accent);
+    const localCards = JSON.parse(localStorage.getItem('localCards') || '[]');
+
+    setOpenAuthModal(false);
+
+    if (localCards.length >= 3) {
+      customToast({
+        description: 'You can only create up to 3 cards.',
+        type: 'error'
+      });
+      return;
+    }
+
+    const newCard = {
+      _id: `local-card-${uuidv4()}`,
+      primary,
+      accent,
+      fontFamily,
+      borderStyle,
+      borderColor,
+      buttonColor,
+      scrollbarColor,
+      lastUpdated: new Date().toISOString(),
+      author: 'Guest',
+      user: 'Guest'
+    };
+
+    localCards.push(newCard);
+    localStorage.setItem('localCards', JSON.stringify(localCards));
+
+    customToast({
+      description: 'Card saved locally.',
+      type: 'success'
+    });
+
+    router.push('/');
+  };
+
+  let mainContent;
+
+  if (!loadedLocalCards) {
+    mainContent = (
+      <div className="flex items-center gap-4">
+        <LoadingIcon className="animate-spin-slow" />
+        <p>Loading card...</p>
+      </div>
+    );
+  } else if (!newCard) {
+    mainContent = <h1 className="text-3xl font-bold">No cards found.</h1>;
+  } else if (newCard.user === session?.user.id || newCard.user === 'Guest') {
+    mainContent = (
+      <>
+        <GlassButton
+          onClick={handleCreateCard}
+          text="Done"
+          className="fixed right-5 top-5"
+          color="dark"
+        >
+          <DoneIcon />
+        </GlassButton>
+
+        <div className="flex h-screen w-screen flex-col items-center justify-center gap-16 bg-[#eaeaea] px-5 md:flex-row">
+          <div style={{ width: 300, height: 400 }}>
+            <SimplifiedCard id={newCard._id} />
+          </div>
+
+          <div className="gradient-border relative hidden h-[380px] w-[500px] items-center justify-center rounded-[45px] bg-[#f5f5f5] p-8 md:flex">
+            <CustomizationPanel />
+          </div>
+
+          <div className="md:hidden">
+            <CustomizationDrawer />
+          </div>
+        </div>
+      </>
+    );
+  } else {
+    mainContent = (
+      <div style={{ width: 300, height: 400 }}>
+        <SimplifiedCard id={newCard._id} />
+      </div>
+    );
+  }
 
   return (
     <CustomizationContext.Provider value={store}>
@@ -156,7 +287,7 @@ export default function CustomizationContainer({
       <Modal
         open={openAuthModal}
         onOpenChange={setOpenAuthModal}
-        buttonOnClick={() => {
+        onPrimaryClick={() => {
           handleGoogleSignIn({
             cardData: {
               primary,
@@ -166,8 +297,9 @@ export default function CustomizationContainer({
             }
           });
         }}
+        onSecondaryClick={handleSaveLocally}
         primaryText="Sign In Via UCSD"
-        secondaryText="No Thanks"
+        secondaryText="Save Locally"
         Icon={<LoginIcon />}
         title="Keep Your Cards Safe."
         description="You're not signed in — your cards might disappear later."
@@ -176,7 +308,7 @@ export default function CustomizationContainer({
       <Modal
         open={openContrastErrorModal}
         onOpenChange={setOpenContrastErrorModal}
-        buttonOnClick={() => setOpenContrastErrorModal(false)}
+        onPrimaryClick={() => setOpenContrastErrorModal(false)}
         primaryText="Okay"
         Icon={null}
         onlyPrimary={true}
@@ -187,7 +319,7 @@ export default function CustomizationContainer({
       <Modal
         open={openExitPageModal}
         onOpenChange={setOpenExitPageModal}
-        buttonOnClick={() => {
+        onPrimaryClick={() => {
           router.back();
         }}
         primaryText="Back To Gallery"
@@ -196,45 +328,9 @@ export default function CustomizationContainer({
         title="Unsaved Changes"
         description="Are you sure you want to leave? Your changes will be lost."
       />
-
-      {card ? (
-        card.user === session?.user.id || card.user === 'Guest' ? (
-          <>
-            <GlassButton
-              onClick={handleCreateCard}
-              text="Done"
-              className="fixed right-5 top-5"
-              color="dark"
-            >
-              <DoneIcon />
-            </GlassButton>
-
-            <div className="flex h-screen w-screen flex-col items-center justify-center gap-16 bg-[#eaeaea] px-5 md:flex-row">
-              <div style={{ width: 300, height: 400 }}>
-                <SimplifiedCard id={card._id} />
-              </div>
-
-              <div className="gradient-border relative hidden h-[380px] w-[500px] items-center justify-center rounded-[45px] bg-[#f5f5f5] p-8 md:flex">
-                <CustomizationPanel />
-              </div>
-
-              <div className="md:hidden">
-                <CustomizationDrawer />
-              </div>
-            </div>
-          </>
-        ) : (
-          <div className="flex h-screen w-screen flex-col items-center justify-center gap-16 bg-[#eaeaea] px-5 md:flex-row">
-            <div style={{ width: 300, height: 400 }}>
-              <SimplifiedCard id={card._id} />
-            </div>
-          </div>
-        )
-      ) : (
-        <div className="flex h-screen w-screen items-center justify-center bg-[#eaeaea]">
-          <h1 className="text-xl font-bold">Card Not Found.</h1>
-        </div>
-      )}
+      <div className="flex h-screen w-screen flex-col items-center justify-center gap-16 bg-[#eaeaea] px-5 md:flex-row">
+        {mainContent}
+      </div>
     </CustomizationContext.Provider>
   );
 }

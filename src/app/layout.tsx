@@ -1,17 +1,28 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { Toaster } from '@/components/ui/sonner';
 import { GoogleAnalytics } from '@next/third-parties/google';
+import localFont from 'next/font/local';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin']
-});
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin']
+const proximaNova = localFont({
+  src: [
+    {
+      path: '../../public/fonts/ProximaNova-Reg.woff2',
+      weight: '400',
+      style: 'normal'
+    },
+    {
+      path: '../../public/fonts/ProximaNova-Semibold.woff2',
+      weight: '600',
+      style: 'normal'
+    },
+    {
+      path: '../../public/fonts/ProximaNova-Bold.woff2',
+      weight: '700',
+      style: 'normal'
+    }
+  ],
+  variable: '--font-proxima-nova'
 });
 
 export const metadata: Metadata = {
@@ -52,7 +63,7 @@ export default function RootLayout({
 
         {/* <script crossOrigin="anonymous" src="//unpkg.com/react-scan/dist/auto.global.js" /> */}
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={`${proximaNova.variable} antialiased`}>
         {children}
         <Toaster toastOptions={{ classNames: { toast: 'custom-toast' } }} visibleToasts={1} />
       </body>

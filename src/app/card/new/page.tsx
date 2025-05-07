@@ -19,5 +19,5 @@ export default async function NewCardPage() {
     lastUpdated: new Date().toISOString()
   };
 
-  return <CustomizationContainer card={card} session={session} type="new" />;
+  return <CustomizationContainer card={card} cardId={card._id} session={session} type="new" />;
 }

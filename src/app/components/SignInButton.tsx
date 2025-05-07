@@ -54,7 +54,7 @@ function SignInButton({ session, className }: SignInButtonProps) {
       <Modal
         open={openSignOutModal}
         onOpenChange={setOpenSignOutModal}
-        buttonOnClick={handleSignOut}
+        onPrimaryClick={handleSignOut}
         primaryText="Sign Out"
         secondaryText="Nevermind"
         Icon={<LoginIcon />}

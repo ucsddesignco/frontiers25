@@ -5,6 +5,7 @@ import { auth, Session } from '@/lib/auth';
 import { headers } from 'next/headers';
 import { DatabaseCard } from '../components/InfiniteCanvas';
 import { revalidatePath } from 'next/cache';
+import { isValidObjectId } from 'mongoose';
 
 const validBorders = ['rectangular', 'rounded', 'beveled', 'squircle'];
 const validFonts = [
@@ -164,6 +165,11 @@ export async function getRandomCards(limit = 50, excludeUserId?: string) {
 export async function getCardByID(id: string) {
   try {
     await connectDB();
+
+    if (!isValidObjectId(id)) {
+      console.error('Invalid card id');
+      return null;
+    }
 
     const found = await card.findOne({ _id: id });
     if (!found) {
