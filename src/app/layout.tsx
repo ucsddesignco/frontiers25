@@ -24,7 +24,19 @@ export const metadata: Metadata = {
     { name: 'Edward New' },
     { name: 'Sahil Gathe' },
     { name: 'Victor Hsiao' }
-  ]
+  ],
+  icons: {
+    icon: [
+      {
+        url: '/favicon-light.png',
+        media: '(prefers-color-scheme: dark)'
+      },
+      {
+        url: '/favicon-dark.png',
+        media: '(prefers-color-scheme: light)'
+      }
+    ]
+  }
 };
 
 export default function RootLayout({
@@ -37,18 +49,7 @@ export default function RootLayout({
       <GoogleAnalytics gaId="G-YFF64V3JQF" />
       <head>
         <meta name="theme-color" content="#000"></meta>
-        <link
-          rel="icon"
-          href="favicon-light.png"
-          type="image/png"
-          media="(prefers-color-scheme: dark)"
-        ></link>
-        <link
-          rel="icon"
-          href="favicon-dark.png"
-          type="image/png"
-          media="(prefers-color-scheme: light)"
-        ></link>
+
         {/* <script crossOrigin="anonymous" src="//unpkg.com/react-scan/dist/auto.global.js" /> */}
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>

@@ -1,44 +1,51 @@
 import { authClient } from '@/lib/auth-client';
+import { setCookie } from './cookieFunctions';
+
+interface CreateCard {
+  primary: string;
+  accent: string;
+  fontFamily: string;
+  borderStyle: string;
+}
 
 export interface HandleGoogleSignInProps {
-  onRequest?: () => void;
-  onSuccess?: () => void;
   onError?: () => void;
-  onFinally?: () => void;
+  cardData?: CreateCard;
 }
 
 export async function handleGoogleSignIn({
-  onRequest,
-  onSuccess,
   onError,
-  onFinally
+  cardData = undefined
 }: HandleGoogleSignInProps) {
   try {
-    const { error } = await authClient.signIn.social(
-      {
-        provider: 'google',
-        callbackURL: '/'
-      },
-      {
-        onRequest: () => {
-          onRequest?.();
-        },
-        onSuccess: () => {
-          onSuccess?.();
-        },
-        onError: ctx => {
+    // Set cookie with card data
+    if (cardData) {
+      // document.cookie = `cardData=${encodeURIComponent(JSON.stringify({ cardData }))}; path=/; secure`;
+      setCookie('cardData', JSON.stringify({ cardData }), {
+        secure: true,
+        maxAge: 30
+      });
+    }
+
+    const { error } = await authClient.signIn.social({
+      provider: 'google',
+      callbackURL: '/',
+      fetchOptions: {
+        onResponse: async () => {},
+        onError: err => {
+          console.error('Sign-in error:', err);
           onError?.();
-          console.error('Error during sign-in:', ctx.error);
         }
       }
-    );
+    });
 
     if (error) {
       console.error('An unexpected error occurred', error);
+      onError?.();
     }
   } catch (error) {
     console.error('An unexpected error occurred', error);
+    onError?.();
   } finally {
-    onFinally?.();
   }
 }

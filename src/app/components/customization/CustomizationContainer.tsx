@@ -157,7 +157,14 @@ export default function CustomizationContainer({
         open={openAuthModal}
         onOpenChange={setOpenAuthModal}
         buttonOnClick={() => {
-          handleGoogleSignIn({ onSuccess: () => setOpenAuthModal(false) });
+          handleGoogleSignIn({
+            cardData: {
+              primary,
+              accent,
+              fontFamily,
+              borderStyle
+            }
+          });
         }}
         primaryText="Sign In Via UCSD"
         secondaryText="No Thanks"

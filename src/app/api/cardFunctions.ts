@@ -1,7 +1,7 @@
 'use server';
 import card from '../../backend/models/card';
 import connectDB from '../../backend/connections/connection';
-import { auth } from '@/lib/auth';
+import { auth, Session } from '@/lib/auth';
 import { headers } from 'next/headers';
 import { DatabaseCard } from '../components/InfiniteCanvas';
 import { revalidatePath } from 'next/cache';
@@ -48,7 +48,7 @@ const requireAuth = async () => {
   });
 
   if (!session) {
-    console.log('No session found');
+    console.error('No session found');
     return null;
   }
 
@@ -59,32 +59,43 @@ export default async function createCard({
   fontFamily,
   borderStyle,
   primary,
-  accent
+  accent,
+  middlewareSession = null
 }: {
   fontFamily: string;
   borderStyle: string;
   primary: string;
   accent: string;
+  middlewareSession?: Session | null;
 }) {
+  const defaultError = { error: 'Failed to Create Card' };
   try {
     await connectDB();
 
     if (!validFonts.includes(fontFamily)) {
       console.error('Invalid font family');
-      return null;
+      return defaultError;
     } else if (!validBorders.includes(borderStyle)) {
       console.error('Invalid border style');
-      return null;
+      return defaultError;
     }
 
-    const session = await requireAuth();
+    let session;
 
-    if (!session) {
-      return null;
+    if (!middlewareSession) {
+      session = await requireAuth();
+
+      if (!session) {
+        console.error('No session found');
+        return defaultError;
+      }
+    } else {
+      session = middlewareSession;
     }
 
     const user_cards = await card.find({ user: session.user.id });
     if (user_cards.length >= 3) {
+      console.error('User has reached the maximum number of cards');
       return { error: 'You can only create up to 3 cards.' };
     } else {
       const new_card = await card.create({
@@ -102,7 +113,7 @@ export default async function createCard({
   } catch (error) {
     console.error('Error creating card:', error);
     // TODO: Handle error appropriately
-    return null;
+    return defaultError;
   }
 }
 

@@ -22,15 +22,21 @@ import GalleryButton from './GalleryButton';
 import MobileGalleryFog from './MobileGalleryFog';
 import { Session } from '@/lib/auth';
 import CreateCard from './CreateCard';
+import { customToast } from '../util/CustomToast/CustomToast';
+import { deleteCookie } from '../util/cookieFunctions';
 
 export type DatabaseCard = Omit<CardType, 'borderColor' | 'buttonColor' | 'scrollbarColor'>;
 
 type InfiniteCanvasProps = {
   data: DatabaseCard[];
   session: Session | null;
+  newCardToast: {
+    status: 'success' | 'error';
+    message: string;
+  };
 };
 
-const InfiniteCanvas = ({ data, session }: InfiniteCanvasProps) => {
+const InfiniteCanvas = ({ data, session, newCardToast }: InfiniteCanvasProps) => {
   const {
     containerRef,
     showExpanded,
@@ -144,6 +150,18 @@ const InfiniteCanvas = ({ data, session }: InfiniteCanvasProps) => {
     }
     setCardSize({ width, height, gap });
   }, [setCardSize]);
+
+  useEffect(() => {
+    if (newCardToast) {
+      requestAnimationFrame(() => {
+        customToast({
+          type: newCardToast.status,
+          description: newCardToast.message
+        });
+      });
+      deleteCookie('new_card_status');
+    }
+  }, [newCardToast]);
 
   return (
     <>

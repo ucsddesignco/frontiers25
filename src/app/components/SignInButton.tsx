@@ -82,7 +82,7 @@ function SignInButton({ session, className }: SignInButtonProps) {
           <div className="my-1 h-0.5 bg-gray-300" />
           <DropdownMenuItem onClick={() => setOpenSignOutModal(true)}>
             <LoginIcon />
-            Log Out
+            Sign Out
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

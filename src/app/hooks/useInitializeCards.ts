@@ -23,9 +23,12 @@ export function useInitializeCards({ data, session }: InitializeCardsProps) {
         const processsedUserCards = processCardData(userCards || []);
 
         if (processsedUserCards.length === 3) {
+          processsedUserCards.sort(
+            (a, b) => new Date(a.lastUpdated).getTime() - new Date(b.lastUpdated).getTime()
+          );
           processedData[MIDDLE_CARD_INDEX - 1] = processsedUserCards[0];
-          processedData[MIDDLE_CARD_INDEX] = processsedUserCards[1];
-          processedData[MIDDLE_CARD_INDEX + 1] = processsedUserCards[2];
+          processedData[MIDDLE_CARD_INDEX] = processsedUserCards[2];
+          processedData[MIDDLE_CARD_INDEX + 1] = processsedUserCards[1];
         } else if (processsedUserCards.length === 2) {
           processedData[MIDDLE_CARD_INDEX - 1] = processsedUserCards[0];
           processedData[MIDDLE_CARD_INDEX] = processsedUserCards[1];
