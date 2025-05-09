@@ -18,7 +18,7 @@ export function CustomizationDrawer() {
   return (
     <Drawer>
       <DrawerTrigger asChild>
-        <Button variant="outline" className="h-16 w-60 rounded-full">
+        <Button variant="outline" className="h-16 w-60 rounded-full bg-[#f5f5f5]">
           <div className="flex justify-between gap-10">
             <span className="hover:cursor-pointer">
               <ColorIcon />
@@ -32,7 +32,7 @@ export function CustomizationDrawer() {
           </div>
         </Button>
       </DrawerTrigger>
-      <DrawerContent className="w-[96%] justify-self-center rounded-[44px] p-6 pt-0">
+      <DrawerContent className="gradient-border w-[96%] justify-self-center rounded-[46px] bg-[#f5f5f5] p-6 pt-0">
         <VisuallyHidden.Root>
           <DrawerTitle>Customization Drawer</DrawerTitle>
         </VisuallyHidden.Root>

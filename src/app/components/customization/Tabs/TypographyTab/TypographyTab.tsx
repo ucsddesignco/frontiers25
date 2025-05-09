@@ -74,10 +74,10 @@ export function TypographyTab() {
           {
             '--border-radius': '12px',
             '--gradient-color': '#D8D7D9',
-            '--text-shadow-color': '#FFF'
+            '--text-shadow-color': '#FFFF'
           } as CSSProperties
         }
-        className="glass-button z-0 mb-2 cursor-pointer items-center px-4 py-2"
+        className="glass-button z-0 cursor-pointer items-center px-4 py-2"
       >
         <div className="color-overlay pointer-events-none"></div>
         <div className={`blur-background pointer-events-none bg-[rgba(255,255,255,0.80)]`}></div>

@@ -58,7 +58,7 @@ export function ColorTab() {
             color: primaryText
           }}
         >
-          <p>Primary</p>
+          <p className="text-[16px] font-medium">Primary</p>
 
           <p
             className={`overflow-hidden transition-all duration-300 ${
@@ -81,7 +81,7 @@ export function ColorTab() {
             color: accentText
           }}
         >
-          <p>Accent</p>
+          <p className="text-[16px] font-medium">Accent</p>
           <p
             className={`overflow-hidden transition-all duration-300 ${
               selectedColor === 'accent' ? 'max-w-full opacity-100' : 'max-w-0 opacity-0'

@@ -14,8 +14,11 @@ export function CustomizationPanel() {
   if (!store) throw new Error('Missing CustomizationContext');
 
   return (
-    <Tabs defaultValue="color" className="relative h-full w-full">
-      <TabsList className="relative top-0 mb-12 grid w-full grid-cols-3">
+    <Tabs
+      defaultValue="color"
+      className="space-between relative flex h-full w-full flex-col bg-[#f5f5f5]"
+    >
+      <TabsList className="relative top-0 mb-12 grid h-[40px] w-full grid-cols-3">
         <TabsTrigger value="color" className={`hover:cursor-pointer`}>
           <ColorIcon />
         </TabsTrigger>
@@ -27,16 +30,16 @@ export function CustomizationPanel() {
         </TabsTrigger>
       </TabsList>
 
-      <div className="h-[240px]">
+      <div className="h-[220px]">
         <TabsContent value="color">
           <ColorTab />
         </TabsContent>
 
-        <TabsContent value="typography" className="h-full overflow-y-auto">
+        <TabsContent value="typography" className="h-full overflow-visible">
           <TypographyTab />
         </TabsContent>
 
-        <TabsContent value="border">
+        <TabsContent value="border" className="h-full overflow-visible">
           <BorderTab />
         </TabsContent>
       </div>

@@ -38,13 +38,29 @@
     z-index: -1;
   }
 
+  .gradient-bkd {
+    position: absolute;
+    inset: 0;
+    height: 158%;
+    width: 118%;
+    transform: translateX(-9%);
+    background-blend-mode: hard-light;
+    z-index: -1;
+    background: linear-gradient(
+      to top,
+      rgba(245, 245, 245, 1) 0%,
+      rgba(245, 245, 245, 0.6) 60%,
+      rgba(245, 245, 245, 0.2) 100%
+    );
+  }
+
   .blur-background {
     position: absolute;
     inset: 0;
     border-radius: var(--border-radius);
-    background-blend-mode: hard-light;
-    -webkit-mask-image: linear-gradient(to top, black 80%, rgba(0, 0, 0, 0.75) 100%);
-    mask-image: linear-gradient(to top, black 80%, rgba(0, 0, 0, 0.75) 100%);
+    background-blend-mode: plus-darker;
+    -webkit-mask-image: linear-gradient(to top, black 60%, rgba(0, 0, 0, 0.75) 100%);
+    mask-image: linear-gradient(to top, black 60%, rgba(0, 0, 0, 0.75) 100%);
     backdrop-filter: blur(12px);
     filter: blur(6px);
     height: 158%;

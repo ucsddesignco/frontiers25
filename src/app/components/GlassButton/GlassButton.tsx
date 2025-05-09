@@ -62,6 +62,10 @@ const GlassButton = forwardRef<HTMLButtonElement, GlassButtonProps>(
         className={`${sizeClass} ${textColor} ${widthClass} glass-button pointer-events-none justify-center`}
       >
         <div className="color-overlay pointer-events-none"></div>
+        {
+          //implemented gradient fill but it needs to change depending on the button color
+          // <!-- <div className="gradient-bkd pointer-events-none"></div> -->
+        }
         <div className={`${blurColorClass} blur-background pointer-events-none`}></div>
         <div className="top-highlight pointer-events-none"></div>
         {children}
