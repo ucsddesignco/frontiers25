@@ -173,7 +173,7 @@ const InfiniteCanvas = ({ data, session, newCardToast }: InfiniteCanvasProps) =>
 
         <MobileGalleryFog showFog={showMobileGalleryFog} />
 
-        <BackgroundDots position={position} zoomLevel={zoomLevel} />
+        {/* <BackgroundDots position={position} zoomLevel={zoomLevel} /> */}
 
         {/* Desktop */}
         <ResetButton handleGalleryClick={handleGalleryClick} handleResetZoom={handleResetZoom} />

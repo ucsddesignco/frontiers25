@@ -141,6 +141,12 @@ export default function CustomizationContainer({
       return;
     }
 
+    // Require authentication for database operations
+    if (!session) {
+      setOpenAuthModal(true);
+      return;
+    }
+
     // Handle new local card creation (for unauthenticated users)
     if (!session && type === 'new') {
       const { borderColor, buttonColor, scrollbarColor } = generateColorVariations(
@@ -179,12 +185,6 @@ export default function CustomizationContainer({
         type: 'success'
       });
       router.push('/');
-      return;
-    }
-
-    // Require authentication for database operations
-    if (!session) {
-      setOpenAuthModal(true);
       return;
     }
 
