@@ -23,7 +23,10 @@ const SelectedIsland = ({ selectedCard, session }: SelectedIslandProps) => {
 
   const selectedCardIndex = selectedCard ? parseInt(selectedCard) : 0;
 
-  const isUsersCard = selectedCard && session?.user.id === basePattern[selectedCardIndex].user;
+  const cardData = basePattern[selectedCardIndex];
+
+  const isUsersCard =
+    selectedCard && (session?.user.id === cardData.user || cardData._id.includes('local-card'));
 
   const cardId = selectedCard ? basePattern[selectedCardIndex]._id : '';
 

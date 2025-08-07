@@ -35,7 +35,7 @@ export function useCardInteractions() {
 
   const handleLearnMore = useCallback(
     (card: VisibleCard) => {
-      if (card.isFading || expandedCard !== null || cardIsExpanding) return;
+      if (expandedCard !== null || cardIsExpanding) return;
       if (showLightFog) setShowLightFog(false);
 
       const clickedCard = document.getElementById(`card-container-${card.key}`);

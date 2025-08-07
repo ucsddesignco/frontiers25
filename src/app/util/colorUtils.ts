@@ -1,4 +1,4 @@
-import { parseColor, Color } from '@react-stately/color'; // Make sure to install @react-stately/color
+import { contrast, isValidColor, lighten, darken, hex2oklch, oklch2hex, convert } from 'colorizr';
 
 type ColorVariations = {
   borderColor: string;
@@ -7,64 +7,149 @@ type ColorVariations = {
 };
 
 export function generateColorVariations(primary: string, accent: string): ColorVariations {
-  let primaryColor: Color;
-  let accentColor: Color;
-
-  try {
-    primaryColor = parseColor(primary).toFormat('hsl');
-    accentColor = parseColor(accent).toFormat('hsl');
-  } catch (e) {
-    console.error('Invalid color format provided:', e);
+  if (!isValidColor(primary) || !isValidColor(accent)) {
     return {
-      borderColor: '#000000',
-      buttonColor: '#FFFFFF',
+      borderColor: '#333333',
+      buttonColor: '#000000',
       scrollbarColor: '#808080'
     };
   }
 
-  const primarySaturation = primaryColor.getChannelValue('saturation');
-  const primaryLightness = primaryColor.getChannelValue('lightness');
+  const borderColor = darken(primary, 15);
 
-  // const accentHue = accentColor.getChannelValue('hue');
-  // const accentSaturation = accentColor.getChannelValue('saturation');
-  const accentLightness = accentColor.getChannelValue('lightness');
+  const scrollbarColor = lighten(accent, 20);
 
-  const borderSaturation = Math.min(primarySaturation + 15, 100);
-  const borderLightness = Math.max(primaryLightness - 15, 0);
+  const buttonColor = generateButtonColor(primary);
 
-  const borderColorColor = primaryColor
-    .withChannelValue('saturation', borderSaturation)
-    .withChannelValue('lightness', borderLightness);
+  return {
+    borderColor,
+    buttonColor,
+    scrollbarColor
+  };
+}
 
-  const buttonSaturation = Math.max(primarySaturation - 5, 0);
+function generateButtonColor(primary: string): string {
+  const MIN_UI_CONTRAST_DARK = 1.35;
+  const MIN_UI_CONTRAST_BRIGHT = 1.18;
+  const MAX_ITERATIONS = 50;
+  const INITIAL_STEP = 1.5;
 
-  let buttonLightness: number;
-  if (primaryLightness <= 5) {
-    buttonLightness = Math.min(primaryLightness + 25, 100);
-  } else if (primaryLightness >= 95) {
-    buttonLightness = Math.max(primaryLightness - 25, 0);
+  const primaryLch = hex2oklch(convert(primary, 'hex'));
+  const primaryLightness = primaryLch.l * 100; // Convert to 0-100 range
+  const primaryChroma = primaryLch.c;
+  const primaryHue = primaryLch.h;
+
+  // Prefer brighter colors more often
+  const preferLighter = primaryLightness < 95;
+
+  let buttonColor: string | null = null;
+  const minContrast = primaryLightness < 60 ? MIN_UI_CONTRAST_DARK : MIN_UI_CONTRAST_BRIGHT;
+
+  // Try the preferred direction first
+  if (preferLighter) {
+    buttonColor = searchInDirection(primary, 1, minContrast, MAX_ITERATIONS, INITIAL_STEP);
   } else {
-    buttonLightness = Math.min(primaryLightness + 10, 95);
+    buttonColor = searchInDirection(primary, -1, minContrast, MAX_ITERATIONS, INITIAL_STEP);
   }
 
-  const buttonColorColor = primaryColor
-    .withChannelValue('saturation', buttonSaturation)
-    .withChannelValue('lightness', buttonLightness);
-
-  let scrollbarLightness: number;
-  const adjustment = 10;
-
-  if (accentLightness < 50) {
-    scrollbarLightness = Math.min(accentLightness + adjustment, 100);
-  } else {
-    scrollbarLightness = Math.max(accentLightness - adjustment, 0);
+  // If preferred direction failed, try the other direction
+  if (!buttonColor) {
+    const alternateDirection = preferLighter ? -1 : 1;
+    buttonColor = searchInDirection(
+      primary,
+      alternateDirection,
+      minContrast,
+      MAX_ITERATIONS,
+      INITIAL_STEP
+    );
   }
 
-  const scrollbarColorColor = accentColor.withChannelValue('lightness', scrollbarLightness);
+  // Final fallback
+  if (!buttonColor) {
+    const fallbackLightness = preferLighter
+      ? Math.min(100, primaryLightness + 15)
+      : Math.max(0, primaryLightness - 15);
 
-  const borderColor = borderColorColor.toString('hex');
-  const buttonColor = buttonColorColor.toString('hex');
-  const scrollbarColor = scrollbarColorColor.toString('hex');
+    const fallbackLch = {
+      l: fallbackLightness / 100, // Convert back to 0-1 range
+      c: primaryChroma * 0.8,
+      h: primaryHue
+    };
 
-  return { borderColor, buttonColor, scrollbarColor };
+    buttonColor = clampToValidRange(fallbackLch);
+  }
+
+  return buttonColor;
+}
+
+function searchInDirection(
+  primary: string,
+  direction: number, // 1 = lighter, -1 = darker
+  minContrast: number,
+  maxIterations: number,
+  initialStep: number
+): string | null {
+  const primaryLch = hex2oklch(convert(primary, 'hex'));
+  const primaryLightness = primaryLch.l * 100; // Convert to 0-100 range
+  const primaryChroma = primaryLch.c;
+  const primaryHue = primaryLch.h;
+
+  let currentLightness = primaryLightness;
+  let currentChroma = primaryChroma;
+  let step = initialStep;
+
+  for (let i = 0; i < maxIterations; i++) {
+    const candidateLch = {
+      l: currentLightness / 100, // Convert back to 0-1 range
+      c: currentChroma,
+      h: primaryHue
+    };
+
+    const candidate = clampToValidRange(candidateLch);
+    const uiContrast = contrast(candidate, primary);
+
+    if (uiContrast >= minContrast) {
+      return candidate;
+    }
+
+    // Adjust lightness for next iteration
+    currentLightness += direction * step;
+
+    // Check boundaries
+    if (currentLightness <= 0 || currentLightness >= 100) {
+      // Hit boundary, try reducing chroma and resetting lightness
+      currentLightness = primaryLightness;
+      currentChroma = Math.max(0, currentChroma - 0.05);
+      step = initialStep;
+
+      if (currentChroma < 0.05) {
+        break;
+      }
+    } else if (i % 8 === 7) {
+      // Increase step size periodically for faster convergence
+      step = Math.min(step + 1, 4);
+    }
+  }
+
+  return null;
+}
+
+function clampToValidRange(lch: { l: number; c: number; h: number }): string {
+  const clampedL = Math.max(0, Math.min(1, lch.l));
+  const clampedC = Math.max(0, Math.min(0.5, lch.c));
+  const clampedH = lch.h || 0;
+
+  try {
+    return oklch2hex({
+      l: clampedL,
+      c: clampedC,
+      h: clampedH
+    });
+  } catch {
+    return oklch2hex({
+      l: clampedL,
+      c: 0,
+      h: 0
+    });
+  }
 }

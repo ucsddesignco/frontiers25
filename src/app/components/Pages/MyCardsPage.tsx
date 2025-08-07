@@ -9,8 +9,7 @@ import Modal from '../Modal';
 import { removeCardByID } from '@/app/api/cardFunctions';
 import { customToast } from '@/app/util/CustomToast/CustomToast';
 import { Session } from '@/lib/auth';
-import { formatRelativeTime } from '@/app/util/formatTime';
-import { CardType } from '../constants';
+import { removeCardFromCache } from '@/app/util/cacheInvalidation';
 
 type CardsPageProps = {
   cards: VisibleCard[];
@@ -36,31 +35,19 @@ function MyCardsPage({
   const cardWidth = 300;
   const cardHeight = 400;
 
-  // if (isMobile) {
-  //   cardWidth = Math.min(Math.max(window.innerWidth * 0.8, 292), 300);
-  //   cardHeight = cardWidth * (4 / 3);
-  // }
-
   const handleDeleteCard = async () => {
     if (!selectedCard) return;
     if (!session) {
-      const localCards = localStorage.getItem('localCards') || '[]';
-      const parsedCards = JSON.parse(localCards);
-      const updatedCards = parsedCards.filter(
-        (card: VisibleCard) => card._id !== selectedCard?._id
-      );
-      localStorage.setItem('localCards', JSON.stringify(updatedCards));
+      removeCardFromCache(selectedCard._id);
+      const updatedCards = cards.filter(card => card._id !== selectedCard._id);
+      setCards(updatedCards);
       setSelectedCard(null);
+      setOpenModal(false);
+
       customToast({
         description: 'Card deleted successfully',
         type: 'success'
       });
-      const updatedCardsWithDate = updatedCards.map((card: CardType) => {
-        card.lastUpdated = formatRelativeTime(card.lastUpdated);
-        return card;
-      });
-      setCards(updatedCardsWithDate);
-      setOpenModal(false);
       return;
     }
     const deleteCount = await removeCardByID(selectedCard._id);
@@ -75,9 +62,11 @@ function MyCardsPage({
       return;
     }
     if (deleteCount > 0) {
+      removeCardFromCache(selectedCard._id);
       const updatedCards = cards.filter(card => card._id !== selectedCard._id);
       setCards(updatedCards);
       setSelectedCard(null);
+
       customToast({
         description: 'Card deleted successfully',
         type: 'success'

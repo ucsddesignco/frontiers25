@@ -15,9 +15,6 @@ interface CardProps {
 
 const Card: React.FC<CardProps> = ({ card, onClick, onMouseDown, onLearnMore, className = '' }) => {
   // Calculate opacity for fading cards
-  const opacity = card.isFading
-    ? Math.max(0, 1 - (Date.now() - (card.fadeStartTime || 0)) / 300)
-    : 1;
 
   const CardLogo = getCardLogo({
     fontFamily: card.fontFamily,
@@ -37,7 +34,6 @@ const Card: React.FC<CardProps> = ({ card, onClick, onMouseDown, onLearnMore, cl
         onClick={onClick}
         onMouseDown={onMouseDown}
         className={`${className} duration-[0.2s] relative z-[0] h-full cursor-pointer transition-[transform,opacity] ease-out`}
-        style={{ opacity }}
       >
         <div className="relative h-full">
           <div

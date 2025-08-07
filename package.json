@@ -25,6 +25,7 @@
     "better-auth": "^1.2.7",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "colorizr": "^3.0.8",
     "lint-staged": "^15.5.0",
     "lucide-react": "^0.503.0",
     "mongodb": "6.15.0",

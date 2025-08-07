@@ -24,11 +24,32 @@ const GalleryPage = ({ cards, session }: GalleryPageProps) => {
   useEffect(() => {
     if (!session) {
       const localCards = localStorage.getItem('localCards') || '[]';
-      const parsedCards = JSON.parse(localCards).map((card: CardType) => {
-        card.lastUpdated = formatRelativeTime(card.lastUpdated);
-        return card;
-      });
-      setMyCards(parsedCards);
+      const tempCards = JSON.parse(localCards).sort(
+        (a: CardType, b: CardType) =>
+          new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime()
+      );
+
+      let processedCards: VisibleCard[] = [];
+      switch (tempCards.length) {
+        case 3:
+          processedCards[1] = tempCards[0];
+          processedCards[0] = tempCards[2];
+          processedCards[2] = tempCards[1];
+          break;
+        case 2:
+          processedCards[1] = tempCards[0];
+          processedCards[0] = tempCards[1];
+          break;
+        case 1:
+          processedCards[0] = tempCards[0];
+          break;
+        default:
+      }
+      processedCards = processedCards.map((card: VisibleCard) => ({
+        ...card,
+        lastUpdated: formatRelativeTime(card.lastUpdated)
+      }));
+      setMyCards(processedCards);
       setLoadedLocalCards(true);
     }
   }, []);

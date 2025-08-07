@@ -67,19 +67,15 @@ function CardGrid({
         const previousClass = isPrevious && !isSelected ? 'z-[1]' : '';
         const showThickFog = (isSelected || isPrevious) && zoomLevel === 1 && !wasZoomed;
 
-        const handleCardClick = card.isFading
-          ? (e: React.MouseEvent<HTMLDivElement>) => {
-              e.preventDefault();
+        const handleCardClick = () => {
+          if (!didDrag && selectedCard !== patternIndexString) {
+            if (wasZoomed) {
+              setWasZoomed(false);
             }
-          : () => {
-              if (!didDrag && selectedCard !== patternIndexString) {
-                if (wasZoomed) {
-                  setWasZoomed(false);
-                }
-                centerToCard(card.x, card.y);
-                setSelectedCard(patternIndexString);
-              }
-            };
+            centerToCard(card.x, card.y);
+            setSelectedCard(patternIndexString);
+          }
+        };
 
         return (
           <div
@@ -90,8 +86,7 @@ function CardGrid({
                 left: `${card.x}px`,
                 top: `${card.y}px`,
                 width: `${cardSize.width}px`,
-                height: `${cardSize.height}px`,
-                zIndex: card.isFading ? -1 : ''
+                height: `${cardSize.height}px`
               } as CSSProperties
             }
           >

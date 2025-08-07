@@ -23,6 +23,12 @@ import { useRouter } from 'next/navigation';
 import { generateColorVariations } from '@/app/util/colorUtils';
 import LoadingIcon from '@/app/assets/LoadingIcon';
 import { v4 as uuidv4 } from 'uuid';
+import {
+  updateCardInCache,
+  addCardToCache,
+  updateLocalCardInCache,
+  addLocalCardToCache
+} from '@/app/util/cacheInvalidation';
 
 interface CustomizationContainerProps {
   card: DatabaseCard | null;
@@ -84,17 +90,17 @@ export default function CustomizationContainer({
     // If card is not found in DB and user is guest, check local storage
     if (!card && !session) {
       const localCards = JSON.parse(localStorage.getItem('localCards') || '[]');
-      const newCard = localCards.find((card: DatabaseCard) => cardId === card._id);
-      if (newCard) {
-        setNewCard(newCard);
-        setPrimary(parseColor(newCard.primary).toString('hsl'));
-        setAccent(parseColor(newCard.accent).toString('hsl'));
-        setFontFamily(newCard.fontFamily);
-        setBorderStyle(newCard.borderStyle);
+      const foundCard = localCards.find((card: DatabaseCard) => cardId === card._id);
+      if (foundCard) {
+        setNewCard(foundCard);
+        setPrimary(parseColor(foundCard.primary).toString('hsl'));
+        setAccent(parseColor(foundCard.accent).toString('hsl'));
+        setFontFamily(foundCard.fontFamily);
+        setBorderStyle(foundCard.borderStyle);
       }
       setLoadedLocalCards(true);
     }
-  }, []);
+  }, [card, session, cardId, setPrimary, setAccent, setFontFamily, setBorderStyle]);
 
   const handleCreateCard = async () => {
     const hexPrimary = parseColor(primary).toString('hex');
@@ -103,7 +109,81 @@ export default function CustomizationContainer({
     if (!validContrast) {
       setOpenContrastErrorModal(true);
       return;
-    } else if (!session) {
+    }
+
+    // Handle local card editing (for unauthenticated users)
+    if (!session && type === 'edit' && newCard && newCard._id.startsWith('local-card-')) {
+      const { borderColor, buttonColor, scrollbarColor } = generateColorVariations(
+        hexPrimary,
+        hexAccent
+      );
+
+      const updatedLocalCard = {
+        ...newCard,
+        primary: hexPrimary,
+        accent: hexAccent,
+        fontFamily,
+        borderStyle,
+        borderColor,
+        buttonColor,
+        scrollbarColor,
+        lastUpdated: new Date().toISOString()
+      };
+
+      // Update both cache and localStorage instantly
+      updateLocalCardInCache(newCard._id, updatedLocalCard);
+
+      customToast({
+        description: 'Card Updated Successfully.',
+        type: 'success'
+      });
+      router.push('/');
+      return;
+    }
+
+    // Handle new local card creation (for unauthenticated users)
+    if (!session && type === 'new') {
+      const { borderColor, buttonColor, scrollbarColor } = generateColorVariations(
+        hexPrimary,
+        hexAccent
+      );
+      const localCards = JSON.parse(localStorage.getItem('localCards') || '[]');
+
+      if (localCards.length >= 3) {
+        customToast({
+          description: 'You can only create up to 3 cards.',
+          type: 'error'
+        });
+        return;
+      }
+
+      const newLocalCard = {
+        _id: `local-card-${uuidv4()}`,
+        primary: hexPrimary,
+        accent: hexAccent,
+        fontFamily,
+        borderStyle,
+        borderColor,
+        buttonColor,
+        scrollbarColor,
+        lastUpdated: new Date().toISOString(),
+        author: 'Guest',
+        user: 'Guest'
+      };
+
+      // Add to both cache and localStorage instantly
+      addLocalCardToCache(newLocalCard);
+
+      customToast({
+        description: 'Card Created Successfully.',
+        type: 'success'
+      });
+      router.push('/');
+      return;
+    }
+
+    // Require authentication for database operations
+    if (!session) {
       setOpenAuthModal(true);
       return;
     }
@@ -127,6 +207,9 @@ export default function CustomizationContainer({
           type: 'error'
         });
       } else if (updatedCard) {
+        // Update cache instantly with the returned data (no refetch needed!)
+        updateCardInCache(card._id, updatedCard);
+
         customToast({
           description: 'Card Updated Successfully.',
           type: 'success'
@@ -154,6 +237,9 @@ export default function CustomizationContainer({
           type: 'error'
         });
       } else if (newCard) {
+        // Add new card to cache instantly (no refetch needed!)
+        addCardToCache(newCard);
+
         router.push('/');
         customToast({
           description: 'Card Created Successfully.',
@@ -207,7 +293,7 @@ export default function CustomizationContainer({
       return;
     }
 
-    const newCard = {
+    const newLocalCard = {
       _id: `local-card-${uuidv4()}`,
       primary,
       accent,
@@ -221,8 +307,8 @@ export default function CustomizationContainer({
       user: 'Guest'
     };
 
-    localCards.push(newCard);
-    localStorage.setItem('localCards', JSON.stringify(localCards));
+    // Add to both cache and localStorage instantly
+    addLocalCardToCache(newLocalCard);
 
     customToast({
       description: 'Card saved locally.',

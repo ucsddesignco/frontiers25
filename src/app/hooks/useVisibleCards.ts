@@ -31,12 +31,7 @@ export type VisibleCard = CardType & {
   virtualRow: number;
   patternIndex: number;
   key: string;
-  isFading?: boolean;
-  fadeStartTime?: number;
 };
-
-// The duration cards will linger after they leave the viewport
-const FADE_DURATION_MS = 250;
 
 export const useVisibleCards = ({
   cardSize,
@@ -46,10 +41,6 @@ export const useVisibleCards = ({
   viewportSize,
   showMobileGallery
 }: UseVisibleCardsProps): VisibleCard[] => {
-  const prevVisibleCardsRef = useRef<Record<string, VisibleCard>>({});
-  // Ref to track the current timestamp for cleanup calculations
-  const nowRef = useRef<number>(Date.now());
-
   const isMobile =
     typeof window !== 'undefined' ? window.innerWidth < 768 : viewportSize.width < 768;
 
@@ -58,8 +49,6 @@ export const useVisibleCards = ({
   const { cardsToRender, centeredIndex } = useMemo(() => {
     if (!basePattern.length || !viewportSize.width || !viewportSize.height || zoomLevel <= 0)
       return { cardsToRender: [], centeredIndex: null };
-
-    nowRef.current = Date.now();
 
     const renderBuffer = zoomLevel <= 1 ? 0 : 1;
 
@@ -118,6 +107,7 @@ export const useVisibleCards = ({
             const cardData = basePattern[patternIndex];
             const cardX = col * effectiveCardWidth;
             const cardY = row * effectiveCardHeight;
+
             const cardKey = `${cardData._id}-${col}-${row}`;
 
             cardsToRender.push({
@@ -135,34 +125,6 @@ export const useVisibleCards = ({
         }
       }
     }
-
-    // Create a new map of previous cards
-    // This is used to fade out cards which is important to make centerToCard look smooth
-    const newPrevVisibleCards: Record<string, VisibleCard> = {};
-
-    // Add fading cards that were previously visible but not currently visible
-    Object.values(prevVisibleCardsRef.current).forEach(prevCard => {
-      if (!currentlyVisibleKeys.has(prevCard.key)) {
-        if (!prevCard.isFading) {
-          prevCard.isFading = true;
-          prevCard.fadeStartTime = nowRef.current;
-        }
-
-        const fadeTime = nowRef.current - (prevCard.fadeStartTime || 0);
-        if (fadeTime < FADE_DURATION_MS) {
-          cardsToRender.push(prevCard);
-          newPrevVisibleCards[prevCard.key] = prevCard;
-        }
-      }
-    });
-
-    cardsToRender
-      .filter(card => !card.isFading)
-      .forEach(card => {
-        newPrevVisibleCards[card.key] = card;
-      });
-
-    prevVisibleCardsRef.current = newPrevVisibleCards;
 
     // --- Determine centered card index (do NOT set state here) ---
     let centeredIndex: number | null = null;

@@ -3,7 +3,7 @@ import { DatabaseCard } from '../components/InfiniteCanvas';
 import { generateColorVariations } from './colorUtils';
 import { formatRelativeTime } from './formatTime';
 
-export const processCardData = (data: DatabaseCard[]) => {
+export const processCardData = (data: DatabaseCard[], shouldFormatTime = true) => {
   const processedData: CardType[] = data.map(card => {
     const { borderColor, buttonColor, scrollbarColor } = generateColorVariations(
       card.primary,
@@ -11,7 +11,7 @@ export const processCardData = (data: DatabaseCard[]) => {
     );
     return {
       ...card,
-      lastUpdated: formatRelativeTime(card.lastUpdated),
+      lastUpdated: shouldFormatTime ? formatRelativeTime(card.lastUpdated) : card.lastUpdated,
       borderColor,
       buttonColor,
       scrollbarColor

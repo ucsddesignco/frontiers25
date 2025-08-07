@@ -1,13 +1,11 @@
 import { cookies, headers } from 'next/headers';
-import { getRandomCards } from './api/cardFunctions';
-import InfiniteCanvas from './components/InfiniteCanvas';
 import { auth } from '@/lib/auth';
+import CardDataProvider from './components/CardDataProvider';
 
 export default async function Home() {
   const session = await auth.api.getSession({
     headers: await headers()
   });
-  const cardData = await getRandomCards(50, session?.user?.id);
 
   const cookieStore = await cookies();
   let newCardToast = null;
@@ -17,7 +15,7 @@ export default async function Home() {
 
   return (
     <main>
-      <InfiniteCanvas data={cardData || []} session={session} newCardToast={newCardToast} />
+      <CardDataProvider session={session} newCardToast={newCardToast} />
     </main>
   );
 }

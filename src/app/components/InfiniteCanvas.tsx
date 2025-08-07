@@ -24,16 +24,17 @@ import { Session } from '@/lib/auth';
 import CreateCard from './CreateCard';
 import { customToast } from '../util/CustomToast/CustomToast';
 import { deleteCookie } from '../util/cookieFunctions';
+import MyCardsButton from './MyCardsButton';
 
 export type DatabaseCard = Omit<CardType, 'borderColor' | 'buttonColor' | 'scrollbarColor'>;
 
 type InfiniteCanvasProps = {
-  data: DatabaseCard[];
+  data: CardType[];
   session: Session | null;
   newCardToast: {
     status: 'success' | 'error';
     message: string;
-  };
+  } | null;
 };
 
 const InfiniteCanvas = ({ data, session, newCardToast }: InfiniteCanvasProps) => {
@@ -46,10 +47,7 @@ const InfiniteCanvas = ({ data, session, newCardToast }: InfiniteCanvasProps) =>
     selectedCard,
     cardSize,
     showMobileGallery,
-    setShowMobileGallery,
     showMobileGalleryFog,
-    setShowMobileGalleryFog,
-    setCardSize,
     showLightFog
   } = useCanvasStore(
     useShallow((state: CanvasState) => ({
@@ -58,23 +56,22 @@ const InfiniteCanvas = ({ data, session, newCardToast }: InfiniteCanvasProps) =>
       basePattern: state.basePattern,
       position: state.position,
       zoomLevel: state.zoomLevel,
-      isTransitionEnabled: state.isTransitionEnabled,
       selectedCard: state.selectedCard,
       cardSize: state.cardSize,
       showMobileGallery: state.showMobileGallery,
-      setShowMobileGallery: state.setShowMobileGallery,
       showMobileGalleryFog: state.showMobileGalleryFog,
-      setShowMobileGalleryFog: state.setShowMobileGalleryFog,
-      setCardSize: state.setCardSize,
       showLightFog: state.showLightFog
     }))
   );
+
+  const setShowMobileGallery = useCanvasStore(state => state.setShowMobileGallery);
+  const setShowMobileGalleryFog = useCanvasStore(state => state.setShowMobileGalleryFog);
+  const setCardSize = useCanvasStore(state => state.setCardSize);
 
   const [wasZoomed, setWasZoomed] = useState(false);
   const backgroundRef = useRef<HTMLDivElement>(null);
   const isInitialLoad = useRef(true);
   const centeredCardIndex = useCanvasStore(state => state.centeredCardIndex);
-
   useInitializeCards({ data, session });
 
   const { centerToCard, centerViewOnScreen } = useCanvasActions();
@@ -183,7 +180,7 @@ const InfiniteCanvas = ({ data, session, newCardToast }: InfiniteCanvasProps) =>
 
         <div className={`${showLightFog ? '' : 'invisible'} fixed right-6 top-5 z-[4] flex gap-4`}>
           <SignInButton session={session} />
-
+          {!session && <MyCardsButton />}
           <CreateCard className="hidden md:block" />
         </div>
 
