@@ -36,8 +36,6 @@ function placeUserCardsInPattern(processedData: CardType[], userCards: CardType[
     return timeA - timeB;
   });
 
-  console.log(sortedUserCards);
-
   const updatedData = [...processedData];
 
   switch (sortedUserCards.length) {
