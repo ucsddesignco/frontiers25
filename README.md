@@ -1,6 +1,6 @@
 # Design Frontiers 2025
 
-https://df25.netlify.app/
+[https://df25.netlify.app/](https://df25.ucsddesign.co/)
 
 Design Frontiers is Design Co's very own long day sprint, where student teams of all backgrounds come together to create innovative solutions for real-world problems
 
