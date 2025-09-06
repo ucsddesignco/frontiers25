@@ -2,7 +2,7 @@
 
 [https://df25.netlify.app/](https://df25.ucsddesign.co/)
 
-Design Frontiers is Design Co's very own long day sprint, where student teams of all backgrounds come together to create innovative solutions for real-world problems
+Design Frontiers is Design Co's annual designathon—a two-day sprint where teams tackle real-world challenges with creative design solutions. Final projects are presented to a panel of industry professionals who offer feedback and select standout work.
 
 ## Getting Started
 
